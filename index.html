@@ -2,59 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Language Tutor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Tutor Trial</title>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    #login, #video-screen {
+      display: none;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; padding: 20px;">
-  <h1>Welcome to the Language Tutor</h1>
+<body>
 
-  <label for="user-select">Select your name:</label><br>
-  <select id="user-select">
-    <option value="" selected disabled>Choose your name</option>
-    <option value="sorato">Sorato</option>
-    <option value="kaito">Kaito</option>
-    <option value="mary">Mary</option>
-    <option value="mina">Mina</option>
-    <option value="tony">Tony</option>
-    <option value="emika">Emika</option>
-  </select><br><br>
+  <h1>Language Tutor</h1>
 
-  <label for="pin-input">Enter your PIN:</label><br>
-  <input type="password" id="pin-input" /><br><br>
+  <!-- Login screen -->
+  <div id="login">
+    <label for="username">Select your name:</label><br>
+    <select id="username">
+      <option value="">--Select--</option>
+      <option value="Sorato">Sorato</option>
+      <option value="Kaito">Kaito</option>
+      <option value="Mary">Mary</option>
+      <option value="Mina">Mina</option>
+      <option value="Tony">Tony</option>
+      <option value="Emika">Emika</option>
+    </select><br><br>
 
-  <button onclick="login()">Log In</button>
+    <label for="pin">Enter your PIN:</label><br>
+    <input type="password" id="pin" /><br><br>
 
-  <p id="status-message" style="color: red;"></p>
+    <button onclick="login()">Log in</button>
+    <p id="login-error" style="color:red;"></p>
+  </div>
+
+  <!-- Welcome screen -->
+  <div id="welcome" style="display:none;">
+    <h2 id="welcome-message"></h2>
+    <button onclick="startLesson()">Start Lesson</button>
+  </div>
+
+  <!-- Video and quiz section -->
+  <div id="video-screen">
+    <p>Watch the video. It will pause for a quiz!</p>
+    <div id="player"></div>
+
+    <div id="quiz" style="display: none; margin-top: 20px;">
+      <h3>Quiz Time!</h3>
+      <p><strong>What does "un" mean?</strong></p>
+      <button onclick="checkAnswer('A')">A. yes</button><br>
+      <button onclick="checkAnswer('B')">B. 1</button><br>
+      <button onclick="checkAnswer('C')">C. hello</button>
+      <p id="quiz-result"></p>
+    </div>
+  </div>
 
   <script>
     const users = {
-      sorato: "2014",
-      kaito: "2015",
-      mary: "2019",
-      mina: "1982",
-      tony: "1984",
-      emika: "2017"
+      "Sorato": "2014",
+      "Kaito": "2015",
+      "Mary": "2019",
+      "Mina": "1982",
+      "Tony": "1984",
+      "Emika": "2017"
     };
 
     function login() {
-      const username = document.getElementById("user-select").value;
-      const pin = document.getElementById("pin-input").value;
-      const status = document.getElementById("status-message");
+      const name = document.getElementById("username").value;
+      const pin = document.getElementById("pin").value;
+      const error = document.getElementById("login-error");
 
-      if (!username || !pin) {
-        status.textContent = "Please select a name and enter a PIN.";
-        return;
-      }
-
-      if (users[username] === pin) {
-        status.style.color = "green";
-        status.textContent = `Welcome, ${username.charAt(0).toUpperCase() + username.slice(1)}!`;
-        // Future: Load that user's progress/lesson here
+      if (users[name] === pin) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("welcome").style.display = "block";
+        document.getElementById("welcome-message").textContent = `Welcome, ${name}!`;
       } else {
-        status.style.color = "red";
-        status.textContent = "Incorrect PIN. Try again.";
+        error.textContent = "Incorrect PIN. Please try again.";
       }
     }
+
+    function startLesson() {
+      document.getElementById("welcome").style.display = "none";
+      document.getElementById("video-screen").style.display = "block";
+    }
+
+    let player;
+    const pauseTime = 31; // seconds
+    const correctAnswer = "B";
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '200',
+        width: '320',
+        videoId: 'RPzZk8gK_EQ',
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+
+      setTimeout(() => {
+        event.target.pauseVideo();
+        document.getElementById("quiz").style.display = "block";
+      }, pauseTime * 1000);
+    }
+
+    function checkAnswer(answer) {
+      const result = document.getElementById("quiz-result");
+      if (answer === correctAnswer) {
+        result.style.color = "green";
+        result.textContent = "¡Correcto! Let's keep watching!";
+        document.getElementById("quiz").style.display = "none";
+        player.playVideo();
+      } else {
+        result.style.color = "red";
+        result.textContent = "Oops! Try again.";
+      }
+    }
+
+    // Show login form when page loads
+    document.getElementById("login").style.display = "block";
   </script>
+
 </body>
 </html>
