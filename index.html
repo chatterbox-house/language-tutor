@@ -12,7 +12,7 @@
       margin: auto;
       padding: 20px;
     }
-    #login, #video-screen {
+    #login, #welcome, #video-screen {
       display: none;
     }
     button {
@@ -45,7 +45,7 @@
   </div>
 
   <!-- Welcome screen -->
-  <div id="welcome" style="display: none;">
+  <div id="welcome">
     <h2 id="welcome-message"></h2>
     <button onclick="startLesson()">Start Lesson</button>
   </div>
@@ -66,6 +66,9 @@
   </div>
 
   <script>
+    // Show login on page load
+    document.getElementById("login").style.display = "block";
+
     const users = {
       Sorato: "2014",
       Kaito: "2015",
@@ -93,21 +96,16 @@
     function startLesson() {
       document.getElementById("welcome").style.display = "none";
       document.getElementById("video-screen").style.display = "block";
+      // Start video playback (if player is ready)
+      if (player && player.playVideo) {
+        player.playVideo();
+      }
     }
 
     let player;
     const correctAnswer = "B";
 
-    function onPlayerReady(event) {
-      event.target.playVideo();
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.ENDED) {
-        document.getElementById("quiz").style.display = "block";
-      }
-    }
-
+    // YouTube iframe API ready callback
     function onYouTubeIframeAPIReady() {
       player = new YT.Player("player", {
         height: "200",
@@ -120,20 +118,26 @@
       });
     }
 
+    function onPlayerReady(event) {
+      // Do nothing here — start on lesson start
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        document.getElementById("quiz").style.display = "block";
+      }
+    }
+
     function checkAnswer(answer) {
       const result = document.getElementById("quiz-result");
       if (answer === correctAnswer) {
         result.style.color = "green";
         result.textContent = "¡Correcto! Well done!";
-        // Optionally reset quiz or proceed to next step
       } else {
         result.style.color = "red";
         result.textContent = "Oops! Try again.";
       }
     }
-
-    // Show login form on page load
-    document.getElementById("login").style.display = "block";
   </script>
 
 </body>
