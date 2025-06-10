@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Language Tutor</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+  <h1>Welcome to the Language Tutor</h1>
+
+  <label for="user-select">Select your name:</label><br>
+  <select id="user-select">
+    <option value="" selected disabled>Choose your name</option>
+    <option value="sorato">Sorato</option>
+    <option value="kaito">Kaito</option>
+    <option value="mary">Mary</option>
+    <option value="mina">Mina</option>
+    <option value="tony">Tony</option>
+    <option value="emika">Emika</option>
+  </select><br><br>
+
+  <label for="pin-input">Enter your PIN:</label><br>
+  <input type="password" id="pin-input" /><br><br>
+
+  <button onclick="login()">Log In</button>
+
+  <p id="status-message" style="color: red;"></p>
+
+  <script>
+    const users = {
+      sorato: "2014",
+      kaito: "2015",
+      mary: "2019",
+      mina: "1982",
+      tony: "1984",
+      emika: "2017"
+    };
+
+    function login() {
+      const username = document.getElementById("user-select").value;
+      const pin = document.getElementById("pin-input").value;
+      const status = document.getElementById("status-message");
+
+      if (!username || !pin) {
+        status.textContent = "Please select a name and enter a PIN.";
+        return;
+      }
+
+      if (users[username] === pin) {
+        status.style.color = "green";
+        status.textContent = `Welcome, ${username.charAt(0).toUpperCase() + username.slice(1)}!`;
+        // Future: Load that user's progress/lesson here
+      } else {
+        status.style.color = "red";
+        status.textContent = "Incorrect PIN. Try again.";
+      }
+    }
+  </script>
+</body>
+</html>
