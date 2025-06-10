@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Language Tutor Trial</title>
   <script src="https://www.youtube.com/iframe_api"></script>
   <style>
@@ -26,7 +26,7 @@
 
   <!-- Login screen -->
   <div id="login">
-    <label for="username">Select your name:</label><br>
+    <label for="username">Select your name:</label><br />
     <select id="username">
       <option value="">--Select--</option>
       <option value="Sorato">Sorato</option>
@@ -35,31 +35,31 @@
       <option value="Mina">Mina</option>
       <option value="Tony">Tony</option>
       <option value="Emika">Emika</option>
-    </select><br><br>
+    </select><br /><br />
 
-    <label for="pin">Enter your PIN:</label><br>
-    <input type="password" id="pin" /><br><br>
+    <label for="pin">Enter your PIN:</label><br />
+    <input type="password" id="pin" /><br /><br />
 
     <button onclick="login()">Log in</button>
-    <p id="login-error" style="color:red;"></p>
+    <p id="login-error" style="color: red;"></p>
   </div>
 
   <!-- Welcome screen -->
-  <div id="welcome" style="display:none;">
+  <div id="welcome" style="display: none;">
     <h2 id="welcome-message"></h2>
     <button onclick="startLesson()">Start Lesson</button>
   </div>
 
   <!-- Video and quiz section -->
   <div id="video-screen">
-    <p>Watch the video. It will pause for a quiz!</p>
+    <p>Watch the video below. When it finishes, a quiz will appear!</p>
     <div id="player"></div>
 
     <div id="quiz" style="display: none; margin-top: 20px;">
       <h3>Quiz Time!</h3>
       <p><strong>What does "un" mean?</strong></p>
-      <button onclick="checkAnswer('A')">A. yes</button><br>
-      <button onclick="checkAnswer('B')">B. 1</button><br>
+      <button onclick="checkAnswer('A')">A. yes</button><br />
+      <button onclick="checkAnswer('B')">B. 1</button><br />
       <button onclick="checkAnswer('C')">C. hello</button>
       <p id="quiz-result"></p>
     </div>
@@ -67,12 +67,12 @@
 
   <script>
     const users = {
-      "Sorato": "2014",
-      "Kaito": "2015",
-      "Mary": "2019",
-      "Mina": "1982",
-      "Tony": "1984",
-      "Emika": "2017"
+      Sorato: "2014",
+      Kaito: "2015",
+      Mary: "2019",
+      Mina: "1982",
+      Tony: "1984",
+      Emika: "2017",
     };
 
     function login() {
@@ -96,7 +96,6 @@
     }
 
     let player;
-    const pauseTime = 31; // seconds
     const correctAnswer = "B";
 
     function onPlayerReady(event) {
@@ -104,27 +103,20 @@
     }
 
     function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING) {
-        // Check every 500ms if the video has reached pauseTime
-        const checkPause = setInterval(() => {
-          if (player.getCurrentTime() >= pauseTime) {
-            player.pauseVideo();
-            clearInterval(checkPause);
-            document.getElementById("quiz").style.display = "block";
-          }
-        }, 500);
+      if (event.data == YT.PlayerState.ENDED) {
+        document.getElementById("quiz").style.display = "block";
       }
     }
 
     function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '200',
-        width: '320',
-        videoId: 'RPzZk8gK_EQ',
+      player = new YT.Player("player", {
+        height: "200",
+        width: "320",
+        videoId: "RPzZk8gK_EQ",
         events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
       });
     }
 
@@ -132,16 +124,15 @@
       const result = document.getElementById("quiz-result");
       if (answer === correctAnswer) {
         result.style.color = "green";
-        result.textContent = "¡Correcto! Let's keep watching!";
-        document.getElementById("quiz").style.display = "none";
-        player.playVideo();
+        result.textContent = "¡Correcto! Well done!";
+        // Optionally reset quiz or proceed to next step
       } else {
         result.style.color = "red";
         result.textContent = "Oops! Try again.";
       }
     }
 
-    // Show login form when page loads
+    // Show login form on page load
     document.getElementById("login").style.display = "block";
   </script>
 
