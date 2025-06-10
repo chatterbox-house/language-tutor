@@ -18,6 +18,10 @@
     button {
       margin-top: 10px;
     }
+    #progress {
+      margin-top: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -47,6 +51,7 @@
   <!-- Welcome screen -->
   <div id="welcome">
     <h2 id="welcome-message"></h2>
+    <div id="progress"></div>
     <button onclick="startLesson()">Start Lesson</button>
   </div>
 
@@ -78,16 +83,24 @@
       Emika: "2017",
     };
 
+    let currentUser = null;
+    const correctAnswer = "B";
+
     function login() {
       const name = document.getElementById("username").value;
       const pin = document.getElementById("pin").value;
       const error = document.getElementById("login-error");
 
       if (users[name] === pin) {
+        currentUser = name;
         document.getElementById("login").style.display = "none";
         document.getElementById("welcome").style.display = "block";
         document.getElementById("welcome-message").textContent = `Welcome, ${name}!`;
         error.textContent = "";
+
+        // Show progress for this user
+        const progress = getUserProgress(currentUser);
+        document.getElementById("progress").textContent = `Quizzes passed: ${progress}`;
       } else {
         error.textContent = "Incorrect PIN. Please try again.";
       }
@@ -96,16 +109,25 @@
     function startLesson() {
       document.getElementById("welcome").style.display = "none";
       document.getElementById("video-screen").style.display = "block";
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("quiz-result").textContent = "";
       // Start video playback (if player is ready)
       if (player && player.playVideo) {
         player.playVideo();
       }
     }
 
-    let player;
-    const correctAnswer = "B";
+    function getUserProgress(user) {
+      const progress = localStorage.getItem(`progress_${user}`);
+      return progress ? parseInt(progress, 10) : 0;
+    }
+
+    function saveUserProgress(user, value) {
+      localStorage.setItem(`progress_${user}`, value);
+    }
 
     // YouTube iframe API ready callback
+    let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player("player", {
         height: "200",
@@ -119,7 +141,7 @@
     }
 
     function onPlayerReady(event) {
-      // Do nothing here — start on lesson start
+      // nothing here now
     }
 
     function onPlayerStateChange(event) {
@@ -133,6 +155,14 @@
       if (answer === correctAnswer) {
         result.style.color = "green";
         result.textContent = "¡Correcto! Well done!";
+
+        // Update user progress
+        let progress = getUserProgress(currentUser);
+        progress++;
+        saveUserProgress(currentUser, progress);
+
+        // Update progress display on screen
+        document.getElementById("progress").textContent = `Quizzes passed: ${progress}`;
       } else {
         result.style.color = "red";
         result.textContent = "Oops! Try again.";
