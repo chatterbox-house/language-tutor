@@ -67,6 +67,7 @@
       <button onclick="checkAnswer('B')">B. 1</button><br />
       <button onclick="checkAnswer('C')">C. hello</button>
       <p id="quiz-result"></p>
+      <button id="finish-btn" style="display:none;" onclick="finishQuiz()">Finish Quiz</button>
     </div>
   </div>
 
@@ -111,6 +112,8 @@
       document.getElementById("video-screen").style.display = "block";
       document.getElementById("quiz").style.display = "none";
       document.getElementById("quiz-result").textContent = "";
+      document.getElementById("finish-btn").style.display = "none";
+
       // Start video playback (if player is ready)
       if (player && player.playVideo) {
         player.playVideo();
@@ -146,29 +149,4 @@
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.ENDED) {
-        document.getElementById("quiz").style.display = "block";
-      }
-    }
-
-    function checkAnswer(answer) {
-      const result = document.getElementById("quiz-result");
-      if (answer === correctAnswer) {
-        result.style.color = "green";
-        result.textContent = "¡Correcto! Well done!";
-
-        // Update user progress
-        let progress = getUserProgress(currentUser);
-        progress++;
-        saveUserProgress(currentUser, progress);
-
-        // Update progress display on screen
-        document.getElementById("progress").textContent = `Quizzes passed: ${progress}`;
-      } else {
-        result.style.color = "red";
-        result.textContent = "Oops! Try again.";
-      }
-    }
-  </script>
-
-</body>
-</html>
+        document.getElementById("quiz").style.displ
