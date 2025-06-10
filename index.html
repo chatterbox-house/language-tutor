@@ -1,41 +1,202 @@
-let player;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Language Tutor Trial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    #video-screen, #quiz, #quiz-result, #finish-btn {
+      display: none;
+      margin-top: 20px;
+    }
+    #quiz label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+    }
+  </style>
+</head>
+<body>
 
-function createPlayer() {
-  if (player) {
-    player.destroy();
-  }
-  player = new YT.Player("player", {
-    height: "200",
-    width: "320",
-    videoId: "RPzZk8gK_EQ",
-    events: {
-      onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange,
-    },
-  });
-}
+  <div id="welcome">
+    <h2>Welcome!</h2>
+    <label for="user-select">Select your name:</label>
+    <select id="user-select">
+      <option value="">--Choose--</option>
+      <option value="Sorato">Sorato</option>
+      <option value="Kaito">Kaito</option>
+      <option value="Mary">Mary</option>
+      <option value="Mina">Mina</option>
+      <option value="Tony">Tony</option>
+      <option value="Emika">Emika</option>
+    </select>
+    <br /><br />
+    <label for="pin-input">Enter PIN code:</label>
+    <input type="password" id="pin-input" maxlength="4" />
+    <br /><br />
+    <button id="login-btn">Login</button>
+    <p id="login-msg" style="color:red;"></p>
+  </div>
 
-function onYouTubeIframeAPIReady() {
-  // don't create the player here yet
-  // create player when lesson starts instead
-}
+  <div id="video-screen">
+    <h3 id="greeting"></h3>
+    <div id="player"></div>
+  </div>
 
-function onPlayerReady(event) {
-  event.target.playVideo();
-}
+  <div id="quiz">
+    <h3>Quiz time!</h3>
+    <p>What does "un" mean?</p>
+    <form id="quiz-form">
+      <label><input type="radio" name="answer" value="A" /> A. yes</label>
+      <label><input type="radio" name="answer" value="B" /> B. 1</label>
+      <label><input type="radio" name="answer" value="C" /> C. hello</label>
+      <button type="submit">Submit Answer</button>
+    </form>
+  </div>
 
-function onPlayerStateChange(event) {
-  if (event.data === YT.PlayerState.ENDED) {
-    document.getElementById("quiz").style.display = "block";
-  }
-}
+  <p id="quiz-result"></p>
+  <button id="finish-btn">Finish Lesson</button>
 
-function startLesson() {
-  document.getElementById("welcome").style.display = "none";
-  document.getElementById("video-screen").style.display = "block";
-  document.getElementById("quiz").style.display = "none";
-  document.getElementById("quiz-result").textContent = "";
-  document.getElementById("finish-btn").style.display = "none";
+  <script>
+    const users = {
+      Sorato: "2014",
+      Kaito: "2015",
+      Mary: "2019",
+      Mina: "1982",
+      Tony: "1984",
+      Emika: "2017",
+    };
 
-  createPlayer(); // create and start fresh player here
-}
+    let currentUser = null;
+    let player;
+
+    document.getElementById("login-btn").addEventListener("click", () => {
+      const selectedUser = document.getElementById("user-select").value;
+      const pin = document.getElementById("pin-input").value.trim();
+      const msg = document.getElementById("login-msg");
+
+      if (!selectedUser) {
+        msg.textContent = "Please select a user.";
+        return;
+      }
+      if (!pin) {
+        msg.textContent = "Please enter your PIN code.";
+        return;
+      }
+      if (users[selectedUser] !== pin) {
+        msg.textContent = "Incorrect PIN code.";
+        return;
+      }
+
+      msg.textContent = "";
+      currentUser = selectedUser;
+      document.getElementById("welcome").style.display = "none";
+      document.getElementById("greeting").textContent = `Welcome ${currentUser}! Enjoy the video.`;
+      startLesson();
+    });
+
+    // Load YouTube IFrame API asynchronously
+    let tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName("script")[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function createPlayer() {
+      if (player) {
+        player.destroy();
+      }
+      player = new YT.Player("player", {
+        height: "200",
+        width: "320",
+        videoId: "RPzZk8gK_EQ", // your YouTube video ID here
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
+      });
+    }
+
+    function onYouTubeIframeAPIReady() {
+      // Don't create player here - wait for startLesson
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        document.getElementById("quiz").style.display = "block";
+      }
+    }
+
+    function startLesson() {
+      document.getElementById("video-screen").style.display = "block";
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("quiz-result").textContent = "";
+      document.getElementById("finish-btn").style.display = "none";
+
+      createPlayer();
+    }
+
+    document.getElementById("quiz-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const answer = document.querySelector('input[name="answer"]:checked');
+      const result = document.getElementById("quiz-result");
+      const finishBtn = document.getElementById("finish-btn");
+
+      if (!answer) {
+        result.textContent = "Please select an answer.";
+        result.style.color = "red";
+        return;
+      }
+
+      if (answer.value === "B") {
+        result.textContent = "Correct! 🎉";
+        result.style.color = "green";
+      } else {
+        result.textContent = "Oops, that's not right. Try again next time!";
+        result.style.color = "red";
+      }
+
+      finishBtn.style.display = "inline-block";
+
+      // Save progress to localStorage
+      let progress = JSON.parse(localStorage.getItem("progress")) || {};
+      if (!progress[currentUser]) {
+        progress[currentUser] = { quizzesCompleted: 0 };
+      }
+      progress[currentUser].quizzesCompleted += 1;
+      localStorage.setItem("progress", JSON.stringify(progress));
+    });
+
+    document.getElementById("finish-btn").addEventListener("click", () => {
+      document.getElementById("video-screen").style.display = "none";
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("quiz-result").textContent = "";
+
+      alert(`Well done ${currentUser}! You've completed ${getUserProgress()} quiz(s).`);
+
+      document.getElementById("welcome").style.display = "block";
+      document.getElementById("pin-input").value = "";
+      document.getElementById("user-select").value = "";
+      currentUser = null;
+    });
+
+    function getUserProgress() {
+      const progress = JSON.parse(localStorage.getItem("progress")) || {};
+      if (!currentUser || !progress[currentUser]) return 0;
+      return progress[currentUser].quizzesCompleted;
+    }
+  </script>
+</body>
+</html>
