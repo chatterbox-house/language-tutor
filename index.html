@@ -1,152 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Language Tutor Trial</title>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    #login, #welcome, #video-screen {
-      display: none;
-    }
-    button {
-      margin-top: 10px;
-    }
-    #progress {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
+let player;
 
-  <h1>Language Tutor</h1>
+function createPlayer() {
+  if (player) {
+    player.destroy();
+  }
+  player = new YT.Player("player", {
+    height: "200",
+    width: "320",
+    videoId: "RPzZk8gK_EQ",
+    events: {
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange,
+    },
+  });
+}
 
-  <!-- Login screen -->
-  <div id="login">
-    <label for="username">Select your name:</label><br />
-    <select id="username">
-      <option value="">--Select--</option>
-      <option value="Sorato">Sorato</option>
-      <option value="Kaito">Kaito</option>
-      <option value="Mary">Mary</option>
-      <option value="Mina">Mina</option>
-      <option value="Tony">Tony</option>
-      <option value="Emika">Emika</option>
-    </select><br /><br />
+function onYouTubeIframeAPIReady() {
+  // don't create the player here yet
+  // create player when lesson starts instead
+}
 
-    <label for="pin">Enter your PIN:</label><br />
-    <input type="password" id="pin" /><br /><br />
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
 
-    <button onclick="login()">Log in</button>
-    <p id="login-error" style="color: red;"></p>
-  </div>
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED) {
+    document.getElementById("quiz").style.display = "block";
+  }
+}
 
-  <!-- Welcome screen -->
-  <div id="welcome">
-    <h2 id="welcome-message"></h2>
-    <div id="progress"></div>
-    <button onclick="startLesson()">Start Lesson</button>
-  </div>
+function startLesson() {
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("video-screen").style.display = "block";
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("quiz-result").textContent = "";
+  document.getElementById("finish-btn").style.display = "none";
 
-  <!-- Video and quiz section -->
-  <div id="video-screen">
-    <p>Watch the video below. When it finishes, a quiz will appear!</p>
-    <div id="player"></div>
-
-    <div id="quiz" style="display: none; margin-top: 20px;">
-      <h3>Quiz Time!</h3>
-      <p><strong>What does "un" mean?</strong></p>
-      <button onclick="checkAnswer('A')">A. yes</button><br />
-      <button onclick="checkAnswer('B')">B. 1</button><br />
-      <button onclick="checkAnswer('C')">C. hello</button>
-      <p id="quiz-result"></p>
-      <button id="finish-btn" style="display:none;" onclick="finishQuiz()">Finish Quiz</button>
-    </div>
-  </div>
-
-  <script>
-    // Show login on page load
-    document.getElementById("login").style.display = "block";
-
-    const users = {
-      Sorato: "2014",
-      Kaito: "2015",
-      Mary: "2019",
-      Mina: "1982",
-      Tony: "1984",
-      Emika: "2017",
-    };
-
-    let currentUser = null;
-    const correctAnswer = "B";
-
-    function login() {
-      const name = document.getElementById("username").value;
-      const pin = document.getElementById("pin").value;
-      const error = document.getElementById("login-error");
-
-      if (users[name] === pin) {
-        currentUser = name;
-        document.getElementById("login").style.display = "none";
-        document.getElementById("welcome").style.display = "block";
-        document.getElementById("welcome-message").textContent = `Welcome, ${name}!`;
-        error.textContent = "";
-
-        // Show progress for this user
-        const progress = getUserProgress(currentUser);
-        document.getElementById("progress").textContent = `Quizzes passed: ${progress}`;
-      } else {
-        error.textContent = "Incorrect PIN. Please try again.";
-      }
-    }
-
-    function startLesson() {
-      document.getElementById("welcome").style.display = "none";
-      document.getElementById("video-screen").style.display = "block";
-      document.getElementById("quiz").style.display = "none";
-      document.getElementById("quiz-result").textContent = "";
-      document.getElementById("finish-btn").style.display = "none";
-
-      // Start video playback (if player is ready)
-      if (player && player.playVideo) {
-        player.playVideo();
-      }
-    }
-
-    function getUserProgress(user) {
-      const progress = localStorage.getItem(`progress_${user}`);
-      return progress ? parseInt(progress, 10) : 0;
-    }
-
-    function saveUserProgress(user, value) {
-      localStorage.setItem(`progress_${user}`, value);
-    }
-
-    // YouTube iframe API ready callback
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player("player", {
-        height: "200",
-        width: "320",
-        videoId: "RPzZk8gK_EQ",
-        events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange,
-        },
-      });
-    }
-
-    function onPlayerReady(event) {
-      // nothing here now
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        document.getElementById("quiz").style.displ
+  createPlayer(); // create and start fresh player here
+}
