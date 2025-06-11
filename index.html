@@ -160,7 +160,16 @@
 
   <script src="vocab.js"></script>
   <script>
-    console.log("Script loaded successfully");
+    console.log("Main script loaded successfully");
+
+    // Fallback vocabulary if vocab.js fails to load
+    let vocab = typeof vocab !== "undefined" ? vocab : [
+      { emoji: "🍎", word: "manzana", type: "noun" },
+      { emoji: "🐶", word: "perro", type: "noun" },
+      { emoji: "🚗", word: "coche", type: "noun" },
+      { emoji: "🏠", word: "casa", type: "noun" },
+      { emoji: "📚", word: "libros", type: "noun" }
+    ];
 
     const users = {
       Tony: { pin: "1984", score: 0, mastered: {}, lastWords: [] },
@@ -216,17 +225,13 @@
         const leaderboardList = document.getElementById("leaderboardList");
 
         // Check DOM elements
-        if (!loginBtn || !usernameSelect || !pinInput || !loginError) {
-          console.error("Missing DOM elements:", { loginBtn, usernameSelect, pinInput, loginError });
+        if (!loginBtn || !usernameSelect || !pinInput || !loginError || !startBtn) {
+          console.error("Missing DOM elements:", { loginBtn, usernameSelect, pinInput, loginError, startBtn });
           return;
         }
 
-        // Check if vocab is loaded
-        if (typeof vocab === "undefined") {
-          console.error("Vocabulary not loaded. Ensure vocab.js is correctly included.");
-          loginError.textContent = "Error: Vocabulary data not loaded.";
-          return;
-        }
+        // Log vocabulary status
+        console.log("Vocabulary loaded:", vocab.length, "words");
 
         function speakText(text) {
           if (!text) return;
@@ -273,12 +278,15 @@
 
         function selectQuizWords() {
           try {
+            console.log("Selecting quiz words for user:", currentUser);
             const user = users[currentUser];
             user.mastered = user.mastered || {};
             user.lastWords = user.lastWords || [];
 
             const errorWordsLastSession = user.lastWords.filter(word => errorWords.has(word));
             const availableWords = vocab.filter(v => (user.mastered[v.word] || 0) < 10);
+
+            console.log("Available words:", availableWords.length, "Error words:", errorWordsLastSession);
 
             let holdovers = errorWordsLastSession.length > 0
               ? errorWordsLastSession.slice(0, 2)
@@ -294,7 +302,9 @@
             user.lastWords = selectedWords;
             saveUserData();
 
-            return vocab.filter(v => selectedWords.includes(v.word));
+            const selectedVocab = vocab.filter(v => selectedWords.includes(v.word));
+            console.log("Selected words:", selectedVocab);
+            return selectedVocab;
           } catch (e) {
             console.error("Error selecting quiz words:", e);
             return vocab.slice(0, 5); // Fallback
@@ -312,6 +322,7 @@
 
         function setupEmojiBoxes() {
           try {
+            console.log("Setting up emoji boxes");
             emojiColumn.innerHTML = "";
             vocab.forEach(({ emoji, word }) => {
               const div = document.createElement("div");
@@ -351,6 +362,7 @@
 
         function setupWordBoxes() {
           try {
+            console.log("Setting up word boxes");
             wordColumn.innerHTML = "";
             const shuffled = shuffle([...vocab]);
 
@@ -416,6 +428,13 @@
 
         function startQuiz() {
           try {
+            console.log("Starting quiz for user:", currentUser);
+            if (!vocab || vocab.length === 0) {
+              console.error("No vocabulary available to start quiz");
+              messages.textContent = "Error: No vocabulary loaded.";
+              return;
+            }
+
             matched = new Set();
             score = 0;
             errorWords = new Set();
@@ -437,11 +456,13 @@
             setupWordBoxes();
           } catch (e) {
             console.error("Error starting quiz:", e);
+            messages.textContent = "Error al iniciar el quiz.";
           }
         }
 
         function finishQuiz() {
           try {
+            console.log("Finishing quiz");
             quizStarted = false;
             const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
             messages.textContent = phrase;
