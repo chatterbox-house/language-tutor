@@ -158,21 +158,11 @@
     <div id="wordColumn"></div>
   </div>
 
+  <!-- Add this line to load vocab.js -->
+  <script src="vocab.js"></script>
+
   <script>
     console.log("Script loaded successfully");
-
-    let vocab = [
-      { emoji: "🍎", word: "manzana", type: "noun" },
-      { emoji: "🐶", word: "perro", type: "noun" },
-      { emoji: "🚗", word: "coche", type: "noun" },
-      { emoji: "🏠", word: "casa", type: "noun" },
-      { emoji: "📚", word: "libros", type: "noun" },
-      { emoji: "🏃", word: "correr", type: "verb" },
-      { emoji: "😊", word: "feliz", type: "adjective" },
-      { emoji: "🍽️", word: "comer", type: "verb" },
-      { emoji: "🌞", word: "sol", type: "noun" },
-      { emoji: "🔴", word: "rojo", type: "adjective" }
-    ];
 
     const users = {
       Tony: { pin: "1984", score: 0, mastered: {}, lastWords: [] },
@@ -230,6 +220,13 @@
         // Check DOM elements
         if (!loginBtn || !usernameSelect || !pinInput || !loginError) {
           console.error("Missing DOM elements:", { loginBtn, usernameSelect, pinInput, loginError });
+          return;
+        }
+
+        // Check if vocab is loaded
+        if (typeof vocab === "undefined") {
+          console.error("vocab.js failed to load");
+          loginError.textContent = "Error loading vocabulary. Please try again later.";
           return;
         }
 
@@ -546,49 +543,4 @@
             logoutBtn.style.display = "none";
             leaderboardDiv.style.display = "none";
             sessionStorage.removeItem("currentUser");
-          } catch (e) {
-            console.error("Error in logoutUser:", e);
           }
-        }
-
-        // Event listeners
-        loginBtn.addEventListener("click", () => {
-          console.log("Login button clicked");
-          if (checkLogin()) {
-            sessionStorage.setItem("currentUser", currentUser);
-            loadUserData();
-          }
-        });
-
-        startBtn.addEventListener("click", () => {
-          console.log("Start Quiz button clicked");
-          if (!quizStarted) startQuiz();
-        });
-
-        finishBtn.addEventListener("click", () => {
-          console.log("Finish Quiz button clicked");
-          finishQuiz();
-        });
-
-        logoutBtn.addEventListener("click", () => {
-          console.log("Logout button clicked");
-          logoutUser();
-        });
-
-        // Initialize
-        loadUserData();
-        const savedUser = sessionStorage.getItem("currentUser");
-        if (savedUser && users[savedUser]) {
-          currentUser = savedUser;
-          usernameSelect.value = currentUser;
-          loadUserData();
-        } else {
-          loginSection.style.display = "block";
-        }
-      } catch (e) {
-        console.error("Initialization error:", e);
-      }
-    };
-  </script>
-</body>
-</html>
