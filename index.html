@@ -4,20 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spanish Vocab Trainer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Comic Neue', cursive;
       max-width: 480px;
       margin: auto;
       padding: 10px;
+      background: linear-gradient(135deg, #ffeb3b, #ff9800);
+      color: #333;
     }
     h1 {
       text-align: center;
+      color: #d81b60;
+      text-shadow: 2px 2px #fff;
     }
     #score {
       text-align: center;
       font-size: 1.2em;
+      margin-bottom: 10px;
+      color: #fff;
+      background: #2196f3;
+      padding: 5px;
+      border-radius: 10px;
+    }
+    #progressBar {
+      width: 100%;
+      background: #ddd;
+      border-radius: 10px;
+      height: 20px;
       margin-bottom: 15px;
+      overflow: hidden;
+    }
+    #progress {
+      height: 100%;
+      background: linear-gradient(to right, #4caf50, #8bc34a);
+      width: 0;
+      transition: width 0.5s ease;
     }
     #container {
       display: flex;
@@ -32,43 +55,62 @@
       gap: 10px;
     }
     .box {
-      border: 2px solid #444;
-      border-radius: 8px;
+      border: 3px solid #ff5722;
+      border-radius: 12px;
       padding: 12px;
       text-align: center;
       font-size: 2.4rem;
       user-select: none;
       cursor: pointer;
-      background-color: #add8e6;
+      background: #ffeb3b;
       width: 100%;
       max-width: 140px;
       height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.3s ease;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .box:hover {
+      transform: scale(1.05);
     }
     .box.selected {
-      background-color: #87ceeb;
-      border-color: #1e90ff;
+      background: #ffca28;
+      border-color: #e91e63;
+      transform: scale(1.1);
     }
     .wordBox {
       font-size: 1.4rem;
-      background-color: #f0f8ff;
+      background: #b2ff59;
     }
     .matched {
-      background-color: transparent !important;
+      background: transparent !important;
       cursor: default;
       border-color: #888;
+      animation: bounce 0.5s;
     }
     .highlight {
-      background-color: #90ee90 !important;
+      background: #4caf50 !important;
+    }
+    .incorrect {
+      animation: shake 0.3s;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
     #messages {
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       margin: 10px 0;
       min-height: 40px;
+      color: #d81b60;
+      font-weight: bold;
     }
     #buttons {
       text-align: center;
@@ -76,46 +118,69 @@
     }
     #leaderboard {
       margin-bottom: 20px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     button {
       margin: 0 10px;
-      padding: 10px 18px;
-      font-size: 1rem;
-      border-radius: 6px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 25px;
       border: none;
       cursor: pointer;
-      background-color: #4682b4;
+      background: #2196f3;
       color: white;
+      transition: background 0.3s, transform 0.2s;
+      font-family: 'Comic Neue', cursive;
     }
     button:hover {
-      background-color: #315f86;
+      background: #1976d2;
+      transform: scale(1.1);
+    }
+    #logoutBtn {
+      background: #f44336;
+    }
+    #logoutBtn:hover {
+      background: #d32f2f;
     }
     #loginSection {
       max-width: 320px;
       margin: 30px auto;
-      border: 2px solid #4682b4;
-      border-radius: 8px;
+      border: 3px solid #2196f3;
+      border-radius: 15px;
       padding: 20px;
-      background-color: #f8faff;
+      background: #e3f2fd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     #loginSection label {
       display: block;
       margin-bottom: 6px;
       font-weight: bold;
+      color: #d81b60;
     }
     #loginSection select, #loginSection input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-bottom: 15px;
       font-size: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      border-radius: 10px;
+      border: 2px solid #ff5722;
+      font-family: 'Comic Neue', cursive;
     }
     #loginError {
-      color: red;
+      color: #f44336;
       font-weight: bold;
       margin-bottom: 10px;
       min-height: 20px;
+    }
+    canvas#confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -146,10 +211,14 @@
   <div id="buttons" style="text-align:center; margin-bottom:10px; display:none;">
     <button id="startBtn">Start Quiz</button>
     <button id="finishBtn" style="display:none;">Finish Quiz</button>
-    <button id="logoutBtn" style="display:none; background-color: #a83232;">Logout</button>
+    <button id="logoutBtn" style="display:none;">Logout</button>
   </div>
 
   <div id="messages"></div>
+
+  <div id="progressBar" style="display:none;">
+    <div id="progress"></div>
+  </div>
 
   <div id="score" style="display:none;">Matches: 0</div>
 
@@ -158,11 +227,14 @@
     <div id="wordColumn"></div>
   </div>
 
+  <canvas id="confettiCanvas"></canvas>
+
   <script src="vocab.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     console.log("Main script loaded successfully");
 
-    // Fallback vocabulary if vocab.js fails to load
+    // Fallback vocabulary
     if (typeof vocab === "undefined") {
       console.warn("vocab.js not loaded, using fallback vocabulary");
       window.vocab = [
@@ -183,19 +255,19 @@
     };
 
     const goodLuckPhrases = [
-      "¡Buena suerte!",
-      "¡Vamos allá!",
-      "¡Ánimo!",
-      "¡Suerte!",
-      "¡A por ello!"
+      "¡Vamos a brillar! ✨",
+      "¡A divertirse! 🎉",
+      "¡Tú puedes! 💪",
+      "¡Suerte, pequeño genio! 🌟",
+      "¡Listo para ganar! 🏆"
     ];
 
     const wellDonePhrases = [
-      "¡Muy bien hecho!",
-      "¡Excelente trabajo!",
-      "¡Lo hiciste genial!",
-      "¡Buen trabajo!",
-      "¡Felicidades!"
+      "¡Súper estrella! 🌟",
+      "¡Eres increíble! 🎉",
+      "¡Lo lograste! 🥳",
+      "¡Fantástico! 🚀",
+      "¡Campeón! 🏅"
     ];
 
     let matched = new Set();
@@ -205,6 +277,11 @@
     let selectedEmoji = null;
     let errorWords = new Set();
     let currentVocab = [];
+
+    // Audio elements
+    const correctSound = new Audio("correct.mp3");
+    const incorrectSound = new Audio("incorrect.mp3");
+    const finishSound = new Audio("finish.mp3");
 
     window.onload = function() {
       try {
@@ -227,6 +304,8 @@
         const buttonsDiv = document.getElementById("buttons");
         const leaderboardDiv = document.getElementById("leaderboard");
         const leaderboardList = document.getElementById("leaderboardList");
+        const progressBar = document.getElementById("progressBar");
+        const progress = document.getElementById("progress");
 
         // Check DOM elements
         if (!loginBtn || !usernameSelect || !pinInput || !loginError || !startBtn) {
@@ -246,6 +325,30 @@
           } catch (e) {
             console.error("Speech synthesis error:", e);
           }
+        }
+
+        function playSound(sound) {
+          try {
+            sound.currentTime = 0;
+            sound.play().catch(e => console.error("Audio play error:", e));
+          } catch (e) {
+            console.error("Sound error:", e);
+          }
+        }
+
+        function triggerConfetti() {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ffeb3b', '#ff5722', '#2196f3', '#4caf50']
+          });
+          setTimeout(() => confetti.reset(), 1000);
+        }
+
+        function updateProgress() {
+          const percentage = (matched.size / currentVocab.length) * 100;
+          progress.style.width = `${percentage}%`;
         }
 
         function shuffle(array) {
@@ -311,7 +414,7 @@
             return selectedVocab;
           } catch (e) {
             console.error("Error selecting quiz words:", e);
-            return vocab.slice(0, 5); // Fallback
+            return vocab.slice(0, 5);
           }
         }
 
@@ -333,12 +436,11 @@
               div.className = "box";
               div.textContent = emoji;
               div.dataset.word = word;
-              div.style.backgroundColor = "#add8e6";
               div.style.cursor = matched.has(word) ? "default" : "pointer";
 
               if (matched.has(word)) {
                 div.classList.add("matched");
-                div.style.backgroundColor = "transparent";
+                div.style.background = "transparent";
                 div.style.cursor = "default";
               }
 
@@ -398,22 +500,28 @@
                     }
                     selectedEmoji.classList.remove("selected");
                     selectedEmoji.classList.add("matched");
-                    selectedEmoji.style.backgroundColor = "transparent";
+                    selectedEmoji.style.background = "transparent";
                     div.classList.add("matched", "highlight");
                     div.style.cursor = "default";
 
                     clearSelections();
+                    updateProgress();
+                    playSound(correctSound);
+                    messages.textContent = "¡Estrella! 🌟";
 
                     if (matched.size === currentVocab.length) {
                       finishBtn.style.display = "inline-block";
-                      messages.textContent = "¡Has completado el quiz!";
-                    } else {
-                      messages.textContent = "Correcto!";
+                      messages.textContent = "¡Quiz terminado! 🏆";
+                      playSound(finishSound);
+                      triggerConfetti();
                     }
                   }
                 } else {
                   errorWords.add(word);
-                  messages.textContent = "Incorrecto. Inténtalo de nuevo.";
+                  div.classList.add("incorrect");
+                  setTimeout(() => div.classList.remove("incorrect"), 300);
+                  messages.textContent = "¡Oops, intenta otra vez! 😄";
+                  playSound(incorrectSound);
                   setTimeout(() => {
                     messages.textContent = "";
                   }, 1500);
@@ -443,6 +551,8 @@
             quizStarted = true;
             messages.textContent = "";
             scoreDisplay.style.display = "block";
+            progressBar.style.display = "block";
+            progress.style.width = "0%";
             scoreDisplay.textContent = `Matches: ${users[currentUser].score}`;
             container.style.display = "flex";
             container.style.pointerEvents = "auto";
@@ -469,6 +579,8 @@
             const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
             messages.textContent = phrase;
             speakText(phrase);
+            playSound(finishSound);
+            triggerConfetti();
 
             finishBtn.style.display = "none";
             startBtn.style.display = "inline-block";
@@ -484,7 +596,7 @@
             const sortedUsers = Object.entries(users)
               .sort((a, b) => b[1].score - a[1].score);
             leaderboardList.innerHTML = sortedUsers
-              .map(([user, data]) => `<li>${user}: ${data.score} points</li>`)
+              .map(([user, data]) => `<li>${user}: ${data.score} estrellas 🌟</li>`)
               .join("");
             leaderboardDiv.style.display = currentUser ? "block" : "none";
           } catch (e) {
@@ -531,6 +643,7 @@
             buttonsDiv.style.display = "block";
             container.style.display = "none";
             scoreDisplay.style.display = "none";
+            progressBar.style.display = "none";
             messages.textContent = "";
             startBtn.style.display = "inline-block";
             finishBtn.style.display = "none";
@@ -556,6 +669,7 @@
             buttonsDiv.style.display = "none";
             container.style.display = "none";
             scoreDisplay.style.display = "none";
+            progressBar.style.display = "none";
             messages.textContent = "";
             loginError.textContent = "";
             pinInput.value = "";
