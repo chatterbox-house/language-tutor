@@ -204,6 +204,7 @@
     let currentUser = null;
     let selectedEmoji = null;
     let errorWords = new Set();
+    let currentVocab = [];
 
     window.onload = function() {
       try {
@@ -327,7 +328,7 @@
           try {
             console.log("Setting up emoji boxes");
             emojiColumn.innerHTML = "";
-            vocab.forEach(({ emoji, word }) => {
+            currentVocab.forEach(({ emoji, word }) => {
               const div = document.createElement("div");
               div.className = "box";
               div.textContent = emoji;
@@ -367,7 +368,7 @@
           try {
             console.log("Setting up word boxes");
             wordColumn.innerHTML = "";
-            const shuffled = shuffle([...vocab]);
+            const shuffled = shuffle([...currentVocab]);
 
             shuffled.forEach(({ word }) => {
               const div = document.createElement("div");
@@ -403,7 +404,7 @@
 
                     clearSelections();
 
-                    if (matched.size === vocab.length) {
+                    if (matched.size === currentVocab.length) {
                       finishBtn.style.display = "inline-block";
                       messages.textContent = "¡Has completado el quiz!";
                     } else {
@@ -452,7 +453,7 @@
             messages.textContent = phrase;
             speakText(phrase);
 
-            vocab = selectQuizWords();
+            currentVocab = selectQuizWords();
             setupEmojiBoxes();
             setupWordBoxes();
           } catch (e) {
@@ -549,6 +550,7 @@
             errorWords.clear();
             score = 0;
             selectedEmoji = null;
+            currentVocab = [];
 
             loginSection.style.display = "block";
             buttonsDiv.style.display = "none";
