@@ -158,9 +158,7 @@
     <div id="wordColumn"></div>
   </div>
 
-  <!-- Add this line to load vocab.js -->
   <script src="vocab.js"></script>
-
   <script>
     console.log("Script loaded successfully");
 
@@ -225,8 +223,8 @@
 
         // Check if vocab is loaded
         if (typeof vocab === "undefined") {
-          console.error("vocab.js failed to load");
-          loginError.textContent = "Error loading vocabulary. Please try again later.";
+          console.error("Vocabulary not loaded. Ensure vocab.js is correctly included.");
+          loginError.textContent = "Error: Vocabulary data not loaded.";
           return;
         }
 
@@ -549,4 +547,43 @@
         }
 
         // Event listeners
-        loginBtn.addEventListener("click
+        loginBtn.addEventListener("click", () => {
+          console.log("Login button clicked");
+          if (checkLogin()) {
+            sessionStorage.setItem("currentUser", currentUser);
+            loadUserData();
+          }
+        });
+
+        startBtn.addEventListener("click", () => {
+          console.log("Start Quiz button clicked");
+          if (!quizStarted) startQuiz();
+        });
+
+        finishBtn.addEventListener("click", () => {
+          console.log("Finish Quiz button clicked");
+          finishQuiz();
+        });
+
+        logoutBtn.addEventListener("click", () => {
+          console.log("Logout button clicked");
+          logoutUser();
+        });
+
+        // Initialize
+        loadUserData();
+        const savedUser = sessionStorage.getItem("currentUser");
+        if (savedUser && users[savedUser]) {
+          currentUser = savedUser;
+          usernameSelect.value = currentUser;
+          loadUserData();
+        } else {
+          loginSection.style.display = "block";
+        }
+      } catch (e) {
+        console.error("Initialization error:", e);
+      }
+    };
+  </script>
+</body>
+</html>
