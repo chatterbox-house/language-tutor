@@ -4,41 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spanish Vocab Trainer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Comic Neue', cursive;
+      font-family: 'Press Start 2P', cursive;
       max-width: 480px;
       margin: auto;
       padding: 10px;
-      background: linear-gradient(135deg, #ffeb3b, #ff9800);
-      color: #333;
+      background: #0f380f; /* Game Boy green */
+      color: #9bbc0f;
+      image-rendering: pixelated;
     }
     h1 {
       text-align: center;
-      color: #d81b60;
-      text-shadow: 2px 2px #fff;
+      color: #306230;
+      text-shadow: 2px 2px #8bac0f;
+      font-size: 1.2rem;
     }
     #score {
       text-align: center;
-      font-size: 1.2em;
+      font-size: 0.8rem;
       margin-bottom: 10px;
-      color: #fff;
-      background: #2196f3;
-      padding: 5px;
-      border-radius: 10px;
+      color: #9bbc0f;
+      background: #306230;
+      padding: 8px;
+      border: 4px solid #8bac0f;
     }
     #progressBar {
       width: 100%;
-      background: #ddd;
-      border-radius: 10px;
-      height: 20px;
+      background: #306230;
+      border: 4px solid #8bac0f;
+      height: 16px;
       margin-bottom: 15px;
-      overflow: hidden;
     }
     #progress {
       height: 100%;
-      background: linear-gradient(to right, #4caf50, #8bc34a);
+      background: #9bbc0f;
       width: 0;
       transition: width 0.5s ease;
     }
@@ -55,62 +56,60 @@
       gap: 10px;
     }
     .box {
-      border: 3px solid #ff5722;
-      border-radius: 12px;
+      border: 4px solid #8bac0f;
       padding: 12px;
       text-align: center;
-      font-size: 2.4rem;
+      font-size: 1.5rem;
       user-select: none;
       cursor: pointer;
-      background: #ffeb3b;
+      background: #306230;
       width: 100%;
       max-width: 140px;
       height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s, background 0.3s;
+      transition: transform 0.1s;
     }
     .box:hover {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     .box.selected {
-      background: #ffca28;
-      border-color: #e91e63;
+      background: #9bbc0f;
+      border-color: #0f380f;
       transform: scale(1.1);
     }
     .wordBox {
-      font-size: 1.4rem;
-      background: #b2ff59;
+      font-size: 1rem;
+      background: #306230;
     }
     .matched {
       background: transparent !important;
       cursor: default;
-      border-color: #888;
-      animation: bounce 0.5s;
+      border-color: #8bac0f;
+      animation: pixelBounce 0.3s;
     }
     .highlight {
-      background: #4caf50 !important;
+      background: #9bbc0f !important;
     }
     .incorrect {
-      animation: shake 0.3s;
+      animation: pixelShake 0.2s;
     }
-    @keyframes bounce {
+    @keyframes pixelBounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-8px); }
     }
-    @keyframes shake {
+    @keyframes pixelShake {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
     }
     #messages {
       text-align: center;
-      font-size: 1.6rem;
+      font-size: 0.9rem;
       margin: 10px 0;
       min-height: 40px;
-      color: #d81b60;
-      font-weight: bold;
+      color: #9bbc0f;
     }
     #buttons {
       text-align: center;
@@ -118,60 +117,57 @@
     }
     #leaderboard {
       margin-bottom: 20px;
-      background: #fff;
+      background: #0f380f;
       padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 4px solid #8bac0f;
     }
     button {
       margin: 0 10px;
-      padding: 12px 20px;
-      font-size: 1.2rem;
-      border-radius: 25px;
-      border: none;
+      padding: 10px 15px;
+      font-size: 0.8rem;
+      border: 4px solid #8bac0f;
       cursor: pointer;
-      background: #2196f3;
-      color: white;
-      transition: background 0.3s, transform 0.2s;
-      font-family: 'Comic Neue', cursive;
+      background: #306230;
+      color: #9bbc0f;
+      transition: background 0.3s;
+      font-family: 'Press Start 2P', cursive;
     }
     button:hover {
-      background: #1976d2;
-      transform: scale(1.1);
+      background: #9bbc0f;
+      color: #0f380f;
     }
     #logoutBtn {
-      background: #f44336;
+      background: #306230;
     }
     #logoutBtn:hover {
-      background: #d32f2f;
+      background: #9bbc0f;
     }
     #loginSection {
       max-width: 320px;
       margin: 30px auto;
-      border: 3px solid #2196f3;
-      border-radius: 15px;
+      border: 4px solid #8bac0f;
       padding: 20px;
-      background: #e3f2fd;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      background: #0f380f;
     }
     #loginSection label {
       display: block;
       margin-bottom: 6px;
-      font-weight: bold;
-      color: #d81b60;
+      color: #9bbc0f;
+      font-size: 0.8rem;
     }
     #loginSection select, #loginSection input {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin-bottom: 15px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: 2px solid #ff5722;
-      font-family: 'Comic Neue', cursive;
+      font-size: 0.8rem;
+      border: 4px solid #8bac0f;
+      background: #306230;
+      color: #9bbc0f;
+      font-family: 'Press Start 2P', cursive;
     }
     #loginError {
-      color: #f44336;
-      font-weight: bold;
+      color: #9bbc0f;
+      font-size: 0.8rem;
       margin-bottom: 10px;
       min-height: 20px;
     }
@@ -255,19 +251,19 @@
     };
 
     const goodLuckPhrases = [
-      "¡Vamos a brillar! ✨",
-      "¡A divertirse! 🎉",
-      "¡Tú puedes! 💪",
-      "¡Suerte, pequeño genio! 🌟",
-      "¡Listo para ganar! 🏆"
+      "¡Listo, pixelero! 🎮",
+      "¡A por los puntos! 💾",
+      "¡Tú puedes, 8-bit! 🕹️",
+      "¡Vamos, héroe! 🌟",
+      "¡Modo juego ON! 🚀"
     ];
 
     const wellDonePhrases = [
-      "¡Súper estrella! 🌟",
-      "¡Eres increíble! 🎉",
-      "¡Lo lograste! 🥳",
-      "¡Fantástico! 🚀",
-      "¡Campeón! 🏅"
+      "¡Eres un pro, pixel! 🌟",
+      "¡Nivel completado! 🎉",
+      "¡Súper 8-bit! 🏆",
+      "¡Victoria retro! 💾",
+      "¡Campeón pixelado! 🕹️"
     ];
 
     let matched = new Set();
@@ -278,10 +274,33 @@
     let errorWords = new Set();
     let currentVocab = [];
 
-    // Audio elements
-    const correctSound = new Audio("correct.mp3");
-    const incorrectSound = new Audio("incorrect.mp3");
+    // Audio for finish sound
     const finishSound = new Audio("finish.mp3");
+
+    // Web Audio API for chiptune sounds
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playChiptuneSound(type) {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      if (type === "correct") {
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // High pitch ding
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); // Subtle volume
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      } else if (type === "incorrect") {
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // Low alarm
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); // Subtle volume
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      }
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.5);
+    }
 
     window.onload = function() {
       try {
@@ -316,14 +335,21 @@
         // Log vocabulary status
         console.log("Vocabulary loaded:", vocab.length, "words");
 
-        function speakText(text) {
-          if (!text) return;
+        function speakText(text, callback) {
+          if (!text) {
+            if (callback) callback();
+            return;
+          }
           try {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = "es-ES";
+            if (callback) {
+              utterance.onend = callback;
+            }
             speechSynthesis.speak(utterance);
           } catch (e) {
             console.error("Speech synthesis error:", e);
+            if (callback) callback();
           }
         }
 
@@ -338,10 +364,11 @@
 
         function triggerConfetti() {
           confetti({
-            particleCount: 100,
-            spread: 70,
+            particleCount: 50,
+            spread: 60,
             origin: { y: 0.6 },
-            colors: ['#ffeb3b', '#ff5722', '#2196f3', '#4caf50']
+            shapes: ['square'],
+            colors: ['#9bbc0f', '#8bac0f', '#306230']
           });
           setTimeout(() => confetti.reset(), 1000);
         }
@@ -506,12 +533,12 @@
 
                     clearSelections();
                     updateProgress();
-                    playSound(correctSound);
-                    messages.textContent = "¡Estrella! 🌟";
+                    speakText(word, () => playChiptuneSound("correct"));
+                    messages.textContent = "¡Punto pixel! 🌟";
 
                     if (matched.size === currentVocab.length) {
                       finishBtn.style.display = "inline-block";
-                      messages.textContent = "¡Quiz terminado! 🏆";
+                      messages.textContent = "¡Nivel terminado! 🏆";
                       playSound(finishSound);
                       triggerConfetti();
                     }
@@ -519,9 +546,9 @@
                 } else {
                   errorWords.add(word);
                   div.classList.add("incorrect");
-                  setTimeout(() => div.classList.remove("incorrect"), 300);
-                  messages.textContent = "¡Oops, intenta otra vez! 😄";
-                  playSound(incorrectSound);
+                  setTimeout(() => div.classList.remove("incorrect"), 200);
+                  speakText(word, () => playChiptuneSound("incorrect"));
+                  messages.textContent = "¡Uy, otro intento! 😄";
                   setTimeout(() => {
                     messages.textContent = "";
                   }, 1500);
@@ -596,7 +623,7 @@
             const sortedUsers = Object.entries(users)
               .sort((a, b) => b[1].score - a[1].score);
             leaderboardList.innerHTML = sortedUsers
-              .map(([user, data]) => `<li>${user}: ${data.score} estrellas 🌟</li>`)
+              .map(([user, data]) => `<li>${user}: ${data.score} píxeles 🌟</li>`)
               .join("");
             leaderboardDiv.style.display = currentUser ? "block" : "none";
           } catch (e) {
