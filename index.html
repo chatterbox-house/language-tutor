@@ -163,13 +163,16 @@
     console.log("Main script loaded successfully");
 
     // Fallback vocabulary if vocab.js fails to load
-    let vocab = typeof vocab !== "undefined" ? vocab : [
-      { emoji: "🍎", word: "manzana", type: "noun" },
-      { emoji: "🐶", word: "perro", type: "noun" },
-      { emoji: "🚗", word: "coche", type: "noun" },
-      { emoji: "🏠", word: "casa", type: "noun" },
-      { emoji: "📚", word: "libros", type: "noun" }
-    ];
+    if (typeof vocab === "undefined") {
+      console.warn("vocab.js not loaded, using fallback vocabulary");
+      window.vocab = [
+        { emoji: "🍎", word: "manzana", type: "noun" },
+        { emoji: "🐶", word: "perro", type: "noun" },
+        { emoji: "🚗", word: "coche", type: "noun" },
+        { emoji: "🏠", word: "casa", type: "noun" },
+        { emoji: "📚", word: "libros", type: "noun" }
+      ];
+    }
 
     const users = {
       Tony: { pin: "1984", score: 0, mastered: {}, lastWords: [] },
@@ -395,8 +398,6 @@
                     selectedEmoji.classList.remove("selected");
                     selectedEmoji.classList.add("matched");
                     selectedEmoji.style.backgroundColor = "transparent";
-                    selectedEmoji.style.cursor = "default";
-
                     div.classList.add("matched", "highlight");
                     div.style.cursor = "default";
 
