@@ -543,4 +543,10 @@
             logoutBtn.style.display = "none";
             leaderboardDiv.style.display = "none";
             sessionStorage.removeItem("currentUser");
+          } catch (e) {
+            console.error("Error in logoutUser:", e);
           }
+        }
+
+        // Event listeners
+        loginBtn.addEventListener("click
