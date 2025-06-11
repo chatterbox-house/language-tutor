@@ -5,7 +5,7 @@ const vocab = [
   { emoji: "🏠", word: "casa", type: "noun" },
   { emoji: "📚", word: "libros", type: "noun" },
   { emoji: "🏃", word: "correr", type: "verb" },
-  { emoji: "😊", word: "feliz", type: "adjective" },
+  { emoji: "😄", word: "feliz", type: "adjective" },
   { emoji: "🍽️", word: "comer", type: "verb" },
   { emoji: "🌞", word: "sol", type: "noun" },
   { emoji: "🔴", word: "rojo", type: "adjective" }
