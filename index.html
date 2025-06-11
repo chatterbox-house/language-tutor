@@ -1,202 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Language Tutor Trial</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 400px;
-      margin: auto;
-    }
-    #video-screen, #quiz, #quiz-result, #finish-btn {
-      display: none;
-      margin-top: 20px;
-    }
-    #quiz label {
-      display: block;
-      margin-bottom: 8px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 12px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spanish Vocab Trainer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 480px;
+    margin: auto;
+    padding: 10px;
+  }
+  h1 {
+    text-align: center;
+  }
+  #score {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  #container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  #emojiColumn, #wordColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .box {
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-size: 2.4rem;
+    user-select: none;
+    cursor: pointer;
+    background-color: #add8e6;
+    width: 100%;
+    max-width: 140px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  .box.selected {
+    background-color: #87ceeb;
+    border-color: #1e90ff;
+  }
+  .wordBox {
+    font-size: 1.4rem;
+    background-color: #f0f8ff;
+  }
+  .matched {
+    background-color: transparent !important;
+    cursor: default;
+    border-color: #888;
+  }
+  .highlight {
+    background-color: #90ee90 !important;
+  }
+  #messages {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 10px 0;
+    min-height: 40px;
+  }
+  #buttons {
+    text-align: center;
+    margin: 10px 0;
+  }
+  button {
+    margin: 0 10px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #4682b4;
+    color: white;
+  }
+  button:hover {
+    background-color: #315f86;
+  }
+
+  /* Login styles */
+  #loginSection {
+    max-width: 320px;
+    margin: 30px auto;
+    border: 2px solid #4682b4;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f8faff;
+  }
+  #loginSection label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  #loginSection select, #loginSection input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  #loginError {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+    min-height: 20px;
+  }
+</style>
 </head>
 <body>
 
-  <div id="welcome">
-    <h2>Welcome!</h2>
-    <label for="user-select">Select your name:</label>
-    <select id="user-select">
-      <option value="">--Choose--</option>
-      <option value="Sorato">Sorato</option>
-      <option value="Kaito">Kaito</option>
-      <option value="Mary">Mary</option>
-      <option value="Mina">Mina</option>
-      <option value="Tony">Tony</option>
-      <option value="Emika">Emika</option>
-    </select>
-    <br /><br />
-    <label for="pin-input">Enter PIN code:</label>
-    <input type="password" id="pin-input" maxlength="4" />
-    <br /><br />
-    <button id="login-btn">Login</button>
-    <p id="login-msg" style="color:red;"></p>
-  </div>
+<h1>Spanish Vocab Trainer</h1>
 
-  <div id="video-screen">
-    <h3 id="greeting"></h3>
-    <div id="player"></div>
-  </div>
+<div id="loginSection">
+  <div id="loginError"></div>
+  <label for="username">Usuario:</label>
+  <select id="username">
+    <option value="">-- Seleccione un usuario --</option>
+    <option value="Tony">Tony</option>
+    <option value="Mina">Mina</option>
+    <option value="Sorato">Sorato</option>
+    <option value="Kaito">Kaito</option>
+    <option value="Maria">Maria</option>
+  </select>
+  <label for="pin">PIN:</label>
+  <input type="password" id="pin" placeholder="Introduce tu PIN" autocomplete="off" />
+  <button id="loginBtn">Iniciar sesión</button>
+</div>
 
-  <div id="quiz">
-    <h3>Quiz time!</h3>
-    <p>What does "un" mean?</p>
-    <form id="quiz-form">
-      <label><input type="radio" name="answer" value="A" /> A. yes</label>
-      <label><input type="radio" name="answer" value="B" /> B. 1</label>
-      <label><input type="radio" name="answer" value="C" /> C. hello</label>
-      <button type="submit">Submit Answer</button>
-    </form>
-  </div>
+<div id="buttons" style="text-align:center; margin-bottom:10px; display:none;">
+  <button id="startBtn">Start Quiz</button>
+  <button id="finishBtn" style="display:none;">Finish Quiz</button>
+  <button id="logoutBtn" style="display:none; background-color: #a83232;">Logout</button>
+</div>
 
-  <p id="quiz-result"></p>
-  <button id="finish-btn">Finish Lesson</button>
+<div id="messages"></div>
 
-  <script>
-    const users = {
-      Sorato: "2014",
-      Kaito: "2015",
-      Mary: "2019",
-      Mina: "1982",
-      Tony: "1984",
-      Emika: "2017",
-    };
+<div id="score" style="display:none;">Matches: 0</div>
 
-    let currentUser = null;
-    let player;
+<div id="container" style="display:none;">
+  <div id="emojiColumn"></div>
+  <div id="wordColumn"></div>
+</div>
 
-    document.getElementById("login-btn").addEventListener("click", () => {
-      const selectedUser = document.getElementById("user-select").value;
-      const pin = document.getElementById("pin-input").value.trim();
-      const msg = document.getElementById("login-msg");
+<script>
+const users = {
+  Tony: "1984",
+  Mina: "1982",
+  Sorato: "2014",
+  Kaito: "2015",
+  Maria: "2019"
+};
 
-      if (!selectedUser) {
-        msg.textContent = "Please select a user.";
+const vocab = [
+  { emoji: "🍎", word: "manzana", eng: "apple" },
+  { emoji: "🐶", word: "perro", eng: "dog" },
+  { emoji: "🚗", word: "coche", eng: "car" },
+  { emoji: "🏠", word: "casa", eng: "house" },
+  { emoji: "📚", word: "libros", eng: "books" }
+];
+
+const goodLuckPhrases = [
+  "¡Buena suerte!",
+  "¡Vamos allá!",
+  "¡Ánimo!",
+  "¡Suerte!",
+  "¡A por ello!"
+];
+
+const wellDonePhrases = [
+  "¡Muy bien hecho!",
+  "¡Excelente trabajo!",
+  "¡Lo hiciste genial!",
+  "¡Buen trabajo!",
+  "¡Felicidades!"
+];
+
+const emojiColumn = document.getElementById("emojiColumn");
+const wordColumn = document.getElementById("wordColumn");
+const scoreDisplay = document.getElementById("score");
+const messages = document.getElementById("messages");
+const startBtn = document.getElementById("startBtn");
+const finishBtn = document.getElementById("finishBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const container = document.getElementById("container");
+const loginSection = document.getElementById("loginSection");
+const loginBtn = document.getElementById("loginBtn");
+const usernameSelect = document.getElementById("username");
+const pinInput = document.getElementById("pin");
+const loginError = document.getElementById("loginError");
+const buttonsDiv = document.getElementById("buttons");
+
+let matched = new Set();
+let score = 0;
+let quizStarted = false;
+let currentUser = null;
+let selectedEmoji = null;
+let errorWords = new Set(); // words that have been mismatched
+
+function speakText(text) {
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "es-ES";
+  speechSynthesis.speak(utterance);
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function clearSelections() {
+  selectedEmoji = null;
+  [...emojiColumn.children].forEach(el => el.classList.remove("selected"));
+}
+
+function setupEmojiBoxes() {
+  emojiColumn.innerHTML = "";
+  vocab.forEach(({ emoji, word }) => {
+    const div = document.createElement("div");
+    div.className = "box";
+    div.textContent = emoji;
+    div.dataset.word = word;
+    div.style.backgroundColor = "#add8e6"; // reset color
+    div.style.cursor = matched.has(word) ? "default" : "pointer";
+
+    if (matched.has(word)) {
+      div.classList.add("matched");
+      div.style.backgroundColor = "transparent";
+      div.style.cursor = "default";
+    }
+
+    div.addEventListener("click", () => {
+      if (matched.has(word)) return;
+
+      if (selectedEmoji === div) {
+        clearSelections();
         return;
       }
-      if (!pin) {
-        msg.textContent = "Please enter your PIN code.";
-        return;
-      }
-      if (users[selectedUser] !== pin) {
-        msg.textContent = "Incorrect PIN code.";
-        return;
-      }
 
-      msg.textContent = "";
-      currentUser = selectedUser;
-      document.getElementById("welcome").style.display = "none";
-      document.getElementById("greeting").textContent = `Welcome ${currentUser}! Enjoy the video.`;
-      startLesson();
+      clearSelections();
+      selectedEmoji = div;
+      div.classList.add("selected");
+
+      speakText(word);
     });
 
-    // Load YouTube IFrame API asynchronously
-    let tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    let firstScriptTag = document.getElementsByTagName("script")[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    emojiColumn.appendChild(div);
+  });
+}
 
-    function createPlayer() {
-      if (player) {
-        player.destroy();
-      }
-      player = new YT.Player("player", {
-        height: "200",
-        width: "320",
-        videoId: "RPzZk8gK_EQ", // your YouTube video ID here
-        events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange,
-        },
-      });
+function setupWordBoxes() {
+  wordColumn.innerHTML = "";
+  // Shuffle words each time
+  const shuffled = shuffle([...vocab]);
+
+  shuffled.forEach(({ word }) => {
+    const div = document.createElement("div");
+    div.className = "box wordBox";
+    div.textContent = word;
+
+    if (matched.has(word)) {
+      div.classList.add("matched", "highlight");
+      div.style.cursor = "default";
+    } else {
+      div.style.cursor = "pointer";
     }
 
-    function onYouTubeIframeAPIReady() {
-      // Don't create player here - wait for startLesson
-    }
+    div.addEventListener("click", () => {
+      if (!selectedEmoji) return;
+      if (matched.has(word)) return;
 
-    function onPlayerReady(event) {
-      event.target.playVideo();
-    }
+      const emojiWord = selectedEmoji.dataset.word;
 
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        document.getElementById("quiz").style.display = "block";
-      }
-    }
+      if (emojiWord === word) {
+        // Correct match, but only count if no prior error on this word
+        if (!matched.has(word)) {
+          if (!errorWords.has(word)) {
+            score++;
+            scoreDisplay.textContent = `Matches: ${score}`;
+          }
+          matched.add(word);
+          // Visual changes
+          selectedEmoji.classList.remove("selected");
+          selectedEmoji.classList.add("matched");
+          selectedEmoji.style.backgroundColor = "transparent";
+          selectedEmoji.style.cursor = "default";
 
-    function startLesson() {
-      document.getElementById("video-screen").style.display = "block";
-      document.getElementById("quiz").style.display = "none";
-      document.getElementById("quiz-result").textContent = "";
-      document.getElementById("finish-btn").style.display = "none";
+          div.classList.add("matched", "highlight");
+          div.style.cursor = "default";
 
-      createPlayer();
-    }
+          clearSelections();
 
-    document.getElementById("quiz-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const answer = document.querySelector('input[name="answer"]:checked');
-      const result = document.getElementById("quiz-result");
-      const finishBtn = document.getElementById("finish-btn");
-
-      if (!answer) {
-        result.textContent = "Please select an answer.";
-        result.style.color = "red";
-        return;
-      }
-
-      if (answer.value === "B") {
-        result.textContent = "Correct! 🎉";
-        result.style.color = "green";
+          if (score + errorWords.size === vocab.length) {
+            finishBtn.style.display = "inline-block";
+            messages.textContent = "¡Has completado el quiz!";
+          } else {
+            messages.textContent = "Correcto!";
+          }
+        }
       } else {
-        result.textContent = "Oops, that's not right. Try again next time!";
-        result.style.color = "red";
+        // Incorrect match: mark this word as penalized and deselect
+        messages.textContent = "Incorrecto. Inténtalo de nuevo.";
+        errorWords.add(selectedEmoji.dataset.word);
+        setTimeout(() => {
+          messages.textContent = "";
+        }, 1500);
+        clearSelections();
       }
-
-      finishBtn.style.display = "inline-block";
-
-      // Save progress to localStorage
-      let progress = JSON.parse(localStorage.getItem("progress")) || {};
-      if (!progress[currentUser]) {
-        progress[currentUser] = { quizzesCompleted: 0 };
-      }
-      progress[currentUser].quizzesCompleted += 1;
-      localStorage.setItem("progress", JSON.stringify(progress));
     });
 
-    document.getElementById("finish-btn").addEventListener("click", () => {
-      document.getElementById("video-screen").style.display = "none";
-      document.getElementById("quiz").style.display = "none";
-      document.getElementById("quiz-result").textContent = "";
+    wordColumn.appendChild(div);
+  });
+}
 
-      alert(`Well done ${currentUser}! You've completed ${getUserProgress()} quiz(s).`);
+function startQuiz() {
+  matched = new Set();
+  score = 0;
+  errorWords = new Set();
+  quizStarted = true;
+  messages.textContent = "";
+  scoreDisplay.style.display = "block";
+  scoreDisplay.textContent = `Matches: 0`;
+  container.style.display = "flex";
+  container.style.pointerEvents = "auto";
+  finishBtn.style.display = "none";
+  startBtn.style.display = "none";
 
-      document.getElementById("welcome").style.display = "block";
-      document.getElementById("pin-input").value = "";
-      document.getElementById("user-select").value = "";
-      currentUser = null;
-    });
+  const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+  messages.textContent = phrase;
+  speakText(phrase);
 
-    function getUserProgress() {
-      const progress = JSON.parse(localStorage.getItem("progress")) || {};
-      if (!currentUser || !progress[currentUser]) return 0;
-      return progress[currentUser].quizzesCompleted;
-    }
-  </script>
+  setupEmojiBoxes();
+  setupWordBoxes();
+}
+
+function finishQuiz() {
+  quizStarted = false;
+  const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
+  messages.textContent = phrase;
+  speakText(phrase);
+
+  finishBtn.style.display = "none";
+  startBtn.style.display = "inline-block";
+  container.style.pointerEvents = "none";
+}
+
+function checkLogin() {
+  const username = usernameSelect.value;
+  const pin = pinInput.value.trim();
+  if (!username) {
+    loginError.textContent = "Por favor, selecciona un usuario.";
+    return false;
+  }
+  if (users[username] !== pin) {
+    loginError.textContent = "PIN incorrecto. Inténtalo de nuevo.";
+    return false;
+  }
+  loginError.textContent = "";
+  currentUser = username;
+  return true;
+}
+
+function loadUserData() {
+  loginSection.style.display = "none";
+  buttonsDiv.style.display = "block";
+  container.style.display = "none";
+  scoreDisplay.style.display = "none";
+  messages.textContent = "";
+  startBtn.style.display = "inline-block";
+  finishBtn.style.display = "none";
+  logoutBtn.style.display = "inline-block";
+
+  // Clear any old score on new login
+  sessionStorage.removeItem(currentUser + "_score");
+}
+
+function logoutUser() {
+  currentUser = null;
+  quizStarted = false;
+  matched.clear();
+  errorWords.clear();
+  score = 0;
+  selectedEmoji = null;
+
+  loginSection.style.display = "block";
+  buttonsDiv.style.display = "none";
+  container.style.display = "none";
+  scoreDisplay.style.display = "none";
+  messages.textContent = "";
+  loginError.textContent = "";
+  pinInput.value = "";
+  usernameSelect.value = "";
+  startBtn.style.display = "inline-block";
+  finishBtn.style.display = "none";
+  logoutBtn.style.display = "none";
+  sessionStorage.removeItem("currentUser");
+}
+
+loginBtn.addEventListener("click", () => {
+  if (checkLogin()) {
+    sessionStorage.setItem("currentUser", currentUser);
+    loadUserData();
+  }
+});
+
+startBtn.addEventListener("click", () => {
+  if (!quizStarted) startQuiz();
+});
+
+finishBtn.addEventListener("click", () => {
+  finishQuiz();
+});
+
+logoutBtn.addEventListener("click", () => {
+  logoutUser();
+});
+
+window.onload = () => {
+  const savedUser = sessionStorage.getItem("currentUser");
+  if (savedUser && users.hasOwnProperty(savedUser)) {
+    currentUser = savedUser;
+    usernameSelect.value = currentUser;
+    loadUserData();
+  }
+};
+</script>
+
 </body>
 </html>
