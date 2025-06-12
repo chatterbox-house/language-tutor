@@ -112,6 +112,8 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+  <!-- Vocab and Game Logic -->
+  <script src="vocab.js"></script>
   <script>
     // Firebase Configuration (Replace with your Firebase project details)
     const firebaseConfig = {
@@ -131,21 +133,17 @@
     let score = 0;
     let selectedEmoji = null;
     let selectedWord = null;
-    const pairs = [
-      { emoji: '🍎', word: 'Manzana' },
-      { emoji: '🚗', word: 'Carro' },
-      { emoji: '🐶', word: 'Perro' },
-      { emoji: '🌞', word: 'Sol' },
-      { emoji: '📖', word: 'Libro' }
-    ];
     const users = {
-      Tony: { pin: '1984', score: 0, mastered: {}, avatar: 'assets/images/avatar_tony.png' },
-      Mina: { pin: '1982', score: 0, mastered: {}, avatar: 'assets/images/avatar_mina.png' },
-      Sorato: { pin: '2014', score: 0, mastered: {}, avatar: 'assets/images/avatar_sorato.png' },
-      Kaito: { pin: '2015', score: 0, mastered: {}, avatar: 'assets/images/avatar_kaito.png' },
-      Maria: { pin: '2019', score: 0, mastered: {}, avatar: 'assets/images/avatar_maria.png' }
+      Tony: { pin: '1111', score: 0, mastered: {}, lastWords: [], avatar: 'assets/images/avatar_tony.png' },
+      Mina: { pin: '2222', score: 0, mastered: {}, lastWords: [], avatar: 'assets/images/avatar_mina.png' },
+      Sorato: { pin: '3333', score: 0, mastered: {}, lastWords: [], avatar: 'assets/images/avatar_sorato.png' },
+      Kaito: { pin: '4444', score: 0, mastered: {}, lastWords: [], avatar: 'assets/images/avatar_kaito.png' },
+      Maria: { pin: '5555', score: 0, mastered: {}, lastWords: [], avatar: 'assets/images/avatar_maria.png' }
     };
     let currentUser = null;
+    let matched = new Set();
+    let errorWords = new Set();
+    let currentVocab = [];
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let musicOscillator = null;
     function speakText(text, callback) {
@@ -233,7 +231,8 @@
       const userData = users[username];
       database.ref('users/' + username).set({
         score: userData.score,
-        mastered: userData.mastered
+        mastered: userData.mastered,
+        lastWords: userData.lastWords
       }).catch(e => console.error('Save error:', e));
     }
     function loadUserData(username) {
@@ -243,10 +242,36 @@
         if (data) {
           users[username].score = data.score || 0;
           users[username].mastered = data.mastered || {};
+          users[username].lastWords = data.lastWords || [];
           updateLeaderboard();
           document.getElementById('score').textContent = `Matches: ${users[username].score}`;
         }
       }).catch(e => console.error('Load error:', e));
+    }
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    function selectQuizWords() {
+      const user = users[currentUser];
+      user.mastered = user.mastered || {};
+      user.lastWords = user.lastWords || [];
+      const errorWordsLastSession = user.lastWords.filter(word => errorWords.has(word));
+      const availableWords = vocab.filter(v => (user.mastered[v.word] || 0) < 10);
+      let holdovers = errorWordsLastSession.length > 0
+        ? errorWordsLastSession.slice(0, 2)
+        : user.lastWords.filter(word => availableWords.some(v => v.word === word)).map(v => v.word);
+      const remainingCount = 5 - holdovers.length;
+      const newWords = shuffle([...availableWords])
+        .filter(v => !holdovers.includes(v.word))
+        .slice(0, remainingCount);
+      const selectedWords = [...holdovers, ...newWords.map(v => v.word)];
+      user.lastWords = selectedWords;
+      saveUserData(currentUser);
+      return vocab.filter(v => selectedWords.includes(v.word));
     }
     document.getElementById('loginBtn').addEventListener('click', () => {
       const username = document.getElementById('username').value;
@@ -256,7 +281,7 @@
         currentUser = username;
         errorDiv.textContent = '';
         document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('buttons').style.display = 'block';
+        document.getElementById('buttons').style.display =❤ block';
         document.getElementById('leaderboard').style.display = 'block';
         document.getElementById('logoutBtn').style.display = 'inline-block';
         loadUserData(username);
@@ -267,17 +292,19 @@
     document.getElementById('startBtn').addEventListener('click', () => {
       document.getElementById('buttons').style.display = 'none';
       document.getElementById('container').style.display = 'flex';
-      document.getElementById('score').style.display = 'block';
+      document.getElementById('score').style.display = 'inline-block';
       document.getElementById('progressBar').style.display = 'block';
       startGame();
     });
     function startGame() {
       score = 0;
+      matched.clear();
+      errorWords.clear();
       document.getElementById('score').textContent = `Matches: ${users[currentUser].score}`;
       document.getElementById('progress').style.width = '0%';
-      const shuffledPairs = [...pairs].sort(() => Math.random() - 0.5);
-      const emojis = shuffledPairs.map(p => p.emoji);
-      const words = shuffledPairs.map(p => p.word).sort(() => Math.random() - 0.5);
+      currentVocab = selectQuizWords();
+      const emojis = currentVocab.map(v => v.emoji);
+      const words = shuffle([...currentVocab]).map(v => v.word);
       const emojiColumn = document.getElementById('emojiColumn');
       const wordColumn = document.getElementById('wordColumn');
       emojiColumn.innerHTML = '';
@@ -286,7 +313,7 @@
         const box = document.createElement('div');
         box.className = 'box emojiBox';
         box.textContent = emoji;
-        box.dataset.word = shuffledPairs[i].word;
+        box.dataset.word = currentVocab[i].word;
         box.addEventListener('click', () => handleBoxClick(box));
         emojiColumn.appendChild(box);
       });
@@ -335,12 +362,13 @@
         if (selectedEmoji.dataset.word === selectedWord.dataset.word) {
           selectedEmoji.classList.add('matched');
           selectedWord.classList.add('matched');
+          matched.add(selectedWord.dataset.word);
           score++;
           users[currentUser].score++;
           users[currentUser].mastered[selectedWord.dataset.word] = (users[currentUser].mastered[selectedWord.dataset.word] || 0) + 1;
           saveUserData(currentUser);
           document.getElementById('score').textContent = `Matches: ${users[currentUser].score}`;
-          document.getElementById('progress').style.width = `${(score / pairs.length) * 100}%`;
+          document.getElementById('progress').style.width = `${(matched.size / currentVocab.length) * 100}%`;
           selectedEmoji.classList.remove('selected');
           selectedWord.classList.remove('selected');
           selectedEmoji = null;
@@ -349,19 +377,20 @@
           playSound('correct');
           setTimeout(() => {
             const messageDiv = document.getElementById('messages');
-            messageDiv.innerHTML = `<img src="https://raw.githubusercontent.com/your-username/NandoMode/main/assets/images/cat_sprite.png" alt="Correct"> Correct!`;
+            messageDiv.innerHTML = `<img src="https://raw.githubusercontent.com/chatterbox-house/language-tutor/main/assets/images/cat_sprite.png" alt="Correct"> Correct!`;
             setTimeout(() => { messageDiv.innerHTML = ''; }, 1000);
           }, 300);
-          if (score === pairs.length) {
+          if (matched.size === currentVocab.length) {
             setTimeout(showEndScreen, 1000);
           }
         } else {
+          errorWords.add(selectedWord.dataset.word);
           selectedEmoji.classList.add('incorrect');
           selectedWord.classList.add('incorrect');
           playSound('incorrect');
           setTimeout(() => {
             const messageDiv = document.getElementById('messages');
-            messageDiv.innerHTML = `<img src="https://raw.githubusercontent.com/your-username/NandoMode/main/assets/images/sad_sprite.png" alt="Incorrect"> Try again!`;
+            messageDiv.innerHTML = `<img src="https://raw.githubusercontent.com/chatterbox-house/language-tutor/main/assets/images/sad_sprite.png" alt="Incorrect"> Try again!`;
             selectedEmoji.classList.remove('selected', 'incorrect');
             selectedWord.classList.remove('selected', 'incorrect');
             selectedEmoji = null;
@@ -380,7 +409,8 @@
       updateLeaderboard();
       document.getElementById('playBtn').addEventListener('click', () => {
         document.getElementById('endScreen').style.display = 'none';
-        document.getElementById('buttons').style.display = 'block';
+        document.getElement Primary docs;
+        .getElementById('buttons').style.display = 'block';
         document.getElementById('leaderboard').style.display = 'block';
         startGame();
       }, { once: true });
@@ -405,7 +435,7 @@
     }
     document.getElementById('themeToggle').addEventListener('click', () => {
       document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : '');
     });
     document.getElementById('logoutBtn').addEventListener('click', () => {
       saveUserData(currentUser);
