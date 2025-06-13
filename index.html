@@ -44,7 +44,7 @@
       background: #fff;
       border: 4px solid #000;
     }
-    #score span.star { /* For Phase 2: star display */
+    #score span.star {
       font-size: 1rem;
       margin-left: 5px;
     }
@@ -54,19 +54,19 @@
       border: 4px solid #000;
       height: 16px;
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8px;
     }
     body.dark #progressBar {
       background: #000;
       border: 4px solid #fff;
     }
-    #progress {
-      height: 100%;
-      background: #000;
-      width: 0;
-      transition: width 0.5s ease;
-    }
-    body.dark #progress {
-      background: #fff;
+    #progressStars {
+      font-size: 0.8rem;
+      text-align: center;
+      width: 100%;
     }
     #container {
       display: flex;
@@ -100,8 +100,8 @@
       border: 4px solid #fff;
       background: #000;
     }
-    .box:hover {
-      transform: scale(1.1);
+    .box:hover:not(.matched) {
+      animation: buzz 0.3s ease-in-out;
     }
     .box.selected {
       background: #000;
@@ -118,29 +118,22 @@
       font-size: 1rem;
     }
     .matched {
-      background: transparent !important;
       cursor: default;
-      border-color: #000;
       animation: pixelBounce 0.3s;
     }
-    body.dark .matched {
-      border-color: #fff;
-    }
-    .gold { /* For Phase 2: gold locking */
+    .gold {
       background: #FFD700 !important;
       border-color: #B8860B !important;
       color: #000 !important;
     }
-    .highlight {
-      background: #000 !important;
-      color: #fff;
-    }
-    body.dark .highlight {
-      background: #fff !important;
-      color: #000;
+    .correct {
+      background: #00FF00 !important;
+      transition: background 0.2s;
     }
     .incorrect {
+      background: #FF0000 !important;
       animation: pixelShake 0.2s;
+      transition: background 0.2s;
     }
     @keyframes pixelBounce {
       0%, 100% { transform: translateY(0); }
@@ -150,6 +143,10 @@
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-4px); }
       75% { transform: translateX(4px); }
+    }
+    @keyframes buzz {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(2px); }
     }
     #messages {
       text-align: center;
@@ -225,7 +222,7 @@
     body.dark #loginSection label {
       color: #fff;
     }
-    #loginSection input {
+    #loginSection select, #loginSection input {
       width: calc(100% - 16px);
       padding: 8px;
       margin-bottom: 15px;
@@ -235,7 +232,7 @@
       color: #000;
       font-family: 'Press Start 2P', cursive;
     }
-    body.dark #loginSection input {
+    body.dark #loginSection select, body.dark #loginSection input {
       border: 4px solid #fff;
       background: #000;
       color: #fff;
@@ -296,6 +293,14 @@
     <div id="loginError"></div>
     <label for="username">Usuario:</label>
     <input type="text" id="username" placeholder="Enter username (1-20 chars)" maxlength="20" autocomplete="off">
+    <label for="avatar">Avatar:</label>
+    <select id="avatar">
+      <option value="😺">😺 Gato</option>
+      <option value="🐶">🐶 Perro</option>
+      <option value="🦁">🦁 León</option>
+      <option value="🐻">🐻 Oso</option>
+      <option value="🦊">🦊 Zorro</option>
+    </select>
     <label for="pin">PIN:</label>
     <input type="password" id="pin" placeholder="Enter 4-digit PIN" maxlength="4" pattern="\d{4}" autocomplete="off">
     <button id="loginBtn">Iniciar sesión / Crear cuenta</button>
@@ -304,14 +309,15 @@
   <div id="buttons" style="text-align:center; margin-bottom:10px; display:none;">
     <button id="startBtn">Start Quiz</button>
     <button id="finishBtn" style="display:none;">Finish Quiz</button>
+    <button id="newGameBtn" style="display:none;">New Quiz</button>
     <button id="logoutBtn" style="display:none;">Logout</button>
   </div>
 
   <div id="messages"></div>
   <div id="progressBar" style="display:none;">
-    <div id="progress"></div>
+    <div id="progressStars"></div>
   </div>
-  <div id="score" style="display:none;">Matches: 0</div>
+  <div id="score" style="display:none;">Stars: 0</div>
   <div id="container" style="display:none;">
     <div id="emojiColumn"></div>
     <div id="wordColumn"></div>
@@ -337,18 +343,18 @@
 
     let users = JSON.parse(localStorage.getItem("users") || "{}");
     const goodLuckPhrases = [
-      "¡Listo, pixelero! ",
-      "¡A por los puntos! ",
-      "¡Tú puedes, 8-bit! ",
-      "¡Vamos, héroe! ",
-      "¡Modo juego ON! "
+      "🚀 ¡Listo, pixelero!",
+      "🌟 ¡A por las estrellas!",
+      "🎮 ¡Tú puedes, 8-bit!",
+      "⚡ ¡Vamos, héroe!",
+      "🔥 ¡Modo juego ON!"
     ];
     const wellDonePhrases = [
-      "¡Eres un pro, pixel! ",
-      "¡Nivel completado! ",
-      "¡Súper 8-bit! ",
-      "¡Victoria retro! ",
-      "¡Campeón pixelado! "
+      "🎉 ¡Eres un pro, pixel!",
+      "🏆 ¡Nivel completado!",
+      "⭐ ¡Súper 8-bit!",
+      "🎈 ¡Victoria retro!",
+      "🌈 ¡Campeón pixelado!"
     ];
     let matched = new Set();
     let score = 0;
@@ -429,14 +435,12 @@
       menuMusicGainNode.connect(audioContext.destination);
       menuMusicOscillator.type = "square";
       menuMusicGainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      // Simple chiptune melody loop
       const notes = [440, 494, 523, 587, 659, 587, 523, 494];
       let time = audioContext.currentTime;
       notes.forEach((freq, i) => {
         menuMusicOscillator.frequency.setValueAtTime(freq, time + i * 0.2);
       });
       menuMusicOscillator.start();
-      // Loop every 1.6 seconds
       menuMusicOscillator.onended = () => {
         if (menuMusicOscillator) playMenuMusic();
       };
@@ -473,33 +477,32 @@
       try {
         console.log("Window loaded, initializing app");
 
-        // DOM elements
         const emojiColumn = document.getElementById("emojiColumn");
         const wordColumn = document.getElementById("wordColumn");
         const scoreDisplay = document.getElementById("score");
         const messages = document.getElementById("messages");
         const startBtn = document.getElementById("startBtn");
         const finishBtn = document.getElementById("finishBtn");
+        const newGameBtn = document.getElementById("newGameBtn");
         const logoutBtn = document.getElementById("logoutBtn");
         const container = document.getElementById("container");
         const loginSection = document.getElementById("loginSection");
         const loginBtn = document.getElementById("loginBtn");
         const usernameInput = document.getElementById("username");
+        const avatarInput = document.getElementById("avatar");
         const pinInput = document.getElementById("pin");
         const loginError = document.getElementById("loginError");
         const buttonsDiv = document.getElementById("buttons");
         const leaderboardDiv = document.getElementById("leaderboard");
         const leaderboardList = document.getElementById("leaderboardList");
         const progressBar = document.getElementById("progressBar");
-        const progress = document.getElementById("progress");
+        const progressStars = document.getElementById("progressStars");
 
-        // Check DOM elements
         if (!loginBtn || !usernameInput || !pinInput || !loginError || !startBtn) {
           console.error("Missing DOM elements:", { loginBtn, usernameInput, pinInput, loginError, startBtn });
           return;
         }
 
-        // Log vocabulary status
         console.log("Vocabulary loaded:", vocab.length, "words");
 
         function speakText(text) {
@@ -518,8 +521,8 @@
         }
 
         function updateProgress() {
-          const percentage = (matched.size / currentVocab.length) * 100;
-          progress.style.width = `${percentage}%`;
+          const stars = matched.size;
+          progressStars.innerHTML = "✩".repeat(5 - stars) + "⭐".repeat(stars);
         }
 
         function shuffle(array) {
@@ -548,7 +551,7 @@
             const availableWords = vocab.filter(v => (user.mastered[v.word] || 0) < 5);
             const holdovers = shuffle([...user.lastWords])
               .filter(word => availableWords.some(v => v.word === word))
-              .slice(0, 2);
+              .slice(0, Math.min(2, availableWords.length));
 
             const remainingCount = 5 - holdovers.length;
             const newWords = shuffle([...availableWords])
@@ -590,8 +593,7 @@
               div.style.cursor = matched.has(word) ? "default" : "pointer";
 
               if (matched.has(word)) {
-                div.classList.add("matched", "highlight");
-                div.style.background = "transparent";
+                div.classList.add("matched", "gold");
                 div.style.cursor = "default";
               }
 
@@ -629,7 +631,7 @@
               div.textContent = word;
 
               if (matched.has(word)) {
-                div.classList.add("matched", "highlight");
+                div.classList.add("matched", "gold");
                 div.style.cursor = "default";
               } else {
                 div.style.cursor = "pointer";
@@ -646,23 +648,28 @@
                     if (!errorWords.has(word)) {
                       users[currentUser].score++;
                       users[currentUser].mastered[word] = (users[currentUser].mastered[word] || 0) + 1;
-                      scoreDisplay.textContent = `Matches: ${users[currentUser].score}`;
+                      scoreDisplay.innerHTML = `Stars: ${users[currentUser].score} ${"⭐".repeat(users[currentUser].score)}`;
                       saveUserData();
                     }
                     selectedEmoji.classList.remove("selected");
-                    selectedEmoji.classList.add("matched", "highlight");
-                    selectedEmoji.style.background = "transparent";
-                    div.classList.add("matched", "highlight");
-                    div.style.cursor = "default";
-
+                    selectedEmoji.classList.add("matched", "correct");
+                    div.classList.add("matched", "correct");
+                    setTimeout(() => {
+                      selectedEmoji.classList.remove("correct");
+                      div.classList.remove("correct");
+                      selectedEmoji.classList.add("gold");
+                      div.classList.add("gold");
+                      div.style.cursor = "default";
+                    }, 200);
                     clearSelections();
                     updateProgress();
                     playAudio("chiptune", "correct");
-                    messages.textContent = "¡Punto pixel! ";
+                    messages.textContent = "🌟 ¡Punto pixel!";
 
                     if (matched.size === currentVocab.length) {
                       finishBtn.style.display = "inline-block";
-                      messages.textContent = "¡Nivel terminado! ";
+                      newGameBtn.style.display = "inline-block";
+                      messages.textContent = "🎉 ¡Nivel terminado!";
                       playAudio("chiptune", "finish");
                       triggerConfetti();
                     }
@@ -672,7 +679,7 @@
                   div.classList.add("incorrect");
                   setTimeout(() => div.classList.remove("incorrect"), 200);
                   playAudio("chiptune", "incorrect");
-                  messages.textContent = "¡Uy, otro intento! ";
+                  messages.textContent = "😅 ¡Uy, otro intento!";
                   setTimeout(() => {
                     messages.textContent = "";
                   }, 1500);
@@ -697,17 +704,17 @@
             }
 
             matched = new Set();
-            score = 0;
             errorWords = new Set();
             quizStarted = true;
             messages.textContent = "";
             scoreDisplay.style.display = "block";
             progressBar.style.display = "block";
-            progress.style.width = "0%";
-            scoreDisplay.textContent = `Matches: ${users[currentUser].score}`;
+            progressStars.innerHTML = "✩✩✩✩✩";
+            scoreDisplay.innerHTML = `Stars: ${users[currentUser].score} ${"⭐".repeat(users[currentUser].score)}`;
             container.style.display = "flex";
             container.style.pointerEvents = "auto";
             finishBtn.style.display = "none";
+            newGameBtn.style.display = "none";
             startBtn.style.display = "none";
             loginSection.style.display = "none";
             stopMenuMusic();
@@ -733,11 +740,20 @@
             triggerConfetti();
 
             finishBtn.style.display = "none";
-            startBtn.style.display = "inline-block";
+            newGameBtn.style.display = "inline-block";
             container.style.pointerEvents = "none";
             updateLeaderboard();
           } catch (e) {
             console.error("Error finishing quiz:", e);
+          }
+        }
+
+        function newQuiz() {
+          try {
+            console.log("Starting new quiz");
+            startQuiz();
+          } catch (e) {
+            console.error("Error starting new quiz:", e);
           }
         }
 
@@ -746,7 +762,7 @@
             const sortedUsers = Object.entries(users)
               .sort((a, b) => b[1].score - a[1].score);
             leaderboardList.innerHTML = sortedUsers
-              .map(([user, data]) => `<li>${user}: ${data.score} píxeles </li>`)
+              .map(([user, data]) => `<li>${data.avatar} ${user}: ${data.score} ⭐</li>`)
               .join("");
             leaderboardDiv.style.display = currentUser ? "block" : "none";
           } catch (e) {
@@ -757,8 +773,9 @@
         function checkLogin() {
           try {
             const username = usernameInput.value.trim();
+            const avatar = avatarInput.value;
             const pin = pinInput.value.trim();
-            console.log("Checking login:", { username, pin });
+            console.log("Checking login:", { username, avatar, pin });
 
             if (!username || username.length > 20) {
               loginError.textContent = "Username must be 1-20 characters.";
@@ -773,7 +790,7 @@
               return false;
             }
             if (!users[username]) {
-              users[username] = { pin, score: 0, mastered: {}, lastWords: [] };
+              users[username] = { pin, avatar, score: 0, mastered: {}, lastWords: [] };
               saveUserData();
             }
             loginError.textContent = "";
@@ -816,6 +833,7 @@
             usernameInput.value = "";
             startBtn.style.display = "inline-block";
             finishBtn.style.display = "none";
+            newGameBtn.style.display = "none";
             logoutBtn.style.display = "none";
             leaderboardDiv.style.display = "none";
             sessionStorage.removeItem("currentUser");
@@ -842,6 +860,11 @@
           finishQuiz();
         });
 
+        newGameBtn.addEventListener("click", () => {
+          console.log("New Quiz button clicked");
+          newQuiz();
+        });
+
         logoutBtn.addEventListener("click", () => {
           console.log("Logout button clicked");
           logoutUser();
@@ -852,6 +875,7 @@
         if (savedUser && users[savedUser]) {
           currentUser = savedUser;
           usernameInput.value = currentUser;
+          avatarInput.value = users[savedUser].avatar;
           buttonsDiv.style.display = "block";
           logoutBtn.style.display = "inline-block";
           loginSection.style.display = "none";
