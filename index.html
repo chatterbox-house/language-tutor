@@ -115,14 +115,13 @@
       font-size: 1rem;
       white-space: normal;
       word-wrap: break-word;
-      /* Removed overflow: hidden to allow wrapped text */
-      line-height: 1.1; /* Tighter line height for better wrapping */
+      line-height: 1.1;
       max-height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 8px; /* Slightly reduced padding for more text space */
+      padding: 8px;
       box-sizing: border-box;
     }
     .matched {
@@ -391,13 +390,7 @@
       const { type, text } = audioQueue.shift();
 
       if (type === "speech") {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "es-ES";
-        utterance.onend = () => {
-          isAudioPlaying = false;
-          processAudioQueue();
-        };
-        speechSynthesis.speak(utterance);
+        speakText(text);
       } else if (type === "chiptune") {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -481,6 +474,92 @@
       }
     }
 
+    // Speech synthesis for Spanish voice
+    let voices = [];
+    let voiceLoadAttempts = 0;
+    const maxVoiceLoadAttempts = 5;
+
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
+      voiceLoadAttempts++;
+      console.log("Voice load attempt:", voiceLoadAttempts);
+    }
+    loadVoices();
+    // Handle voices loaded asynchronously
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function getSpanishVoice() {
+      // Prefer es-ES, then any es-* (e.g., es-MX, es-AR)
+      const esESVoice = voices.find(v => v.lang === "es-ES");
+      if (esESVoice) {
+        console.log("Selected es-ES voice:", esESVoice.name);
+        return esESVoice;
+      }
+      const esVoice = voices.find(v => v.lang.startsWith("es-"));
+      if (esVoice) {
+        console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
+        return esVoice;
+      }
+      console.warn("No Spanish voice found");
+      return null;
+    }
+
+    function speakText(text) {
+      // Check if speechSynthesis is available
+      if (!window.speechSynthesis) {
+        console.error("SpeechSynthesis API not supported in this browser");
+        document.getElementById("messages").textContent = "Voz no compatible con este navegador.";
+        isAudioPlaying = false;
+        processAudioQueue();
+        return;
+      }
+
+      // Force voice refresh
+      loadVoices();
+
+      // Wait for voices to load if not ready
+      if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
+        console.log("Voices not loaded, retrying...");
+        setTimeout(() => speakText(text), 200);
+        return;
+      }
+
+      const spanishVoice = getSpanishVoice();
+      if (!spanishVoice) {
+        console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
+        document.getElementById("messages").textContent = "No hay voz en español. Instala una en la configuración de tu sistema.";
+        setTimeout(() => {
+          document.getElementById("messages").textContent = "";
+        }, 3000);
+        isAudioPlaying = false;
+        processAudioQueue();
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = spanishVoice;
+      utterance.lang = spanishVoice.lang; // Match voice's language
+      utterance.onend = () => {
+        console.log("Speech finished:", text);
+        isAudioPlaying = false;
+        processAudioQueue();
+      };
+      utterance.onerror = (e) => {
+        console.error("Speech synthesis error:", e.error, e.message);
+        document.getElementById("messages").textContent = "Error al reproducir voz.";
+        setTimeout(() => {
+          document.getElementById("messages").textContent = "";
+        }, 2000);
+        isAudioPlaying = false;
+        processAudioQueue();
+      };
+      console.log("Speaking text:", text, "with voice:", spanishVoice.name, spanishVoice.lang);
+      speechSynthesis.speak(utterance);
+    }
+
     window.onload = function() {
       try {
         console.log("Window loaded, initializing app");
@@ -519,10 +598,6 @@
         }
 
         console.log("Vocabulary loaded:", vocab.length, "words");
-
-        function speakText(text) {
-          playAudio("speech", text);
-        }
 
         function triggerConfetti() {
           confetti({
@@ -563,24 +638,20 @@
             user.mastered = user.mastered || {};
             user.lastWords = user.lastWords || [];
 
-            // Filter available words (not fully mastered)
             let availableWords = vocab.filter(v => (user.mastered[v.word] || 0) < 5);
             if (availableWords.length < 5) {
               console.warn("Not enough unique words, including all vocab");
               availableWords = [...vocab];
             }
 
-            // Initialize set for unique words
             const selectedWordsSet = new Set();
 
-            // Add up to 2 holdovers (previously used words)
             const holdovers = shuffle([...user.lastWords])
               .filter(word => availableWords.some(v => v.word === word))
               .slice(0, Math.min(2, availableWords.length));
             holdovers.forEach(word => selectedWordsSet.add(word));
             console.log("Holdovers selected:", holdovers);
 
-            // Add new words to reach 5
             const remainingCount = 5 - selectedWordsSet.size;
             const newWords = shuffle([...availableWords])
               .filter(v => !selectedWordsSet.has(v.word))
@@ -589,7 +660,6 @@
             newWords.forEach(word => selectedWordsSet.add(word));
             console.log("New words selected:", newWords);
 
-            // Convert to array and ensure exactly 5 words
             let selectedWords = Array.from(selectedWordsSet);
             if (selectedWords.length < 5) {
               const extraWords = shuffle([...availableWords])
@@ -600,20 +670,16 @@
               console.log("Extra words added:", extraWords);
             }
 
-            // Ensure no duplicates
             selectedWords = [...new Set(selectedWords)].slice(0, 5);
             console.log("Final selected words:", selectedWords);
 
-            // Update user's last words
             user.lastWords = selectedWords;
             saveUserData();
 
-            // Get vocab entries for selected words
             const selectedVocab = vocab.filter(v => selectedWords.includes(v.word));
             const finalVocab = selectedVocab.slice(0, 5);
             console.log("Selected vocab:", finalVocab.map(v => v.word));
 
-            // Verify uniqueness
             const wordSet = new Set(finalVocab.map(v => v.word));
             if (wordSet.size !== finalVocab.length) {
               console.error("Duplicate words detected:", finalVocab.map(v => v.word));
@@ -664,7 +730,7 @@
                 selectedEmoji = div;
                 div.classList.add("selected");
 
-                speakText(word);
+                playAudio("speech", word);
               });
 
               emojiColumn.appendChild(div);
@@ -684,7 +750,6 @@
               div.className = "box wordBox";
               div.textContent = word;
 
-              // Enhanced font size adjustment for long words
               if (word.length > 15) {
                 div.style.fontSize = "0.6rem";
               } else if (word.length > 10) {
