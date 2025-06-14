@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>NANDOmode</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      touch-action: manipulation;
+      overscroll-behavior: none;
+    }
     body {
       font-family: 'Press Start 2P', cursive;
       max-width: 100%;
@@ -26,7 +33,7 @@
     }
     h1 {
       text-align: center;
-      font-size: 1.2rem;
+      font-size: min(5vw, 1.2rem);
       color: #000;
       text-shadow: 2px 2px #fff;
       margin: 5px 0;
@@ -37,7 +44,7 @@
     }
     #score {
       text-align: center;
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
       margin: 5px 0;
       color: #fff;
       background: #000;
@@ -65,7 +72,7 @@
       border: 4px solid #fff;
     }
     #progressStars {
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
       text-align: center;
       width: 100%;
     }
@@ -75,10 +82,10 @@
       gap: 8px;
       margin: 5px 0;
       flex-grow: 1;
-      height: calc(100vh - 150px);
+      max-height: calc(100vh - 150px);
       width: 100%;
       padding: 0 5px;
-      box-sizing: border-box;
+      overflow: hidden;
     }
     #emojiColumn, #wordColumn {
       flex: 1;
@@ -86,24 +93,27 @@
       flex-direction: column;
       gap: 4px;
       justify-content: space-around;
+      max-height: 100%;
+      overflow: hidden;
     }
     .box {
       border: 4px solid #000;
       padding: 4px;
       text-align: center;
-      font-size: 4rem;
+      font-size: min(10vw, 3rem);
       user-select: none;
       cursor: pointer;
       background: #fff;
       width: 100%;
-      height: 18vh;
-      max-height: 120px;
+      height: 18%;
+      max-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.1s;
-      box-sizing: border-box;
+      transition: transform 0.2s ease;
       line-height: 1;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     body.dark .box {
       border: 4px solid #fff;
@@ -116,7 +126,7 @@
       background: #000;
       border-color: #fff;
       color: #fff;
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
     body.dark .box.selected {
       background: #fff;
@@ -124,27 +134,26 @@
       color: #000;
     }
     .wordBox {
-      font-size: 1.2rem;
+      font-size: min(5vw, 1.2rem);
       white-space: normal;
       word-wrap: break-word;
       line-height: 1.1;
-      height: 18vh;
-      max-height: 120px;
+      height: 18%;
+      max-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       padding: 6px;
-      box-sizing: border-box;
     }
     .wordBox[data-word-length="long"] {
-      font-size: 0.8rem;
+      font-size: min(4vw, 0.8rem);
     }
     .wordBox[data-word-length="medium"] {
-      font-size: 1rem;
+      font-size: min(4.5vw, 1rem);
     }
     .wordBox[data-word-length="short"] {
-      font-size: 1.2rem;
+      font-size: min(5vw, 1.2rem);
     }
     .matched {
       cursor: default;
@@ -177,9 +186,17 @@
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(2px); }
     }
+    @media (max-width: 768px) {
+      .box:hover:not(.matched) {
+        animation: none;
+      }
+      .matched, .incorrect {
+        animation: none;
+      }
+    }
     #messages {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: min(4vw, 0.8rem);
       margin: 5px 0;
       min-height: 30px;
       color: #000;
@@ -210,7 +227,7 @@
     button {
       margin: 4px;
       padding: 6px 10px;
-      font-size: 0.6rem;
+      font-size: min(3.5vw, 0.6rem);
       border: 4px solid #000;
       cursor: pointer;
       background: #fff;
@@ -218,6 +235,8 @@
       transition: background 0.3s;
       font-family: 'Press Start 2P', cursive;
       display: inline-block;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     body.dark button {
       border: 4px solid #fff;
@@ -247,7 +266,7 @@
       display: block;
       margin-bottom: 5px;
       color: #000;
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
     }
     body.dark #loginSection label {
       color: #fff;
@@ -256,7 +275,7 @@
       width: calc(100% - 14px);
       padding: 6px;
       margin-bottom: 12px;
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
       border: 4px solid #000;
       background: #fff;
       color: #000;
@@ -271,7 +290,7 @@
       width: calc(100% - 14px);
       padding: 6px;
       margin-bottom: 12px;
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
       border: 4px solid #000;
       background: #fff;
       color: #000;
@@ -284,7 +303,7 @@
     }
     #loginError {
       color: #000;
-      font-size: 0.7rem;
+      font-size: min(4vw, 0.7rem);
       margin-bottom: 8px;
       min-height: 18px;
     }
@@ -311,6 +330,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     body.dark #themeToggle {
       background: #000;
@@ -389,881 +410,946 @@
   </div>
   <canvas id="confettiCanvas"></canvas>
 
-  <script src="vocab.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
-    console.log("Main script loaded successfully");
+ <script src="vocab.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  console.log("Main script loaded successfully");
 
-    // Fallback vocabulary
-    if (typeof vocab === "undefined") {
-      console.warn("vocab.js not loaded, using fallback vocabulary");
-      window.vocab = [
-        { emoji: "🏃", word: "correr", type: "verb" },
-        { emoji: "🍽️", word: "comer", type: "verb" },
-        { emoji: "🎤", word: "cantar", type: "verb" },
-        { emoji: "😴", word: "dormir", type: "verb" },
-        { emoji: "✍️", word: "escribir", type: "verb" }
-      ];
-    }
-
-    // Shuffle vocab to ensure random order
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-    vocab = shuffle([...vocab]);
-
-    let users = JSON.parse(localStorage.getItem("users") || "{}");
-    const goodLuckPhrases = [
-      "🚀 ¡Listo, pixelero!",
-      "🌟 ¡A por las estrellas!",
-      "🎮 ¡Tú puedes, 8-bit!",
-      "⚡ ¡Vamos, héroe!",
-      "🔥 ¡Modo juego ON!"
+  // Fallback vocabulary
+  if (typeof vocab === "undefined") {
+    console.warn("vocab.js not loaded, using fallback vocabulary");
+    window.vocab = [
+      { emoji: "🏃", word: "correr", type: "verb" },
+      { emoji: "🍽️", word: "comer", type: "verb" },
+      { emoji: "🎤", word: "cantar", type: "verb" },
+      { emoji: "😴", word: "dormir", type: "verb" },
+      { emoji: "✍️", word: "escribir", type: "verb" }
     ];
-    const wellDonePhrases = [
-      "🎉 ¡Eres un pro, pixel!",
-      "🏆 ¡Nivel completado!",
-      "⭐ ¡Súper 8-bit!",
-      "🎈 ¡Victoria retro!",
-      "🌈 ¡Campeón pixelado!"
-    ];
-    let matched = new Set();
-    let quizStarted = false;
-    let currentUser = null;
-    let selectedEmoji = null;
-    let errorWords = new Set();
-    let currentVocab = [];
+  }
 
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    let menuMusicOscillator = null;
-    let menuMusicGainNode = null;
-    let hasInteracted = false;
-
-    let audioQueue = [];
-    let isAudioPlaying = false;
-    function playAudio(type, text) {
-      audioQueue.push({ type, text });
-      processAudioQueue();
+  // Shuffle vocab to ensure random order
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-    function processAudioQueue() {
-      if (isAudioPlaying || audioQueue.length === 0) return;
-      isAudioPlaying = true;
-      const { type, text } = audioQueue.shift();
+    return array;
+  }
+  vocab = shuffle([...vocab]);
 
-      if (type === "speech") {
-        speakText(text);
-      } else if (type === "chiptune") {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        if (text === "correct") {
-          oscillator.type = "square";
-          oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
-          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-          oscillator.start();
-          oscillator.stop(audioContext.currentTime + 0.5);
-        } else if (text === "incorrect") {
-          oscillator.type = "square";
-          oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-          oscillator.start();
-          oscillator.stop(audioContext.currentTime + 0.5);
-        } else if (text === "finish") {
-          oscillator.type = "square";
-          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-          oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-          oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.3);
-          oscillator.frequency.setValueAtTime(1100, audioContext.currentTime + 0.6);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
-          oscillator.start();
-          oscillator.stop(audioContext.currentTime + 1);
-        }
-        setTimeout(() => {
-          isAudioPlaying = false;
-          processAudioQueue();
-        }, text === "finish" ? 1000 : 500);
-      }
-    }
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+  const goodLuckPhrases = [
+    "🚀 ¡Listo, pixelero!",
+    "🌟 ¡A por las estrellas!",
+    "🎮 ¡Tú puedes, 8-bit!",
+    "⚡ ¡Vamos, héroe!",
+    "🔥 ¡Modo juego ON!"
+  ];
+  const wellDonePhrases = [
+    "🎉 ¡Eres un pro, pixel!",
+    "🏆 ¡Nivel completado!",
+    "⭐ ¡Súper 8-bit!",
+    "🎈 ¡Victoria retro!",
+    "🌈 ¡Campeón pixelado!"
+  ];
+  let matched = new Set();
+  let quizStarted = false;
+  let currentUser = null;
+  let selectedEmoji = null;
+  let errorWords = new Set();
+  let currentVocab = [];
 
-    function playMenuMusic() {
-      if (!hasInteracted || menuMusicOscillator) return;
-      menuMusicOscillator = audioContext.createOscillator();
-      menuMusicGainNode = audioContext.createGain();
-      menuMusicOscillator.connect(menuMusicGainNode);
-      menuMusicGainNode.connect(audioContext.destination);
-      menuMusicOscillator.type = "square";
-      menuMusicGainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      const notes = [440, 494, 523, 587, 659, 587, 523, 494];
-      let time = audioContext.currentTime;
-      notes.forEach((freq, i) => {
-        menuMusicOscillator.frequency.setValueAtTime(freq, time + i * 0.2);
-      });
-      menuMusicOscillator.start();
-      menuMusicOscillator.onended = () => {
-        if (menuMusicOscillator) playMenuMusic();
-      };
-      setTimeout(() => {
-        if (menuMusicOscillator) menuMusicOscillator.stop();
-      }, 1600);
-    }
-    function stopMenuMusic() {
-      if (menuMusicOscillator) {
-        menuMusicGainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-        menuMusicOscillator.stop(audioContext.currentTime + 0.1);
-        menuMusicOscillator = null;
-        menuMusicGainNode = null;
-      }
-    }
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let menuMusicOscillator = null;
+  let menuMusicGainNode = null;
+  let hasInteracted = false;
 
-    const themeToggle = document.getElementById("themeToggle");
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-    }
-    if (themeToggle) {
-      themeToggle.addEventListener("click", () => {
-        hasInteracted = true;
-        toggleTheme();
-      });
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-      }
-    }
+  let audioQueue = [];
+  let isAudioPlaying = false;
 
-    let voices = [];
-    let voiceLoadAttempts = 0;
-    const maxVoiceLoadAttempts = 5;
+  window.onload = function() {
+    try {
+      console.log("Window loaded, initializing app");
 
-    function loadVoices() {
-      voices = speechSynthesis.getVoices();
-      console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
-      voiceLoadAttempts++;
-      console.log("Voice load attempt:", voiceLoadAttempts);
-    }
-    loadVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = loadVoices;
-    }
-
-    function getSpanishVoice() {
-      const esESVoice = voices.find(v => v.lang === "es-ES");
-      if (esESVoice) {
-        console.log("Selected es-ES voice:", esESVoice.name);
-        return esESVoice;
-      }
-      const esVoice = voices.find(v => v.lang.startsWith("es-"));
-      if (esVoice) {
-        console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
-        return esVoice;
-      }
-      console.warn("No Spanish voice found");
-      return null;
-    }
-
-    function speakText(text) {
-      if (!window.speechSynthesis) {
-        console.error("SpeechSynthesis API not supported");
-        document.getElementById("messages").textContent = "Voz no compatible.";
-        isAudioPlaying = false;
-        processAudioQueue();
-        return;
-      }
-
-      loadVoices();
-      if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
-        console.log("Voices not loaded, retrying...");
-        setTimeout(() => speakText(text), 200);
-        return;
-      }
-
-      const spanishVoice = getSpanishVoice();
-      if (!spanishVoice) {
-        console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-        document.getElementById("messages").textContent = "No hay voz en español.";
-        setTimeout(() => {
-          document.getElementById("messages").textContent = "";
-        }, 3000);
-        isAudioPlaying = false;
-        processAudioQueue();
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.voice = spanishVoice;
-      utterance.lang = spanishVoice.lang;
-      utterance.onend = () => {
-        console.log("Speech finished:", text);
-        isAudioPlaying = false;
-        processAudioQueue();
-      };
-      utterance.onerror = (e) => {
-        console.error("Speech synthesis error:", e.error, e.message);
-        document.getElementById("messages").textContent = "Error al reproducir voz.";
-        setTimeout(() => {
-          document.getElementById("messages").textContent = "";
-        }, 2000);
-        isAudioPlaying = false;
-        processAudioQueue();
-      };
-      console.log("Speaking text:", text, "with voice:", spanishVoice.name);
-      speechSynthesis.speak(utterance);
-    }
-
-    function populateUsernameDropdown() {
-      const usernameSelect = document.getElementById("usernameSelect");
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-      usernameSelect.innerHTML = '<option value="" disabled selected>Select or choose new username</option>';
-      Object.keys(users).forEach(username => {
-        const option = document.createElement("option");
-        option.value = username;
-        option.textContent = username;
-        usernameSelect.appendChild(option);
-      });
-      usernameSelect.innerHTML += '<option value="other">Other (Enter new username)</option>';
-    }
-
-    function toggleNewUsernameInput() {
+      // DOM elements
+      const emojiColumn = document.getElementById("emojiColumn");
+      const wordColumn = document.getElementById("wordColumn");
+      const scoreDisplay = document.getElementById("score");
+      const messages = document.getElementById("messages");
+      const startBtn = document.getElementById("startBtn");
+      const quitBtn = document.getElementById("quitBtn");
+      const playAgainBtn = document.getElementById("playAgainBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const refreshBtn = document.getElementById("refreshBtn");
+      const container = document.getElementById("container");
+      const loginSection = document.getElementById("loginSection");
+      const loginBtn = document.getElementById("loginBtn");
       const usernameSelect = document.getElementById("usernameSelect");
       const newUsernameInput = document.getElementById("newUsernameInput");
-      newUsernameInput.style.display = usernameSelect.value === "other" ? "block" : "none";
-    }
+      const avatarInput = document.getElementById("avatar");
+      const pinInput = document.getElementById("pin");
+      const loginError = document.getElementById("loginError");
+      const buttonsDiv = document.getElementById("buttons");
+      const leaderboardDiv = document.getElementById("leaderboard");
+      const leaderboardList = document.getElementById("leaderboardList");
+      const progressBar = document.getElementById("progressBar");
+      const progressStars = document.getElementById("progressStars");
 
-    window.onload = function() {
-      try {
-        console.log("Window loaded, initializing app");
+      if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn) {
+        console.error("Missing DOM elements");
+        return;
+      }
 
-        const emojiColumn = document.getElementById("emojiColumn");
-        const wordColumn = document.getElementById("wordColumn");
-        const scoreDisplay = document.getElementById("score");
-        const messages = document.getElementById("messages");
-        const startBtn = document.getElementById("startBtn");
-        const quitBtn = document.getElementById("quitBtn");
-        const playAgainBtn = document.getElementById("playAgainBtn");
-        const logoutBtn = document.getElementById("logoutBtn");
-        const refreshBtn = document.getElementById("refreshBtn");
-        const container = document.getElementById("container");
-        const loginSection = document.getElementById("loginSection");
-        const loginBtn = document.getElementById("loginBtn");
-        const usernameSelect = document.getElementById("usernameSelect");
-        const newUsernameInput = document.getElementById("newUsernameInput");
-        const avatarInput = document.getElementById("avatar");
-        const pinInput = document.getElementById("pin");
-        const loginError = document.getElementById("loginError");
-        const buttonsDiv = document.getElementById("buttons");
-        const leaderboardDiv = document.getElementById("leaderboard");
-        const leaderboardList = document.getElementById("leaderboardList");
-        const progressBar = document.getElementById("progressBar");
-        const progressStars = document.getElementById("progressStars");
+      console.log("Vocabulary loaded:", vocab.length, "words");
 
-        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn) {
-          console.error("Missing DOM elements");
+      // Function declarations
+      function playAudio(type, text) {
+        audioQueue.push({ type, text });
+        processAudioQueue();
+      }
+
+      function processAudioQueue() {
+        if (isAudioPlaying || audioQueue.length === 0) return;
+        isAudioPlaying = true;
+        const { type, text } = audioQueue.shift();
+
+        if (type === "speech") {
+          speakText(text);
+        } else if (type === "chiptune") {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          if (text === "correct") {
+            oscillator.type = "square";
+            oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5);
+          } else if (text === "incorrect") {
+            oscillator.type = "square";
+            oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5);
+          } else if (text === "finish") {
+            oscillator.type = "square";
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(1100, audioContext.currentTime + 0.6);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 1);
+          }
+          setTimeout(() => {
+            isAudioPlaying = false;
+            processAudioQueue();
+          }, text === "finish" ? 1000 : 500);
+        }
+      }
+
+      function playMenuMusic() {
+        if (!hasInteracted || menuMusicOscillator) return;
+        menuMusicOscillator = audioContext.createOscillator();
+        menuMusicGainNode = audioContext.createGain();
+        menuMusicOscillator.connect(menuMusicGainNode);
+        menuMusicGainNode.connect(audioContext.destination);
+        menuMusicOscillator.type = "square";
+        menuMusicGainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        const notes = [440, 494, 523, 587, 659, 587, 523, 494];
+        let time = audioContext.currentTime;
+        notes.forEach((freq, i) => {
+          menuMusicOscillator.frequency.setValueAtTime(freq, time + i * 0.2);
+        });
+        menuMusicOscillator.start();
+        menuMusicOscillator.onended = () => {
+          if (menuMusicOscillator) playMenuMusic();
+        };
+        setTimeout(() => {
+          if (menuMusicOscillator) menuMusicOscillator.stop();
+        }, 1600);
+      }
+
+      function stopMenuMusic() {
+        if (menuMusicOscillator) {
+          menuMusicGainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+          menuMusicOscillator.stop(audioContext.currentTime + 0.1);
+          menuMusicOscillator = null;
+          menuMusicGainNode = null;
+        }
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark");
+        localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+      }
+
+      let voices = [];
+      let voiceLoadAttempts = 0;
+      const maxVoiceLoadAttempts = 5;
+
+      function loadVoices() {
+        voices = speechSynthesis.getVoices();
+        console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
+        voiceLoadAttempts++;
+        console.log("Voice load attempt:", voiceLoadAttempts);
+      }
+      loadVoices();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+
+      function getSpanishVoice() {
+        const esESVoice = voices.find(v => v.lang === "es-ES");
+        if (esESVoice) {
+          console.log("Selected es-ES voice:", esESVoice.name);
+          return esESVoice;
+        }
+        const esVoice = voices.find(v => v.lang.startsWith("es-"));
+        if (esVoice) {
+          console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
+          return esVoice;
+        }
+        console.warn("No Spanish voice found");
+        return null;
+      }
+
+      function speakText(text) {
+        if (!window.speechSynthesis) {
+          console.error("SpeechSynthesis API not supported");
+          document.getElementById("messages").textContent = "Voz no compatible.";
+          isAudioPlaying = false;
+          processAudioQueue();
           return;
         }
 
-        console.log("Vocabulary loaded:", vocab.length, "words");
+        loadVoices();
+        if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
+          console.log("Voices not loaded, retrying...");
+          setTimeout(() => speakText(text), 200);
+          return;
+        }
 
-        function triggerConfetti() {
-          function confettiBurst() {
-            confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.6 },
-              shapes: ['square'],
-              colors: ['#000', '#fff', '#FFD700', '#00FF00']
-            });
+        const spanishVoice = getSpanishVoice();
+        if (!spanishVoice) {
+          console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
+          document.getElementById("messages").textContent = "No hay voz en español.";
+          setTimeout(() => {
+            document.getElementById("messages").textContent = "";
+          }, 3000);
+          isAudioPlaying = false;
+          processAudioQueue();
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.voice = spanishVoice;
+        utterance.lang = spanishVoice.lang;
+        utterance.onend = () => {
+          console.log("Speech finished:", text);
+          isAudioPlaying = false;
+          processAudioQueue();
+        };
+        utterance.onerror = (e) => {
+          console.error("Speech synthesis error:", e.error, e.message);
+          document.getElementById("messages").textContent = "Error al reproducir voz.";
+          setTimeout(() => {
+            document.getElementById("messages").textContent = "";
+          }, 2000);
+          isAudioPlaying = false;
+          processAudioQueue();
+        };
+        console.log("Speaking text:", text, "with voice:", spanishVoice.name);
+        speechSynthesis.speak(utterance);
+      }
+
+      function populateUsernameDropdown() {
+        const usernameSelect = document.getElementById("usernameSelect");
+        const users = JSON.parse(localStorage.getItem("users") || "{}");
+        usernameSelect.innerHTML = '<option value="" disabled selected>Select or choose new username</option>';
+        Object.keys(users).forEach(username => {
+          const option = document.createElement("option");
+          option.value = username;
+          option.textContent = username;
+          usernameSelect.appendChild(option);
+        });
+        usernameSelect.innerHTML += '<option value="other">Other (Enter new username)</option>';
+      }
+
+      function toggleNewUsernameInput() {
+        const usernameSelect = document.getElementById("usernameSelect");
+        const newUsernameInput = document.getElementById("newUsernameInput");
+        newUsernameInput.style.display = usernameSelect.value === "other" ? "block" : "none";
+      }
+
+      function triggerConfetti() {
+        function confettiBurst() {
+          confetti({
+            particleCount: 50,
+            spread: 70,
+            origin: { y: 0.6 },
+            shapes: ['square'],
+            colors: ['#000', '#fff', '#FFD700', '#00FF00']
+          });
+        }
+        confettiBurst();
+        setTimeout(confettiBurst, 300);
+        setTimeout(confettiBurst, 600);
+        setTimeout(() => confetti.reset(), 2000);
+      }
+
+      function updateProgress() {
+        const dollars = matched.size;
+        progressStars.innerHTML = "◇".repeat(5 - dollars) + "$".repeat(dollars);
+      }
+
+      function saveUserData() {
+        try {
+          localStorage.setItem("users", JSON.stringify(users));
+        } catch (e) {
+          console.error("Failed to save user data:", e);
+        }
+      }
+
+      function selectQuizWords(preserveCarryovers = []) {
+        try {
+          console.log("Selecting quiz words for user:", currentUser);
+          const user = users[currentUser];
+          user.mastered = user.mastered || {};
+          user.retired = user.retired || [];
+          user.activePool = user.activePool || shuffle([...vocab]).slice(0, 30);
+          user.lastWords = user.lastWords || [];
+          user.roundCount = user.roundCount || 0;
+          user.level = user.level || 1;
+          user.badges = user.badges || [];
+          user.streak = user.streak || 0;
+          if (!preserveCarryovers.length) user.roundCount++;
+
+          const retiredCount = user.retired.length;
+          if (retiredCount >= 5 && retiredCount % 5 === 0) {
+            const newWords = shuffle([...vocab])
+              .filter(v => !user.activePool.some(p => p.word === v.word) && !user.retired.includes(v.word))
+              .slice(0, 5);
+            user.activePool.push(...newWords);
+            console.log("Added new words to activePool:", newWords.map(v => v.word));
           }
-          confettiBurst();
-          setTimeout(confettiBurst, 300);
-          setTimeout(confettiBurst, 600);
-          setTimeout(() => confetti.reset(), 2000);
-        }
 
-        function updateProgress() {
-          const dollars = matched.size;
-          progressStars.innerHTML = "◇".repeat(5 - dollars) + "$".repeat(dollars);
-        }
-
-        function saveUserData() {
-          try {
-            localStorage.setItem("users", JSON.stringify(users));
-          } catch (e) {
-            console.error("Failed to save user data:", e);
-          }
-        }
-
-        function selectQuizWords(preserveCarryovers = []) {
-          try {
-            console.log("Selecting quiz words for user:", currentUser);
-            const user = users[currentUser];
-            user.mastered = user.mastered || {};
-            user.retired = user.retired || [];
-            user.activePool = user.activePool || shuffle([...vocab]).slice(0, 30);
-            user.lastWords = user.lastWords || [];
-            user.roundCount = user.roundCount || 0;
-            user.level = user.level || 1;
-            user.badges = user.badges || [];
-            user.streak = user.streak || 0;
-            if (!preserveCarryovers.length) user.roundCount++;
-
-            const retiredCount = user.retired.length;
-            if (retiredCount >= 5 && retiredCount % 5 === 0) {
-              const newWords = shuffle([...vocab])
-                .filter(v => !user.activePool.some(p => p.word === v.word) && !user.retired.includes(v.word))
-                .slice(0, 5);
-              user.activePool.push(...newWords);
-              console.log("Added new words to activePool:", newWords.map(v => v.word));
-            }
-
-            if (user.roundCount % 10 === 0 && user.retired.length > 0 && !preserveCarryovers.length) {
-              console.log("Triggering review round");
-              const retiredWords = shuffle([...user.retired]).slice(0, 2);
-              const nonRetiredWords = shuffle([...user.activePool])
-                .filter(v => !user.retired.includes(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
-                .slice(0, 3);
-              const selectedWords = [...retiredWords.map(word => vocab.find(v => v.word === word)), ...nonRetiredWords];
-              user.lastWords = selectedWords.map(v => v.word);
-              saveUserData();
-              return selectedWords.slice(0, 5);
-            }
-
-            const buckets = [[], [], []];
-            user.activePool.forEach(v => {
-              const correctCount = user.mastered[v.word]?.correctCount || 0;
-              if (correctCount < 3) buckets[correctCount].push(v);
-            });
-
-            const weights = [0.2, 0.5, 0.3];
-            const availableBuckets = buckets.map((b, i) => ({ words: b, weight: weights[i] }))
-              .filter(b => b.words.length > 0);
-
-            let carryovers = preserveCarryovers.length
-              ? preserveCarryovers
-              : shuffle([...user.lastWords])
-                  .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.correctCount || 0) < 3)
-                  .sort((a, b) => (user.mastered[b]?.errorCount || 0) - (user.mastered[a]?.errorCount || 0))
-                  .slice(0, 2);
-            const selectedWordsSet = new Set(carryovers);
-            console.log("Carryovers:", carryovers);
-
-            let learnedCount = carryovers.filter(w => (user.mastered[w]?.correctCount || 0) > 0).length;
-            while (selectedWordsSet.size < 5 && availableBuckets.length > 0) {
-              const preferLearned = learnedCount < 4 && buckets[1].length + buckets[2].length > 0;
-              const targetBucket = preferLearned ? [1, 2] : [0, 1, 2];
-              const filteredBuckets = availableBuckets.filter(b => targetBucket.includes(buckets.indexOf(b.words)));
-              if (!filteredBuckets.length) break;
-
-              const totalWeight = filteredBuckets.reduce((sum, b) => sum + b.weight, 0);
-              let rand = Math.random() * totalWeight;
-              let selectedBucket = null;
-              for (const bucket of filteredBuckets) {
-                rand -= bucket.weight;
-                if (rand <= 0) {
-                  selectedBucket = bucket;
-                  break;
-                }
-              }
-              if (!selectedBucket) selectedBucket = filteredBuckets[filteredBuckets.length - 1];
-
-              const eligibleWords = selectedBucket.words.filter(v => !selectedWordsSet.has(v.word));
-              if (eligibleWords.length > 0) {
-                const word = shuffle([...eligibleWords])
-                  .sort((a, b) => (user.mastered[b.word]?.errorCount || 0) - (user.mastered[a.word]?.errorCount || 0))[0];
-                selectedWordsSet.add(word.word);
-                if ((user.mastered[word.word]?.correctCount || 0) > 0) learnedCount++;
-              } else {
-                availableBuckets.splice(availableBuckets.indexOf(selectedBucket), 1);
-              }
-            }
-
-            if (selectedWordsSet.size < 5) {
-              const extraWords = shuffle([...user.activePool])
-                .filter(v => !selectedWordsSet.has(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
-                .slice(0, 5 - selectedWordsSet.size);
-              extraWords.forEach(v => selectedWordsSet.add(v.word));
-              console.log("Extra words added:", extraWords.map(v => v.word));
-            }
-
-            const selectedWords = Array.from(selectedWordsSet).slice(0, 5);
-            const finalVocab = vocab.filter(v => selectedWords.includes(v.word));
-            if (new Set(finalVocab.map(v => v.word)).size !== finalVocab.length) {
-              console.error("Duplicates detected:", finalVocab.map(v => v.word));
-              return selectQuizWords(preserveCarryovers);
-            }
-            user.lastWords = finalVocab.map(v => v.word);
+          if (user.roundCount % 10 === 0 && user.retired.length > 0 && !preserveCarryovers.length) {
+            console.log("Triggering review round");
+            const retiredWords = shuffle([...user.retired]).slice(0, 2);
+            const nonRetiredWords = shuffle([...user.activePool])
+              .filter(v => !user.retired.includes(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
+              .slice(0, 3);
+            const selectedWords = [...retiredWords.map(word => vocab.find(v => v.word === word)), ...nonRetiredWords];
+            user.lastWords = selectedWords.map(v => v.word);
             saveUserData();
-            console.log("Selected words:", finalVocab.map(v => v.word));
-            return finalVocab;
-          } catch (e) {
-            console.error("Error selecting quiz words:", e);
-            return shuffle([...vocab]).slice(0, 5);
+            return selectedWords.slice(0, 5);
           }
-        }
 
-        function clearSelections() {
-          selectedEmoji = null;
-          try {
-            [...emojiColumn.children].forEach(el => el.classList.remove("selected"));
-          } catch (e) {
-            console.error("Error clearing selections:", e);
-          }
-        }
+          const buckets = [[], [], []];
+          user.activePool.forEach(v => {
+            const correctCount = user.mastered[v.word]?.correctCount || 0;
+            if (correctCount < 3) buckets[correctCount].push(v);
+          });
 
-        function setupEmojiBoxes() {
-          try {
-            console.log("Setting up emoji boxes");
-            emojiColumn.innerHTML = "";
-            const shuffledVocab = shuffle([...currentVocab.slice(0, 5)]);
-            shuffledVocab.forEach(({ emoji, word }) => {
-              const div = document.createElement("div");
-              div.className = "box";
-              div.textContent = emoji;
-              div.dataset.word = word;
-              div.style.cursor = matched.has(word) ? "default" : "pointer";
+          const weights = [0.2, 0.5, 0.3];
+          const availableBuckets = buckets.map((b, i) => ({ words: b, weight: weights[i] }))
+            .filter(b => b.words.length > 0);
 
-              if (matched.has(word)) {
-                div.classList.add("matched", "gold");
-                div.style.cursor = "default";
+          let carryovers = preserveCarryovers.length
+            ? preserveCarryovers
+            : shuffle([...user.lastWords])
+                .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.correctCount || 0) < 3)
+                .sort((a, b) => (user.mastered[b]?.errorCount || 0) - (user.mastered[a]?.errorCount || 0))
+                .slice(0, 2);
+          const selectedWordsSet = new Set(carryovers);
+          console.log("Carryovers:", carryovers);
+
+          let learnedCount = carryovers.filter(w => (user.mastered[w]?.correctCount || 0) > 0).length;
+          while (selectedWordsSet.size < 5 && availableBuckets.length > 0) {
+            const preferLearned = learnedCount < 4 && buckets[1].length + buckets[2].length > 0;
+            const targetBucket = preferLearned ? [1, 2] : [0, 1, 2];
+            const filteredBuckets = availableBuckets.filter(b => targetBucket.includes(buckets.indexOf(b.words)));
+            if (!filteredBuckets.length) break;
+
+            const totalWeight = filteredBuckets.reduce((sum, b) => sum + b.weight, 0);
+            let rand = Math.random() * totalWeight;
+            let selectedBucket = null;
+            for (const bucket of filteredBuckets) {
+              rand -= bucket.weight;
+              if (rand <= 0) {
+                selectedBucket = bucket;
+                break;
               }
-
-              div.addEventListener("click", () => {
-                if (matched.has(word)) return;
-
-                if (selectedEmoji === div) {
-                  clearSelections();
-                  return;
-                }
-
-                clearSelections();
-                selectedEmoji = div;
-                div.classList.add("selected");
-
-                playAudio("speech", word);
-              });
-
-              emojiColumn.appendChild(div);
-            });
-          } catch (e) {
-            console.error("Error setting up emoji boxes:", e);
-          }
-        }
-
-        function setupWordBoxes() {
-          try {
-            console.log("Setting up word boxes");
-            wordColumn.innerHTML = "";
-            const shuffled = shuffle([...currentVocab.slice(0, 5)]);
-            shuffled.forEach(({ word }) => {
-              const div = document.createElement("div");
-              div.className = "box wordBox";
-              div.textContent = word;
-
-              if (word.length > 15) {
-                div.dataset.wordLength = "long";
-              } else if (word.length > 10) {
-                div.dataset.wordLength = "medium";
-              } else {
-                div.dataset.wordLength = "short";
-              }
-
-              if (matched.has(word)) {
-                div.classList.add("matched", "gold");
-                div.style.cursor = "default";
-              } else {
-                div.style.cursor = "pointer";
-              }
-
-              div.addEventListener("click", () => {
-                if (!selectedEmoji || matched.has(word)) return;
-
-                const emojiWord = selectedEmoji.dataset.word;
-                const user = users[currentUser];
-
-                if (emojiWord === word) {
-                  if (!matched.has(word)) {
-                    matched.add(word);
-                    user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
-                    if (!errorWords.has(word)) {
-                      user.mastered[word].correctCount++;
-                      user.score++;
-                      if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
-                        user.retired.push(word);
-                        user.score += 3;
-                        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos`;
-                        triggerConfetti();
-                        setTimeout(() => {
-                          messages.textContent = "";
-                        }, 2000);
-                        if (user.retired.length % 10 === 0) {
-                          user.level++;
-                          console.log(`Level up: ${user.level}`);
-                        }
-                      }
-                      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
-                      user.mastered[word].errorCount = 0;
-                      user.streak++;
-                      saveUserData();
-                    }
-                    selectedEmoji.classList.remove("selected");
-                    selectedEmoji.classList.add("matched", "correct");
-                    div.classList.add("matched", "correct");
-                    setTimeout(() => {
-                      selectedEmoji.classList.remove("correct");
-                      div.classList.remove("correct");
-                      selectedEmoji.classList.add("gold");
-                      div.classList.add("gold");
-                      div.style.cursor = "default";
-                    }, 200);
-                    clearSelections();
-                    updateProgress();
-                    playAudio("chiptune", "correct");
-                    messages.textContent = "🌟 ¡Punto pixel!";
-
-                    if (matched.size === currentVocab.length) {
-                      finishQuiz();
-                    }
-                  }
-                } else {
-                  errorWords.add(word);
-                  user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
-                  user.mastered[word].errorCount++;
-                  if (user.retired.includes(word) && user.mastered[word].errorCount >= 2) {
-                    user.retired = user.retired.filter(w => w !== word);
-                    user.activePool.push(vocab.find(v => v.word === word));
-                    user.mastered[word].correctCount = 0;
-                    console.log(`Reintroduced retired word: ${word}`);
-                  }
-                  user.streak = 0;
-                  div.classList.add("incorrect");
-                  setTimeout(() => div.classList.remove("incorrect"), 200);
-                  playAudio("chiptune", "incorrect");
-                  messages.textContent = "😅 ¡Uy, otro intento!";
-                  setTimeout(() => {
-                    messages.textContent = "";
-                  }, 1500);
-                  clearSelections();
-                  saveUserData();
-                }
-              });
-
-              wordColumn.appendChild(div);
-            });
-          } catch (e) {
-            console.error("Error setting up word boxes:", e);
-          }
-        }
-
-        function startQuiz() {
-          try {
-            console.log("Starting quiz for user:", currentUser);
-            if (!vocab || vocab.length === 0) {
-              console.error("No vocabulary available");
-              messages.textContent = "Error: No vocabulary loaded.";
-              return;
             }
+            if (!selectedBucket) selectedBucket = filteredBuckets[filteredBuckets.length - 1];
 
-            matched = new Set();
-            errorWords = new Set();
-            quizStarted = true;
-            messages.textContent = "";
-            scoreDisplay.style.display = "block";
-            progressBar.style.display = "block";
-            progressStars.innerHTML = "◇◇◇◇◇";
-            scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
-            container.style.display = "flex";
-            container.style.pointerEvents = "auto";
-            buttonsDiv.style.display = "flex";
-            startBtn.style.display = "none";
-            quitBtn.style.display = "inline-block";
-            refreshBtn.style.display = "inline-block";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
-            loginSection.style.display = "none";
-            leaderboardDiv.style.display = "none";
-            stopMenuMusic();
-
-            const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
-            messages.textContent = phrase;
-
-            currentVocab = selectQuizWords();
-            setupEmojiBoxes();
-            setupWordBoxes();
-
-            console.log("Game buttons visible:", {
-              buttonsDiv: buttonsDiv.style.display,
-              refreshBtn: refreshBtn.style.display,
-              quitBtn: quitBtn.style.display
-            });
-          } catch (e) {
-            console.error("Error starting quiz:", e);
-            messages.textContent = "Error al iniciar el quiz.";
-          }
-        }
-
-        function finishQuiz() {
-          try {
-            console.log("Finishing quiz");
-            quizStarted = false;
-            const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
-            messages.textContent = phrase;
-
-            triggerConfetti();
-            playAudio("chiptune", "finish");
-
-            container.classList.add("fade-out");
-            scoreDisplay.classList.add("fade-out");
-            progressBar.classList.add("fade-out");
-            messages.classList.add("fade-out");
-
-            setTimeout(() => {
-              container.style.display = "none";
-              scoreDisplay.style.display = "none";
-              progressBar.style.display = "none";
-              messages.style.display = "none";
-              container.classList.remove("fade-out");
-              scoreDisplay.classList.remove("fade-out");
-              progressBar.classList.remove("fade-out");
-              messages.classList.remove("fade-out");
-
-              updateLeaderboard();
-              leaderboardDiv.style.display = "block";
-              leaderboardDiv.classList.add("fade-in");
-
-              buttonsDiv.style.display = "flex";
-              playAgainBtn.style.display = "inline-block";
-              logoutBtn.style.display = "inline-block";
-              quitBtn.style.display = "none";
-              refreshBtn.style.display = "none";
-              startBtn.style.display = "none";
-              buttonsDiv.classList.add("fade-in");
-
-              console.log("Post-game buttons visible:", {
-                buttonsDiv: buttonsDiv.style.display,
-                playAgainBtn: playAgainBtn.style.display,
-                logoutBtn: logoutBtn.style.display
-              });
-
-              setTimeout(() => {
-                leaderboardDiv.classList.remove("fade-in");
-                buttonsDiv.classList.remove("fade-in");
-              }, 500);
-            }, 500);
-
-            container.style.pointerEvents = "none";
-          } catch (e) {
-            console.error("Error finishing quiz:", e);
-          }
-        }
-
-        function newQuiz() {
-          try {
-            console.log("Starting new quiz");
-            leaderboardDiv.style.display = "none";
-            startQuiz();
-          } catch (e) {
-            console.error("Error starting new quiz:", e);
-          }
-        }
-
-        function refreshGame() {
-          try {
-            console.log("Refreshing game");
-            matched = new Set();
-            errorWords = new Set();
-            selectedEmoji = null;
-            messages.textContent = "";
-            progressStars.innerHTML = "◇◇◇◇◇";
-            container.style.pointerEvents = "auto";
-            quitBtn.style.display = "inline-block";
-            refreshBtn.style.display = "inline-block";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
-
-            const previousCarryovers = [...users[currentUser].lastWords];
-            currentVocab = selectQuizWords(previousCarryovers);
-            setupEmojiBoxes();
-            setupWordBoxes();
-
-            const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
-            messages.textContent = phrase;
-          } catch (e) {
-            console.error("Error refreshing game:", e);
-            messages.textContent = "Error al reiniciar el juego.";
-          }
-        }
-
-        function updateLeaderboard() {
-          try {
-            const sortedUsers = Object.entries(users)
-              .sort((a, b) => b[1].score - a[1].score);
-            leaderboardList.innerHTML = sortedUsers
-              .map(([user, data]) => `<li>${data.avatar} ${user}: $${data.score}</li>`)
-              .join("");
-            leaderboardDiv.style.display = currentUser ? "block" : "none";
-          } catch (e) {
-            console.error("Error updating leaderboard:", e);
-          }
-        }
-
-        function checkLogin() {
-          try {
-            const usernameSelect = document.getElementById("usernameSelect");
-            const newUsernameInput = document.getElementById("newUsernameInput");
-            const username = usernameSelect.value === "other" ? newUsernameInput.value.trim() : usernameSelect.value;
-            const avatar = avatarInput.value;
-            const pin = pinInput.value.trim();
-            console.log("Checking login:", { username, avatar, pin });
-
-            if (!username || username.length > 20) {
-              loginError.textContent = "Username must be 1-20 characters.";
-              return false;
-            }
-            if (!/^\d{4}$/.test(pin)) {
-              loginError.textContent = "PIN must be 4 digits.";
-              return false;
-            }
-            if (users[username] && users[username].pin !== pin) {
-              loginError.textContent = "Incorrect PIN.";
-              return false;
-            }
-            if (!users[username]) {
-              users[username] = {
-                pin,
-                avatar,
-                score: 0,
-                mastered: {},
-                retired: [],
-                activePool: shuffle([...vocab]).slice(0, 30),
-                lastWords: [],
-                roundCount: 0,
-                level: 1,
-                badges: [],
-                streak: 0
-              };
-              saveUserData();
-              populateUsernameDropdown();
+            const eligibleWords = selectedBucket.words.filter(v => !selectedWordsSet.has(v.word));
+            if (eligibleWords.length > 0) {
+              const word = shuffle([...eligibleWords])
+                .sort((a, b) => (user.mastered[b.word]?.errorCount || 0) - (user.mastered[a.word]?.errorCount || 0))[0];
+              selectedWordsSet.add(word.word);
+              if ((user.mastered[word.word]?.correctCount || 0) > 0) learnedCount++;
             } else {
-              const newWords = vocab.filter(v => !users[username].activePool.some(p => p.word === v.word) && !users[username].retired.includes(v.word));
-              if (newWords.length > 0) {
-                users[username].activePool.push(...newWords.slice(0, 5));
-                console.log("Added new words to existing user’s activePool:", newWords.slice(0, 5).map(v => v.word));
+              availableBuckets.splice(availableBuckets.indexOf(selectedBucket), 1);
+            }
+          }
+
+          if (selectedWordsSet.size < 5) {
+            const extraWords = shuffle([...user.activePool])
+              .filter(v => !selectedWordsSet.has(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
+              .slice(0, 5 - selectedWordsSet.size);
+            extraWords.forEach(v => selectedWordsSet.add(v.word));
+            console.log("Extra words added:", extraWords.map(v => v.word));
+          }
+
+          const selectedWords = Array.from(selectedWordsSet).slice(0, 5);
+          const finalVocab = vocab.filter(v => selectedWords.includes(v.word));
+          if (new Set(finalVocab.map(v => v.word)).size !== finalVocab.length) {
+            console.error("Duplicates detected:", finalVocab.map(v => v.word));
+            return selectQuizWords(preserveCarryovers);
+          }
+          user.lastWords = finalVocab.map(v => v.word);
+          saveUserData();
+          console.log("Selected words:", finalVocab.map(v => v.word));
+          return finalVocab;
+        } catch (e) {
+          console.error("Error selecting quiz words:", e);
+          return shuffle([...vocab]).slice(0, 5);
+        }
+      }
+
+      function clearSelections() {
+        selectedEmoji = null;
+        try {
+          [...emojiColumn.children].forEach(el => el.classList.remove("selected"));
+        } catch (e) {
+          console.error("Error clearing selections:", e);
+        }
+      }
+
+      function setupEmojiBoxes() {
+        try {
+          console.log("Setting up emoji boxes");
+          emojiColumn.innerHTML = "";
+          const shuffledVocab = shuffle([...currentVocab.slice(0, 5)]);
+          shuffledVocab.forEach(({ emoji, word }) => {
+            const div = document.createElement("div");
+            div.className = "box";
+            div.textContent = emoji;
+            div.dataset.word = word;
+            div.style.cursor = matched.has(word) ? "default" : "pointer";
+
+            if (matched.has(word)) {
+              div.classList.add("matched", "gold");
+              div.style.cursor = "default";
+            }
+
+            const handleSelection = (e) => {
+              e.preventDefault();
+              if (matched.has(word)) return;
+
+              if (selectedEmoji === div) {
+                clearSelections();
+                return;
+              }
+
+              clearSelections();
+              selectedEmoji = div;
+              div.classList.add("selected");
+              playAudio("speech", word);
+            };
+
+            div.addEventListener("click", handleSelection);
+            div.addEventListener("touchstart", handleSelection);
+
+            emojiColumn.appendChild(div);
+          });
+        } catch (e) {
+          console.error("Error setting up emoji boxes:", e);
+        }
+      }
+
+      function setupWordBoxes() {
+        try {
+          console.log("Setting up word boxes");
+          wordColumn.innerHTML = "";
+          const shuffled = shuffle([...currentVocab.slice(0, 5)]);
+          shuffled.forEach(({ word }) => {
+            const div = document.createElement("div");
+            div.className = "box wordBox";
+            div.textContent = word;
+
+            if (word.length > 15) {
+              div.dataset.wordLength = "long";
+            } else if (word.length > 10) {
+              div.dataset.wordLength = "medium";
+            } else {
+              div.dataset.wordLength = "short";
+            }
+
+            if (matched.has(word)) {
+              div.classList.add("matched", "gold");
+              div.style.cursor = "default";
+            } else {
+              div.style.cursor = "pointer";
+            }
+
+            const handleSelection = (e) => {
+              e.preventDefault();
+              if (!selectedEmoji || matched.has(word)) return;
+
+              const emojiWord = selectedEmoji.dataset.word;
+              const user = users[currentUser];
+
+              if (emojiWord === word) {
+                if (!matched.has(word)) {
+                  matched.add(word);
+                  user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
+                  if (!errorWords.has(word)) {
+                    user.mastered[word].correctCount++;
+                    user.score++;
+                    if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
+                      user.retired.push(word);
+                      user.score += 3;
+                      messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos`;
+                      triggerConfetti();
+                      setTimeout(() => {
+                        messages.textContent = "";
+                      }, 2000);
+                      if (user.retired.length % 10 === 0) {
+                        user.level++;
+                        console.log(`Level up: ${user.level}`);
+                      }
+                    }
+                    scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
+                    user.mastered[word].errorCount = 0;
+                    user.streak++;
+                    saveUserData();
+                  }
+                  const currentEmoji = selectedEmoji;
+                  const currentDiv = div;
+                  currentEmoji.classList.remove("selected");
+                  currentEmoji.classList.add("matched", "correct");
+                  currentDiv.classList.add("matched", "correct");
+                  setTimeout(() => {
+                    if (currentEmoji) {
+                      currentEmoji.classList.remove("correct");
+                      currentEmoji.classList.add("gold");
+                    }
+                    if (currentDiv) {
+                      currentDiv.classList.remove("correct");
+                      currentDiv.classList.add("gold");
+                      currentDiv.style.cursor = "default";
+                    }
+                  }, 200);
+                  clearSelections();
+                  updateProgress();
+                  playAudio("chiptune", "correct");
+                  messages.textContent = "🌟 ¡Punto pixel!";
+
+                  if (matched.size === currentVocab.length) {
+                    finishQuiz();
+                  }
+                }
+              } else {
+                errorWords.add(word);
+                user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
+                user.mastered[word].errorCount++;
+                if (user.retired.includes(word) && user.mastered[word].errorCount >= 2) {
+                  user.retired = user.retired.filter(w => w !== word);
+                  user.activePool.push(vocab.find(v => v.word === word));
+                  user.mastered[word].correctCount = 0;
+                  console.log(`Reintroduced retired word: ${word}`);
+                }
+                user.streak = 0;
+                div.classList.add("incorrect");
+                setTimeout(() => div.classList.remove("incorrect"), 200);
+                playAudio("chiptune", "incorrect");
+                messages.textContent = "😅 ¡Uy, otro intento!";
+                setTimeout(() => {
+                  messages.textContent = "";
+                }, 1500);
+                clearSelections();
                 saveUserData();
               }
-            }
-            loginError.textContent = "";
-            currentUser = username;
-            sessionStorage.setItem("currentUser", currentUser);
-            buttonsDiv.style.display = "flex";
-            startBtn.style.display = "inline-block";
-            logoutBtn.style.display = "inline-block";
-            loginSection.style.display = "none";
-            hasInteracted = true;
-            playMenuMusic();
-            updateLeaderboard();
-            console.log("Login successful for", username);
-            return true;
-          } catch (e) {
-            console.error("Error in checkLogin:", e);
-            loginError.textContent = "Error al iniciar sesión.";
-            return false;
-          }
+            };
+
+            div.addEventListener("click", handleSelection);
+            div.addEventListener("touchstart", handleSelection);
+
+            wordColumn.appendChild(div);
+          });
+        } catch (e) {
+          console.error("Error setting up word boxes:", e);
         }
+      }
 
-        function logoutUser() {
-          try {
-            saveUserData();
-            currentUser = null;
-            quizStarted = false;
-            matched.clear();
-            errorWords.clear();
-            selectedEmoji = null;
-            currentVocab = [];
+      function startQuiz() {
+        try {
+          console.log("Starting quiz for user:", currentUser);
+          if (!vocab || vocab.length === 0) {
+            console.error("No vocabulary available");
+            messages.textContent = "Error: No vocabulary loaded.";
+            return;
+          }
 
-            loginSection.style.display = "block";
-            buttonsDiv.style.display = "none";
+          matched = new Set();
+          errorWords = new Set();
+          quizStarted = true;
+          messages.textContent = "";
+          scoreDisplay.style.display = "block";
+          progressBar.style.display = "block";
+          progressStars.innerHTML = "◇◇◇◇◇";
+          scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
+          container.style.display = "flex";
+          container.style.pointerEvents = "auto";
+          buttonsDiv.style.display = "flex";
+          startBtn.style.display = "none";
+          quitBtn.style.display = "inline-block";
+          refreshBtn.style.display = "inline-block";
+          playAgainBtn.style.display = "none";
+          logoutBtn.style.display = "none";
+          loginSection.style.display = "none";
+          leaderboardDiv.style.display = "none";
+          stopMenuMusic();
+
+          const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+          messages.textContent = phrase;
+
+          currentVocab = selectQuizWords();
+          setupEmojiBoxes();
+          setupWordBoxes();
+
+          console.log("Game buttons visible:", {
+            buttonsDiv: buttonsDiv.style.display,
+            refreshBtn: refreshBtn.style.display,
+            quitBtn: quitBtn.style.display
+          });
+        } catch (e) {
+          console.error("Error starting quiz:", e);
+          messages.textContent = "Error al iniciar el quiz.";
+        }
+      }
+
+      function finishQuiz() {
+        try {
+          console.log("Finishing quiz");
+          quizStarted = false;
+          const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
+          messages.textContent = phrase;
+
+          triggerConfetti();
+          playAudio("chiptune", "finish");
+
+          container.classList.add("fade-out");
+          scoreDisplay.classList.add("fade-out");
+          progressBar.classList.add("fade-out");
+          messages.classList.add("fade-out");
+
+          setTimeout(() => {
             container.style.display = "none";
             scoreDisplay.style.display = "none";
             progressBar.style.display = "none";
-            messages.textContent = "";
-            loginError.textContent = "";
-            pinInput.value = "";
-            usernameSelect.value = "";
-            newUsernameInput.value = "";
-            newUsernameInput.style.display = "none";
-            startBtn.style.display = "inline-block";
+            messages.style.display = "none";
+            container.classList.remove("fade-out");
+            scoreDisplay.classList.remove("fade-out");
+            progressBar.classList.remove("fade-out");
+            messages.classList.remove("fade-out");
+
+            updateLeaderboard();
+            leaderboardDiv.style.display = "block";
+            leaderboardDiv.classList.add("fade-in");
+
+            buttonsDiv.style.display = "flex";
+            playAgainBtn.style.display = "inline-block";
+            logoutBtn.style.display = "inline-block";
             quitBtn.style.display = "none";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
             refreshBtn.style.display = "none";
-            leaderboardDiv.style.display = "none";
-            sessionStorage.removeItem("currentUser");
-            hasInteracted = true;
-            playMenuMusic();
-            populateUsernameDropdown();
-          } catch (e) {
-            console.error("Error in logoutUser:", e);
-          }
+            startBtn.style.display = "none";
+            buttonsDiv.classList.add("fade-in");
+
+            console.log("Post-game buttons visible:", {
+              buttonsDiv: buttonsDiv.style.display,
+              playAgainBtn: playAgainBtn.style.display,
+              logoutBtn: logoutBtn.style.display
+            });
+
+            setTimeout(() => {
+              leaderboardDiv.classList.remove("fade-in");
+              buttonsDiv.classList.remove("fade-in");
+            }, 500);
+          }, 500);
+
+          container.style.pointerEvents = "none";
+        } catch (e) {
+          console.error("Error finishing quiz:", e);
         }
+      }
 
-        loginBtn.addEventListener("click", () => {
-          console.log("Login button clicked");
-          checkLogin();
-        });
+      function newQuiz() {
+        try {
+          console.log("Starting new quiz");
+          leaderboardDiv.style.display = "none";
+          startQuiz();
+        } catch (e) {
+          console.error("Error starting new quiz:", e);
+        }
+      }
 
-        startBtn.addEventListener("click", () => {
-          console.log("Start Quiz button clicked");
-          if (!quizStarted) startQuiz();
-        });
+      function refreshGame() {
+        try {
+          console.log("Refreshing game");
+          matched = new Set();
+          errorWords = new Set();
+          selectedEmoji = null;
+          messages.textContent = "";
+          progressStars.innerHTML = "◇◇◇◇◇";
+          container.style.pointerEvents = "auto";
+          quitBtn.style.display = "inline-block";
+          refreshBtn.style.display = "inline-block";
+          playAgainBtn.style.display = "none";
+          logoutBtn.style.display = "none";
 
-        quitBtn.addEventListener("click", () => {
-          console.log("Quit button clicked");
-          finishQuiz();
-        });
+          const previousCarryovers = [...users[currentUser].lastWords];
+          currentVocab = selectQuizWords(previousCarryovers);
+          setupEmojiBoxes();
+          setupWordBoxes();
 
-        playAgainBtn.addEventListener("click", () => {
-          console.log("Play Again button clicked");
-          newQuiz();
-        });
+          const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+          messages.textContent = phrase;
+        } catch (e) {
+          console.error("Error refreshing game:", e);
+          messages.textContent = "Error al reiniciar el juego.";
+        }
+      }
 
-        logoutBtn.addEventListener("click", () => {
-          console.log("Logout button clicked");
-          logoutUser();
-        });
+      function updateLeaderboard() {
+        try {
+          const sortedUsers = Object.entries(users)
+            .sort((a, b) => b[1].score - a[1].score);
+          leaderboardList.innerHTML = sortedUsers
+            .map(([user, data]) => `<li>${data.avatar} ${user}: $${data.score}</li>`)
+            .join("");
+          leaderboardDiv.style.display = currentUser ? "block" : "none";
+        } catch (e) {
+          console.error("Error updating leaderboard:", e);
+        }
+      }
 
-        refreshBtn.addEventListener("click", () => {
-          console.log("Refresh button clicked");
-          refreshGame();
-        });
+      function checkLogin() {
+        try {
+          const usernameSelect = document.getElementById("usernameSelect");
+          const newUsernameInput = document.getElementById("newUsernameInput");
+          const username = usernameSelect.value === "other" ? newUsernameInput.value.trim() : usernameSelect.value;
+          const avatar = avatarInput.value;
+          const pin = pinInput.value.trim();
+          console.log("Checking login:", { username, avatar, pin });
 
-        const savedUser = sessionStorage.getItem("currentUser");
-        if (savedUser && users[savedUser]) {
-          currentUser = savedUser;
-          usernameSelect.value = savedUser;
-          avatarInput.value = users[savedUser].avatar;
-          const newWords = vocab.filter(v => !users[savedUser].activePool.some(p => p.word === v.word) && !users[savedUser].retired.includes(v.word));
-          if (newWords.length > 0) {
-            users[savedUser].activePool.push(...newWords.slice(0, 5));
-            saveUserData();
+          if (!username || username.length > 20) {
+            loginError.textContent = "Username must be 1-20 characters.";
+            return false;
           }
+          if (!/^\d{4}$/.test(pin)) {
+            loginError.textContent = "PIN must be 4 digits.";
+            return false;
+          }
+          if (users[username] && users[username].pin !== pin) {
+            loginError.textContent = "Incorrect PIN.";
+            return false;
+          }
+          if (!users[username]) {
+            users[username] = {
+              pin,
+              avatar,
+              score: 0,
+              mastered: {},
+              retired: [],
+              activePool: shuffle([...vocab]).slice(0, 30),
+              lastWords: [],
+              roundCount: 0,
+              level: 1,
+              badges: [],
+              streak: 0
+            };
+            saveUserData();
+            populateUsernameDropdown();
+          } else {
+            const newWords = vocab.filter(v => !users[username].activePool.some(p => p.word === v.word) && !users[username].retired.includes(v.word));
+            if (newWords.length > 0) {
+              users[username].activePool.push(...newWords.slice(0, 5));
+              console.log("Added new words to existing user’s activePool:", newWords.slice(0, 5).map(v => v.word));
+              saveUserData();
+            }
+          }
+          loginError.textContent = "";
+          currentUser = username;
+          sessionStorage.setItem("currentUser", currentUser);
           buttonsDiv.style.display = "flex";
           startBtn.style.display = "inline-block";
           logoutBtn.style.display = "inline-block";
           loginSection.style.display = "none";
+          hasInteracted = true;
+          playMenuMusic();
           updateLeaderboard();
-        } else {
-          loginSection.style.display = "block";
-          populateUsernameDropdown();
+          console.log("Login successful for", username);
+          return true;
+        } catch (e) {
+          console.error("Error in checkLogin:", e);
+          loginError.textContent = "Error al iniciar sesión.";
+          return false;
         }
-      } catch (e) {
-        console.error("Initialization error:", e);
       }
-    };
-  </script>
+
+      function logoutUser() {
+        try {
+          saveUserData();
+          currentUser = null;
+          quizStarted = false;
+          matched.clear();
+          errorWords.clear();
+          selectedEmoji = null;
+          currentVocab = [];
+
+          loginSection.style.display = "block";
+          buttonsDiv.style.display = "none";
+          container.style.display = "none";
+          scoreDisplay.style.display = "none";
+          progressBar.style.display = "none";
+          messages.textContent = "";
+          loginError.textContent = "";
+          pinInput.value = "";
+          usernameSelect.value = "";
+          newUsernameInput.value = "";
+          newUsernameInput.style.display = "none";
+          startBtn.style.display = "inline-block";
+          quitBtn.style.display = "none";
+          playAgainBtn.style.display = "none";
+          logoutBtn.style.display = "none";
+          refreshBtn.style.display = "none";
+          leaderboardDiv.style.display = "none";
+          sessionStorage.removeItem("currentUser");
+          hasInteracted = true;
+          playMenuMusic();
+          populateUsernameDropdown();
+        } catch (e) {
+          console.error("Error in logoutUser:", e);
+        }
+      }
+
+      // Event listeners
+      const themeToggle = document.getElementById("themeToggle");
+      if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+          hasInteracted = true;
+          toggleTheme();
+        });
+        themeToggle.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          hasInteracted = true;
+          toggleTheme();
+        });
+        if (localStorage.getItem("theme") === "dark") {
+          document.body.classList.add("dark");
+        }
+      }
+
+      loginBtn.addEventListener("click", () => {
+        console.log("Login button clicked");
+        checkLogin();
+      });
+      loginBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Login button touched");
+        checkLogin();
+      });
+
+      startBtn.addEventListener("click", () => {
+        console.log("Start Quiz button clicked");
+        if (typeof startQuiz === "function") {
+          if (!quizStarted) startQuiz();
+        } else {
+          console.error("startQuiz is not defined");
+          messages.textContent = "Error: Quiz cannot start.";
+        }
+      });
+      startBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Start Quiz button touched");
+        if (typeof startQuiz === "function") {
+          if (!quizStarted) startQuiz();
+        } else {
+          console.error("startQuiz is not defined");
+          messages.textContent = "Error: Quiz cannot start.";
+        }
+      });
+
+      quitBtn.addEventListener("click", () => {
+        console.log("Quit button clicked");
+        finishQuiz();
+      });
+      quitBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Quit button touched");
+        finishQuiz();
+      });
+
+      playAgainBtn.addEventListener("click", () => {
+        console.log("Play Again button clicked");
+        newQuiz();
+      });
+      playAgainBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Play Again button touched");
+        newQuiz();
+      });
+
+      logoutBtn.addEventListener("click", () => {
+        console.log("Logout button clicked");
+        logoutUser();
+      });
+      logoutBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Logout button touched");
+        logoutUser();
+      });
+
+      refreshBtn.addEventListener("click", () => {
+        console.log("Refresh button clicked");
+        refreshGame();
+      });
+      refreshBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        console.log("Refresh button touched");
+        refreshGame();
+      });
+
+      const savedUser = sessionStorage.getItem("currentUser");
+      if (savedUser && users[savedUser]) {
+        currentUser = savedUser;
+        usernameSelect.value = savedUser;
+        avatarInput.value = users[savedUser].avatar;
+        const newWords = vocab.filter(v => !users[savedUser].activePool.some(p => p.word === v.word) && !users[savedUser].retired.includes(v.word));
+        if (newWords.length > 0) {
+          users[savedUser].activePool.push(...newWords.slice(0, 5));
+          saveUserData();
+        }
+        buttonsDiv.style.display = "flex";
+        startBtn.style.display = "inline-block";
+        logoutBtn.style.display = "inline-block";
+        loginSection.style.display = "none";
+        updateLeaderboard();
+      } else {
+        loginSection.style.display = "block";
+        populateUsernameDropdown();
+      }
+    } catch (e) {
+      console.error("Initialization error:", e);
+    }
+  };
+</script>
 </body>
 </html>
