@@ -58,11 +58,11 @@ body.dark #score {
 #progressBar {
   width: 100%;
   background: #fff;
-  border: 2px solid #000; /* Reduced border thickness */
-  height: 30px; /* Increased height for visibility */
+  border: 2px solid #000;
+  height: 30px;
   margin: 5px 0;
   display: flex;
-  justify-content: center; /* Center stars */
+  justify-content: center;
   align-items: center;
   padding: 0 6px;
 }
@@ -71,7 +71,7 @@ body.dark #progressBar {
   border: 2px solid #fff;
 }
 #progressStars {
-  font-size: clamp(1rem, 5vw, 1.2rem); /* Larger stars */
+  font-size: clamp(1rem, 5vw, 1.2rem);
   text-align: center;
   width: 100%;
   line-height: 1;
@@ -414,42 +414,6 @@ body.dark #themeToggle {
 body.dark #themeToggle::before {
   content: '🌙';
 }
-#petModal {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border: 4px solid #000;
-  padding: 15px;
-  z-index: 1002;
-  max-width: 90%;
-  text-align: center;
-}
-body.dark #petModal {
-  background: #000;
-  border: 4px solid #fff;
-  color: #fff;
-}
-.pet-card {
-  background: #f0f0f0;
-  border: 4px solid #000;
-  padding: 8px;
-  text-align: center;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-}
-body.dark .pet-card {
-  background: #333;
-  border: 4px solid #fff;
-}
-.pet-card.unlocked {
-  background: #FFD700;
-}
-.pet-card.locked {
-  background: #ccc;
-  color: #666;
-}
 @keyframes fadeOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
@@ -503,13 +467,7 @@ body.dark .pet-card {
     <button id="playAgainBtn" style="display:none;" tabindex="0" aria-label="Play again">Play Again</button>
     <button id="logoutBtn" style="display:none;" tabindex="0" aria-label="Logout">Logout</button>
     <button id="refreshBtn" style="display:none;" tabindex="0" aria-label="Refresh quiz">Refresh</button>
-    <button id="myPetsBtn" style="display:none;" tabindex="0" aria-label="View my pets">My Pets</button>
-  </div>
-
-  <div id="petModal" style="display:none;">
-    <h2>My Pets</h2>
-    <div id="petGallery" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(80px, 1fr)); gap:8px;"></div>
-    <button id="closePetModal" tabindex="0" aria-label="Close pet modal">Close</button>
+    <!-- Placeholder for future feature button -->
   </div>
 
   <div id="messages"></div>
@@ -549,15 +507,6 @@ body.dark .pet-card {
       return array;
     }
     vocab = shuffle([...vocab]);
-
-    // Pet data for collection system
-    const petData = {
-      "😺": { name: "Kitty", unlockCondition: () => true }, // Starter pet
-      "🐶": { name: "Puppy", unlockCondition: user => user.retired.length >= 5 },
-      "🦁": { name: "Leo", unlockCondition: user => user.roundCount >= 3 },
-      "🐻": { name: "Bear", unlockCondition: user => user.level >= 2 },
-      "🦊": { name: "Foxy", unlockCondition: user => user.score >= 10 }
-    };
 
     let users = JSON.parse(localStorage.getItem("users") || "{}");
     const goodLuckPhrases = [
@@ -610,10 +559,6 @@ body.dark .pet-card {
         const playAgainBtn = document.getElementById("playAgainBtn");
         const logoutBtn = document.getElementById("logoutBtn");
         const refreshBtn = document.getElementById("refreshBtn");
-        const myPetsBtn = document.getElementById("myPetsBtn");
-        const petModal = document.getElementById("petModal");
-        const petGallery = document.getElementById("petGallery");
-        const closePetModal = document.getElementById("closePetModal");
         const container = document.getElementById("container");
         const loginSection = document.getElementById("loginSection");
         const loginBtn = document.getElementById("loginBtn");
@@ -642,7 +587,7 @@ body.dark .pet-card {
         emojiColumn.scrollTop = 0;
         wordColumn.scrollTop = 0;
 
-        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn || !myPetsBtn || !petModal || !closePetModal) {
+        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn) {
           console.error("Missing DOM elements");
           messages.textContent = "Error: Elementos de la página no encontrados.";
           return;
@@ -735,99 +680,94 @@ body.dark .pet-card {
           localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
         }
 
-  let voices = [];
-  let voiceLoadAttempts = 0;
-  const maxVoiceLoadAttempts = 5; // Reduced attempts for faster fallback
+        let voices = [];
+        let voiceLoadAttempts = 0;
+        const maxVoiceLoadAttempts = 5;
 
-  function loadVoices() {
-    voices = speechSynthesis.getVoices();
-    console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
-    voiceLoadAttempts++;
-    console.log("Voice load attempt:", voiceLoadAttempts);
-  }
+        function loadVoices() {
+          voices = speechSynthesis.getVoices();
+          console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
+          voiceLoadAttempts++;
+          console.log("Voice load attempt:", voiceLoadAttempts);
+        }
 
-  // Load voices initially
-  loadVoices();
-  if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-  }
+        loadVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = loadVoices;
+        }
 
-  function getSpanishVoice() {
-    // Prioritize Google Spanish voices for better quality
-    const preferredVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
-    if (preferredVoices.length) {
-      console.log("Selected Google Spanish voice:", preferredVoices[0].name, preferredVoices[0].lang);
-      return preferredVoices[0];
-    }
-    // Fallback to any es-ES voice
-    const esESVoice = voices.find(v => v.lang === "es-ES");
-    if (esESVoice) {
-      console.log("Selected es-ES voice:", esESVoice.name);
-      return esESVoice;
-    }
-    // Fallback to any Spanish voice
-    const esVoice = voices.find(v => v.lang.startsWith("es-"));
-    if (esVoice) {
-      console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
-      return esVoice;
-    }
-    console.warn("No Spanish voice found");
-    return null;
-  }
+        function getSpanishVoice() {
+          const preferredVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
+          if (preferredVoices.length) {
+            console.log("Selected Google Spanish voice:", preferredVoices[0].name, preferredVoices[0].lang);
+            return preferredVoices[0];
+          }
+          const esESVoice = voices.find(v => v.lang === "es-ES");
+          if (esESVoice) {
+            console.log("Selected es-ES voice:", esESVoice.name);
+            return esESVoice;
+          }
+          const esVoice = voices.find(v => v.lang.startsWith("es-"));
+          if (esVoice) {
+            console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
+            return esVoice;
+          }
+          console.warn("No Spanish voice found");
+          return null;
+        }
 
-  function speakText(text) {
-    if (!window.speechSynthesis) {
-      console.error("SpeechSynthesis API not supported");
-      messages.textContent = "Voz no compatible en este dispositivo.";
-      setTimeout(() => {
-        messages.textContent = "";
-      }, 2000);
-      isAudioPlaying = false;
-      processAudioQueue();
-      return;
-    }
+        function speakText(text) {
+          if (!window.speechSynthesis) {
+            console.error("SpeechSynthesis API not supported");
+            messages.textContent = "Voz no compatible en este dispositivo.";
+            setTimeout(() => {
+              messages.textContent = "";
+            }, 2000);
+            isAudioPlaying = false;
+            processAudioQueue();
+            return;
+          }
 
-    // Retry if voices aren't loaded yet
-    if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
-      console.log("Voices not loaded, retrying...");
-      setTimeout(() => speakText(text), 200); // Reduced retry delay
-      return;
-    }
+          if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
+            console.log("Voices not loaded, retrying...");
+            setTimeout(() => speakText(text), 200);
+            return;
+          }
 
-    const spanishVoice = getSpanishVoice();
-    if (!spanishVoice) {
-      console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-      messages.textContent = "No hay voz en español disponible.";
-      setTimeout(() => {
-        messages.textContent = "";
-      }, 2000);
-      isAudioPlaying = false;
-      processAudioQueue();
-      return;
-    }
+          const spanishVoice = getSpanishVoice();
+          if (!spanishVoice) {
+            console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
+            messages.textContent = "No hay voz en español disponible.";
+            setTimeout(() => {
+              messages.textContent = "";
+            }, 2000);
+            isAudioPlaying = false;
+            processAudioQueue();
+            return;
+          }
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = spanishVoice;
-    utterance.lang = "es-ES"; // Force Spanish language
-    utterance.rate = 0.9; // Slightly slower for clarity
-    utterance.volume = 1.0;
-    utterance.onend = () => {
-      console.log("Speech finished:", text);
-      isAudioPlaying = false;
-      processAudioQueue();
-    };
-    utterance.onerror = (e) => {
-      console.error("Speech synthesis error:", e.error, e.message);
-      messages.textContent = "Error al reproducir voz.";
-      setTimeout(() => {
-        messages.textContent = "";
-      }, 2000);
-      isAudioPlaying = false;
-      processAudioQueue();
-    };
-    console.log("Speaking text:", text, "with voice:", spanishVoice.name);
-    speechSynthesis.speak(utterance);
-  }
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.voice = spanishVoice;
+          utterance.lang = "es-ES";
+          utterance.rate = 0.9;
+          utterance.volume = 1.0;
+          utterance.onend = () => {
+            console.log("Speech finished:", text);
+            isAudioPlaying = false;
+            processAudioQueue();
+          };
+          utterance.onerror = (e) => {
+            console.error("Speech synthesis error:", e.error, e.message);
+            messages.textContent = "Error al reproducir voz.";
+            setTimeout(() => {
+              messages.textContent = "";
+            }, 2000);
+            isAudioPlaying = false;
+            processAudioQueue();
+          };
+          console.log("Speaking text:", text, "with voice:", spanishVoice.name);
+          speechSynthesis.speak(utterance);
+        }
 
         function populateUsernameDropdown() {
           usernameSelect.innerHTML = `
@@ -878,7 +818,7 @@ body.dark .pet-card {
 
         function updateProgress() {
           const stars = matched.size;
-          progressStars.innerHTML = "🌟".repeat(stars) + "☆".repeat(5 - stars); // Filled stars for matches, empty for remaining
+          progressStars.innerHTML = "🌟".repeat(stars) + "☆".repeat(5 - stars);
         }
 
         function saveUserData() {
@@ -888,31 +828,6 @@ body.dark .pet-card {
             console.error("Failed to save user data:", e);
             loginError.textContent = "Error al guardar datos.";
           }
-        }
-
-        function checkPetUnlocks() {
-          const user = users[currentUser];
-          Object.keys(petData).forEach(pet => {
-            if (!user.pets.includes(pet) && petData[pet].unlockCondition(user)) {
-              user.pets.push(pet);
-              messages.textContent = `🎉 ¡Has desbloqueado a ${petData[pet].name} ${pet}!`;
-              triggerConfetti();
-              setTimeout(() => { messages.textContent = ""; }, 2000);
-            }
-          });
-          saveUserData();
-        }
-
-        function showPetGallery() {
-          petGallery.innerHTML = "";
-          Object.entries(petData).forEach(([pet, { name }]) => {
-            const isUnlocked = users[currentUser].pets.includes(pet);
-            const div = document.createElement("div");
-            div.className = `pet-card ${isUnlocked ? "unlocked" : "locked"}`;
-            div.innerHTML = isUnlocked ? `${pet}<br>${name}` : "???<br>Locked";
-            petGallery.appendChild(div);
-          });
-          petModal.style.display = "block";
         }
 
         function selectQuizWords(preserveCarryovers = []) {
@@ -927,7 +842,6 @@ body.dark .pet-card {
             user.level = user.level || 1;
             user.badges = user.badges || [];
             user.streak = user.streak || 0;
-            user.pets = user.pets || [user.avatar]; // Initialize with current avatar
             if (!preserveCarryovers.length) user.roundCount++;
 
             const retiredCount = user.retired.length;
@@ -1148,11 +1062,10 @@ body.dark .pet-card {
                           console.log(`Level up: ${user.level}`);
                         }
                       }
-                      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length} <span>${user.pets[0]}</span>`;
+                      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
                       user.mastered[word].errorCount = 0;
                       user.streak++;
                       saveUserData();
-                      checkPetUnlocks(); // Check for pet unlocks after correct match
                     }
                     const currentEmoji = selectedEmoji;
                     const currentDiv = div;
@@ -1239,7 +1152,7 @@ body.dark .pet-card {
             scoreDisplay.style.display = "block";
             progressBar.style.display = "block";
             progressStars.innerHTML = "☆☆☆☆☆";
-            scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length} <span>${users[currentUser].pets[0]}</span>`;
+            scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
             container.style.display = "flex";
             container.style.pointerEvents = "auto";
             buttonsDiv.style.display = "flex";
@@ -1248,7 +1161,6 @@ body.dark .pet-card {
             refreshBtn.style.display = "inline-block";
             playAgainBtn.style.display = "none";
             logoutBtn.style.display = "none";
-            myPetsBtn.style.display = "inline-block";
             loginSection.style.display = "none";
             leaderboardDiv.style.display = "none";
             stopMenuMusic();
@@ -1269,8 +1181,7 @@ body.dark .pet-card {
             console.log("Game buttons visible:", {
               buttonsDiv: buttonsDiv.style.display,
               refreshBtn: refreshBtn.style.display,
-              quitBtn: quitBtn.style.display,
-              myPetsBtn: myPetsBtn.style.display
+              quitBtn: quitBtn.style.display
             });
 
             if (emojiColumn.children[0]) {
@@ -1314,7 +1225,6 @@ body.dark .pet-card {
               buttonsDiv.style.display = "flex";
               playAgainBtn.style.display = "inline-block";
               logoutBtn.style.display = "inline-block";
-              myPetsBtn.style.display = "inline-block";
               quitBtn.style.display = "none";
               refreshBtn.style.display = "none";
               startBtn.style.display = "none";
@@ -1323,8 +1233,7 @@ body.dark .pet-card {
               console.log("Post-game buttons visible:", {
                 buttonsDiv: buttonsDiv.style.display,
                 playAgainBtn: playAgainBtn.style.display,
-                logoutBtn: logoutBtn.style.display,
-                myPetsBtn: myPetsBtn.style.display
+                logoutBtn: logoutBtn.style.display
               });
 
               setTimeout(() => {
@@ -1364,7 +1273,6 @@ body.dark .pet-card {
             container.style.pointerEvents = "auto";
             quitBtn.style.display = "inline-block";
             refreshBtn.style.display = "inline-block";
-            myPetsBtn.style.display = "inline-block";
             playAgainBtn.style.display = "none";
             logoutBtn.style.display = "none";
 
@@ -1422,8 +1330,7 @@ body.dark .pet-card {
                 roundCount: 0,
                 level: 1,
                 badges: [],
-                streak: 0,
-                pets: [avatarInput.value]
+                streak: 0
               };
               saveUserData();
               loginError.textContent = "";
@@ -1431,7 +1338,6 @@ body.dark .pet-card {
               buttonsDiv.style.display = "flex";
               startBtn.style.display = "inline-block";
               logoutBtn.style.display = "inline-block";
-              myPetsBtn.style.display = "inline-block";
               loginSection.style.display = "none";
               messages.textContent = "¡Bienvenido, Invitado!";
               hasInteracted = true;
@@ -1473,14 +1379,12 @@ body.dark .pet-card {
                 roundCount: 0,
                 level: 1,
                 badges: [],
-                streak: 0,
-                pets: [avatarInput.value]
+                streak: 0
               };
               saveUserData();
               populateUsernameDropdown();
             } else {
               users[username].avatar = avatarInput.value;
-              users[username].pets = users[username].pets || [avatarInput.value];
               const newWords = vocab.filter(v => !users[username].activePool.some(p => p.word === v.word) && !users[username].retired.includes(v.word));
               if (newWords.length > 0) {
                 users[username].activePool.push(...newWords.slice(0, 5));
@@ -1495,7 +1399,6 @@ body.dark .pet-card {
             buttonsDiv.style.display = "flex";
             startBtn.style.display = "inline-block";
             logoutBtn.style.display = "inline-block";
-            myPetsBtn.style.display = "inline-block";
             loginSection.style.display = "none";
             messages.textContent = `¡Bienvenido, ${username}!`;
             hasInteracted = true;
@@ -1537,9 +1440,6 @@ body.dark .pet-card {
             playAgainBtn.style.display = "none";
             logoutBtn.style.display = "none";
             refreshBtn.style.display = "none";
-            myPetsBtn.style.display = "none";
-            petModal.style.display = "none";
-            leaderboardDiv.style.display = "none";
             pinInput.disabled = false;
             sessionStorage.removeItem("currentUser");
             hasInteracted = true;
@@ -1721,35 +1621,6 @@ body.dark .pet-card {
           }
         });
 
-        myPetsBtn.addEventListener("click", () => {
-          console.log("My Pets button clicked");
-          showPetGallery();
-        });
-        myPetsBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("My Pets button touched");
-          showPetGallery();
-        });
-        myPetsBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("My Pets button activated with Enter");
-            showPetGallery();
-          }
-        });
-
-        closePetModal.addEventListener("click", () => {
-          petModal.style.display = "none";
-        });
-        closePetModal.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          petModal.style.display = "none";
-        });
-        closePetModal.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            petModal.style.display = "none";
-          }
-        });
-
         const savedUser = sessionStorage.getItem("currentUser");
         if (savedUser && (users[savedUser] || savedUser === "Guest")) {
           currentUser = savedUser;
@@ -1765,7 +1636,6 @@ body.dark .pet-card {
           buttonsDiv.style.display = "flex";
           startBtn.style.display = "inline-block";
           logoutBtn.style.display = "inline-block";
-          myPetsBtn.style.display = "inline-block";
           loginSection.style.display = "none";
           updateLeaderboard();
           startBtn.focus();
