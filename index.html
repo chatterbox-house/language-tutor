@@ -735,121 +735,99 @@ body.dark .pet-card {
           localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
         }
 
-        let voices = [];
-        let voiceLoadAttempts = 0;
-        const maxVoiceLoadAttempts = 10;
+  let voices = [];
+  let voiceLoadAttempts = 0;
+  const maxVoiceLoadAttempts = 5; // Reduced attempts for faster fallback
 
-        function loadVoices() {
-          voices = speechSynthesis.getVoices();
-          console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
-          voiceLoadAttempts++;
-          console.log("Voice load attempt:", voiceLoadAttempts);
-        }
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
-        }
+  function loadVoices() {
+    voices = speechSynthesis.getVoices();
+    console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
+    voiceLoadAttempts++;
+    console.log("Voice load attempt:", voiceLoadAttempts);
+  }
 
-        function getSpanishVoice() {
-          const preferredVoices = voices.filter(v => v.name.includes("Google") && (v.lang === "es-ES" || v.lang.startsWith("es-")));
-          if (preferredVoices.length) {
-            console.log("Selected preferred Google voice:", preferredVoices[0].name, preferredVoices[0].lang);
-            return preferredVoices[0];
-          }
-          const esESVoice = voices.find(v => v.lang === "es-ES");
-          if (esESVoice) {
-            console.log("Selected es-ES voice:", esESVoice.name);
-            return esESVoice;
-          }
-          const esVoice = voices.find(v => v.lang.startsWith("es-"));
-          if (esVoice) {
-            console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
-            return esVoice;
-          }
-          console.warn("No Spanish voice found");
-          return null;
-        }
+  // Load voices initially
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
 
-        function playFallbackAudio(word) {
-          const vocabItem = vocab.find(v => v.word === word);
-          if (vocabItem && vocabItem.audio) {
-            console.log("Playing fallback audio for:", word, vocabItem.audio);
-            const audio = new Audio(vocabItem.audio);
-            audio.volume = 0.5;
-            audio.play().then(() => {
-              console.log("Fallback audio played successfully");
-              isAudioPlaying = false;
-              processAudioQueue();
-            }).catch(e => {
-              console.error("Error playing fallback audio:", e);
-              messages.textContent = "Error al reproducir audio. Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
-              setTimeout(() => {
-                messages.textContent = "";
-              }, 3000);
-              isAudioPlaying = false;
-              processAudioQueue();
-            });
-          } else {
-            console.warn("No fallback audio available for:", word);
-            messages.textContent = "¡Voz baja? Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
-            setTimeout(() => {
-              messages.textContent = "";
-            }, 3000);
-            isAudioPlaying = false;
-            processAudioQueue();
-          }
-        }
+  function getSpanishVoice() {
+    // Prioritize Google Spanish voices for better quality
+    const preferredVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
+    if (preferredVoices.length) {
+      console.log("Selected Google Spanish voice:", preferredVoices[0].name, preferredVoices[0].lang);
+      return preferredVoices[0];
+    }
+    // Fallback to any es-ES voice
+    const esESVoice = voices.find(v => v.lang === "es-ES");
+    if (esESVoice) {
+      console.log("Selected es-ES voice:", esESVoice.name);
+      return esESVoice;
+    }
+    // Fallback to any Spanish voice
+    const esVoice = voices.find(v => v.lang.startsWith("es-"));
+    if (esVoice) {
+      console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
+      return esVoice;
+    }
+    console.warn("No Spanish voice found");
+    return null;
+  }
 
-        function speakText(text) {
-          if (!window.speechSynthesis) {
-            console.error("SpeechSynthesis API not supported");
-            messages.textContent = "Voz no compatible en este dispositivo. Ajusta el volumen.";
-            setTimeout(() => {
-              messages.textContent = "";
-            }, 3000);
-            playFallbackAudio(text);
-            return;
-          }
+  function speakText(text) {
+    if (!window.speechSynthesis) {
+      console.error("SpeechSynthesis API not supported");
+      messages.textContent = "Voz no compatible en este dispositivo.";
+      setTimeout(() => {
+        messages.textContent = "";
+      }, 2000);
+      isAudioPlaying = false;
+      processAudioQueue();
+      return;
+    }
 
-          loadVoices();
-          if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
-            console.log("Voices not loaded, retrying...");
-            setTimeout(() => speakText(text), 500);
-            return;
-          }
+    // Retry if voices aren't loaded yet
+    if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
+      console.log("Voices not loaded, retrying...");
+      setTimeout(() => speakText(text), 200); // Reduced retry delay
+      return;
+    }
 
-          const spanishVoice = getSpanishVoice();
-          if (!spanishVoice) {
-            console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-            messages.textContent = "No hay voz en español disponible. Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
-            setTimeout(() => {
-              messages.textContent = "";
-            }, 3000);
-            playFallbackAudio(text);
-            return;
-          }
+    const spanishVoice = getSpanishVoice();
+    if (!spanishVoice) {
+      console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
+      messages.textContent = "No hay voz en español disponible.";
+      setTimeout(() => {
+        messages.textContent = "";
+      }, 2000);
+      isAudioPlaying = false;
+      processAudioQueue();
+      return;
+    }
 
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.voice = spanishVoice;
-          utterance.lang = spanishVoice.lang;
-          utterance.rate = 0.9;
-          utterance.volume = 1.0;
-          utterance.onend = () => {
-            console.log("Speech finished:", text);
-            isAudioPlaying = false;
-            processAudioQueue();
-          };
-          utterance.onerror = (e) => {
-            console.error("Speech synthesis error:", e.error, e.message);
-            messages.textContent = "Error al reproducir voz. Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
-            setTimeout(() => {
-              messages.textContent = "";
-            }, 2000);
-            playFallbackAudio(text);
-          };
-          console.log("Speaking text:", text, "with voice:", spanishVoice.name);
-          speechSynthesis.speak(utterance);
-        }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = spanishVoice;
+    utterance.lang = "es-ES"; // Force Spanish language
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.volume = 1.0;
+    utterance.onend = () => {
+      console.log("Speech finished:", text);
+      isAudioPlaying = false;
+      processAudioQueue();
+    };
+    utterance.onerror = (e) => {
+      console.error("Speech synthesis error:", e.error, e.message);
+      messages.textContent = "Error al reproducir voz.";
+      setTimeout(() => {
+        messages.textContent = "";
+      }, 2000);
+      isAudioPlaying = false;
+      processAudioQueue();
+    };
+    console.log("Speaking text:", text, "with voice:", spanishVoice.name);
+    speechSynthesis.speak(utterance);
+  }
 
         function populateUsernameDropdown() {
           usernameSelect.innerHTML = `
