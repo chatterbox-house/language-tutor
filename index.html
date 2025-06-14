@@ -372,7 +372,7 @@
   <script src="vocab.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
-   console.log("Main script loaded successfully");
+ console.log("Main script loaded successfully");
 
 // Fallback vocabulary
 if (typeof vocab === "undefined") {
@@ -385,6 +385,16 @@ if (typeof vocab === "undefined") {
     { emoji: "✍️", word: "escribir", type: "verb" }
   ];
 }
+
+// Shuffle vocab to ensure random order
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+vocab = shuffle([...vocab]); // Randomize vocab on load
 
 let users = JSON.parse(localStorage.getItem("users") || "{}");
 const goodLuckPhrases = [
@@ -640,14 +650,6 @@ window.onload = function() {
       progressStars.innerHTML = "◇".repeat(5 - dollars) + "$".repeat(dollars);
     }
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
     function saveUserData() {
       try {
         localStorage.setItem("users", JSON.stringify(users));
@@ -656,54 +658,115 @@ window.onload = function() {
       }
     }
 
-    function selectQuizWords() {
+    function selectQuizWords(preserveCarryovers = []) {
       try {
         console.log("Selecting quiz words for user:", currentUser);
         const user = users[currentUser];
         user.mastered = user.mastered || {};
+        user.retired = user.retired || [];
+        user.activePool = user.activePool || shuffle([...vocab]).slice(0, 30); // Initial 30-word pool
         user.lastWords = user.lastWords || [];
+        user.roundCount = user.roundCount || 0;
+        user.level = user.level || 1; // For future gamification
+        user.badges = user.badges || [];
+        user.streak = user.streak || 0;
+        if (!preserveCarryovers.length) user.roundCount++; // Don't increment on refresh
 
-        let availableWords = vocab.filter(v => (user.mastered[v.word] || 0) < 5);
-        if (availableWords.length < 5) {
-          console.warn("Not enough unique words, including all vocab");
-          availableWords = [...vocab];
+        // Expand activePool if 5 words retired
+        const retiredCount = user.retired.length;
+        if (retiredCount >= 5 && retiredCount % 5 === 0) {
+          const newWords = shuffle([...vocab])
+            .filter(v => !user.activePool.some(p => p.word === v.word) && !user.retired.includes(v.word))
+            .slice(0, 5);
+          user.activePool.push(...newWords);
+          console.log("Added new words to activePool:", newWords.map(v => v.word));
         }
 
-        const selectedWordsSet = new Set();
-        const holdovers = shuffle([...user.lastWords])
-          .filter(word => availableWords.some(v => v.word === word))
-          .slice(0, Math.min(2, availableWords.length));
-        holdovers.forEach(word => selectedWordsSet.add(word));
-        console.log("Holdovers selected:", holdovers);
-
-        const remainingCount = 5 - selectedWordsSet.size;
-        const newWords = shuffle([...availableWords])
-          .filter(v => !selectedWordsSet.has(v.word))
-          .slice(0, remainingCount)
-          .map(v => v.word);
-        newWords.forEach(word => selectedWordsSet.add(word));
-        console.log("New words selected:", newWords);
-
-        let selectedWords = Array.from(selectedWordsSet);
-        if (selectedWords.length < 5) {
-          const extraWords = shuffle([...availableWords])
-            .filter(v => !selectedWords.includes(v.word))
-            .slice(0, 5 - selectedWords.length)
-            .map(v => v.word);
-          selectedWords.push(...extraWords);
-          console.log("Extra words added:", extraWords);
+        // Review round every 10 rounds
+        if (user.roundCount % 10 === 0 && user.retired.length > 0 && !preserveCarryovers.length) {
+          console.log("Triggering review round");
+          const retiredWords = shuffle([...user.retired]).slice(0, 2);
+          const nonRetiredWords = shuffle([...user.activePool])
+            .filter(v => !user.retired.includes(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
+            .slice(0, 3);
+          const selectedWords = [...retiredWords.map(word => vocab.find(v => v.word === word)), ...nonRetiredWords];
+          user.lastWords = selectedWords.map(v => v.word);
+          saveUserData();
+          return selectedWords.slice(0, 5);
         }
 
-        selectedWords = [...new Set(selectedWords)].slice(0, 5);
-        console.log("Final selected words:", selectedWords);
+        // Normal round: 2 carryovers, up to 2 from Buckets 1–2, 1 new
+        const buckets = [[], [], []]; // Buckets for 0–2 correct matches
+        user.activePool.forEach(v => {
+          const correctCount = user.mastered[v.word]?.correctCount || 0;
+          if (correctCount < 3) buckets[correctCount].push(v);
+        });
 
-        user.lastWords = selectedWords;
+        // Bucket weights
+        const weights = [0.2, 0.5, 0.3]; // Prioritize Buckets 1–2
+        const availableBuckets = buckets.map((b, i) => ({ words: b, weight: weights[i] }))
+          .filter(b => b.words.length > 0);
+
+        // Select 2 carryovers
+        let carryovers = preserveCarryovers.length
+          ? preserveCarryovers
+          : shuffle([...user.lastWords])
+              .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.correctCount || 0) < 3)
+              .sort((a, b) => (user.mastered[b]?.errorCount || 0) - (user.mastered[a]?.errorCount || 0))
+              .slice(0, 2);
+        const selectedWordsSet = new Set(carryovers);
+        console.log("Carryovers:", carryovers);
+
+        // Select up to 2 from Buckets 1–2, 1 from Bucket 0
+        let learnedCount = carryovers.filter(w => (user.mastered[w]?.correctCount || 0) > 0).length;
+        while (selectedWordsSet.size < 5 && availableBuckets.length > 0) {
+          const preferLearned = learnedCount < 4 && buckets[1].length + buckets[2].length > 0;
+          const targetBucket = preferLearned ? [1, 2] : [0, 1, 2];
+          const filteredBuckets = availableBuckets.filter(b => targetBucket.includes(buckets.indexOf(b.words)));
+          if (!filteredBuckets.length) break;
+
+          const totalWeight = filteredBuckets.reduce((sum, b) => sum + b.weight, 0);
+          let rand = Math.random() * totalWeight;
+          let selectedBucket = null;
+          for (const bucket of filteredBuckets) {
+            rand -= bucket.weight;
+            if (rand <= 0) {
+              selectedBucket = bucket;
+              break;
+            }
+          }
+          if (!selectedBucket) selectedBucket = filteredBuckets[filteredBuckets.length - 1];
+
+          const eligibleWords = selectedBucket.words.filter(v => !selectedWordsSet.has(v.word));
+          if (eligibleWords.length > 0) {
+            const word = shuffle([...eligibleWords])
+              .sort((a, b) => (user.mastered[b.word]?.errorCount || 0) - (user.mastered[a.word]?.errorCount || 0))[0];
+            selectedWordsSet.add(word.word);
+            if ((user.mastered[word.word]?.correctCount || 0) > 0) learnedCount++;
+          } else {
+            availableBuckets.splice(availableBuckets.indexOf(selectedBucket), 1);
+          }
+        }
+
+        // Fallback if not enough words
+        if (selectedWordsSet.size < 5) {
+          const extraWords = shuffle([...user.activePool])
+            .filter(v => !selectedWordsSet.has(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
+            .slice(0, 5 - selectedWordsSet.size);
+          extraWords.forEach(v => selectedWordsSet.add(v.word));
+          console.log("Extra words added:", extraWords.map(v => v.word));
+        }
+
+        const selectedWords = Array.from(selectedWordsSet).slice(0, 5);
+        const finalVocab = vocab.filter(v => selectedWords.includes(v.word));
+        // Verify no duplicates
+        if (new Set(finalVocab.map(v => v.word)).size !== finalVocab.length) {
+          console.error("Duplicates detected:", finalVocab.map(v => v.word));
+          return selectQuizWords(preserveCarryovers); // Retry
+        }
+        user.lastWords = finalVocab.map(v => v.word);
         saveUserData();
-
-        const selectedVocab = vocab.filter(v => selectedWords.includes(v.word));
-        const finalVocab = selectedVocab.slice(0, 5);
-        console.log("Selected vocab:", finalVocab.map(v => v.word));
-
+        console.log("Selected words:", finalVocab.map(v => v.word));
         return finalVocab;
       } catch (e) {
         console.error("Error selecting quiz words:", e);
@@ -788,14 +851,32 @@ window.onload = function() {
             if (!selectedEmoji || matched.has(word)) return;
 
             const emojiWord = selectedEmoji.dataset.word;
+            const user = users[currentUser];
 
             if (emojiWord === word) {
               if (!matched.has(word)) {
                 matched.add(word);
+                user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
                 if (!errorWords.has(word)) {
-                  users[currentUser].score++;
-                  users[currentUser].mastered[word] = (users[currentUser].mastered[word] || 0) + 1;
-                  scoreDisplay.innerHTML = `Score: $${users[currentUser].score}`;
+                  user.mastered[word].correctCount++;
+                  user.score++;
+                  if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
+                    user.retired.push(word);
+                    user.score += 3; // Bonus for retirement
+                    messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos`;
+                    triggerConfetti();
+                    setTimeout(() => {
+                      messages.textContent = "";
+                    }, 2000);
+                    // Update level for gamification
+                    if (user.retired.length % 10 === 0) {
+                      user.level++;
+                      console.log(`Level up: ${user.level}`);
+                    }
+                  }
+                  scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
+                  user.mastered[word].errorCount = 0; // Reset errors
+                  user.streak++; // Increment streak
                   saveUserData();
                 }
                 selectedEmoji.classList.remove("selected");
@@ -819,6 +900,16 @@ window.onload = function() {
               }
             } else {
               errorWords.add(word);
+              user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
+              user.mastered[word].errorCount++;
+              // Reintroduce retired word if missed twice
+              if (user.retired.includes(word) && user.mastered[word].errorCount >= 2) {
+                user.retired = user.retired.filter(w => w !== word);
+                user.activePool.push(vocab.find(v => v.word === word));
+                user.mastered[word].correctCount = 0;
+                console.log(`Reintroduced retired word: ${word}`);
+              }
+              user.streak = 0; // Reset streak
               div.classList.add("incorrect");
               setTimeout(() => div.classList.remove("incorrect"), 200);
               playAudio("chiptune", "incorrect");
@@ -827,6 +918,7 @@ window.onload = function() {
                 messages.textContent = "";
               }, 1500);
               clearSelections();
+              saveUserData();
             }
           });
 
@@ -853,7 +945,7 @@ window.onload = function() {
         scoreDisplay.style.display = "block";
         progressBar.style.display = "block";
         progressStars.innerHTML = "◇◇◇◇◇";
-        scoreDisplay.innerHTML = `Score: $${users[currentUser].score}`;
+        scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
         container.style.display = "flex";
         container.style.pointerEvents = "auto";
         buttonsDiv.style.display = "flex";
@@ -963,7 +1055,8 @@ window.onload = function() {
         playAgainBtn.style.display = "none";
         logoutBtn.style.display = "none";
 
-        currentVocab = selectQuizWords();
+        const previousCarryovers = [...users[currentUser].lastWords]; // Preserve carryovers
+        currentVocab = selectQuizWords(previousCarryovers);
         setupEmojiBoxes();
         setupWordBoxes();
 
@@ -1008,8 +1101,28 @@ window.onload = function() {
           return false;
         }
         if (!users[username]) {
-          users[username] = { pin, avatar, score: 0, mastered: {}, lastWords: [] };
+          users[username] = {
+            pin,
+            avatar,
+            score: 0,
+            mastered: {},
+            retired: [],
+            activePool: shuffle([...vocab]).slice(0, 30), // Initialize active pool
+            lastWords: [],
+            roundCount: 0,
+            level: 1,
+            badges: [],
+            streak: 0
+          };
           saveUserData();
+        } else {
+          // Update activePool with new vocab words
+          const newWords = vocab.filter(v => !users[username].activePool.some(p => p.word === v.word) && !users[username].retired.includes(v.word));
+          if (newWords.length > 0) {
+            users[username].activePool.push(...newWords.slice(0, 5));
+            console.log("Added new words to existing user’s activePool:", newWords.slice(0, 5).map(v => v.word));
+            saveUserData();
+          }
         }
         loginError.textContent = "";
         currentUser = username;
@@ -1100,6 +1213,12 @@ window.onload = function() {
       currentUser = savedUser;
       usernameInput.value = currentUser;
       avatarInput.value = users[savedUser].avatar;
+      // Update activePool for existing users
+      const newWords = vocab.filter(v => !users[savedUser].activePool.some(p => p.word === v.word) && !users[savedUser].retired.includes(v.word));
+      if (newWords.length > 0) {
+        users[savedUser].activePool.push(...newWords.slice(0, 5));
+        saveUserData();
+      }
       buttonsDiv.style.display = "flex";
       startBtn.style.display = "inline-block";
       logoutBtn.style.display = "inline-block";
