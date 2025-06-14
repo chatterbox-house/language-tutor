@@ -377,6 +377,13 @@ body.dark #newUsernameInput {
 body.dark #loginError {
   color: #fff;
 }
+#ttsPrompt {
+  text-align: center;
+  margin: 10px;
+  color: #FF0000;
+  font-size: clamp(0.6rem, 4vw, 0.8rem);
+  display: none;
+}
 canvas#confettiCanvas {
   position: fixed;
   top: 0;
@@ -441,24 +448,28 @@ body.dark #themeToggle::before {
 
   <div id="loginSection">
     <div id="loginError"></div>
-    <label for="usernameSelect">Usuario:</label>
+    <label for="usernameSelect">Usuario / User:</label>
     <select id="usernameSelect" tabindex="0" aria-label="Select user">
-      <option value="" disabled selected>Selecciona usuario o crea uno nuevo</option>
-      <option value="Guest">Invitado (sin PIN)</option>
-      <option value="new">Nuevo usuario</option>
+      <option value="" disabled selected>Selecciona usuario o crea uno nuevo / Select user or create new</option>
+      <option value="Guest">Invitado / Guest (sin PIN / no PIN)</option>
+      <option value="new">Usuario nuevo / New user</option>
     </select>
-    <input type="text" id="newUsernameInput" placeholder="Ingresa nuevo usuario (1-20 caracteres)" maxlength="20" autocomplete="off" style="display: none; margin-top: 8px;" tabindex="0" aria-label="New username">
+    <input type="text" id="newUsernameInput" placeholder="Ingresa nuevo usuario (1-20 caracteres) / Enter new username (1-20 characters)" maxlength="20" autocomplete="off" style="display: none; margin-top: 8px;" tabindex="0" aria-label="New username">
     <label for="avatar">Avatar:</label>
     <select id="avatar" tabindex="0" aria-label="Select avatar">
-      <option value="😺">😺 Gato</option>
-      <option value="🐶">🐶 Perro</option>
-      <option value="🦁">🦁 León</option>
-      <option value="🐻">🐻 Oso</option>
-      <option value="🦊">🦊 Zorro</option>
+      <option value="😺">😺 Gato / Cat</option>
+      <option value="🐶">🐶 Perro / Dog</option>
+      <option value="🦁">🦁 León / Lion</option>
+      <option value="🐻">🐻 Oso / Bear</option>
+      <option value="🦊">🦊 Zorro / Fox</option>
     </select>
-    <label for="pin">PIN (4 dígitos, opcional para nuevos usuarios):</label>
-    <input type="password" id="pin" placeholder="Ingresa PIN de 4 dígitos" maxlength="4" autocomplete="off" tabindex="0" aria-label="Enter PIN">
-    <button id="loginBtn" tabindex="0" aria-label="Login or create account">Iniciar sesión / Crear cuenta</button>
+    <label for="pin">PIN (4 dígitos, opcional para nuevos usuarios / 4 digits, optional for new users):</label>
+    <input type="password" id="pin" placeholder="Ingresa PIN de 4 dígitos / Enter 4-digit PIN" maxlength="4" autocomplete="off" tabindex="0" aria-label="Enter PIN">
+    <button id="loginBtn" tabindex="0" aria-label="Login or create account">Iniciar sesión / Crear cuenta / Login or Create account</button>
+  </div>
+
+  <div id="ttsPrompt">
+    Por favor, instala o habilita el motor de texto a voz en español en la configuración de tu dispositivo. / Please install or enable the Spanish text-to-speech engine in your device settings.
   </div>
 
   <div id="buttons" style="display:none;">
@@ -467,7 +478,6 @@ body.dark #themeToggle::before {
     <button id="playAgainBtn" style="display:none;" tabindex="0" aria-label="Play again">Play Again</button>
     <button id="logoutBtn" style="display:none;" tabindex="0" aria-label="Logout">Logout</button>
     <button id="refreshBtn" style="display:none;" tabindex="0" aria-label="Refresh quiz">Refresh</button>
-    <!-- Placeholder for future feature button -->
   </div>
 
   <div id="messages"></div>
@@ -510,18 +520,18 @@ body.dark #themeToggle::before {
 
     let users = JSON.parse(localStorage.getItem("users") || "{}");
     const goodLuckPhrases = [
-      "🚀 ¡Listo, pixelero!",
-      "🌟 ¡A por las estrellas!",
-      "🎮 ¡Tú puedes, 8-bit!",
-      "⚡ ¡Vamos, héroe!",
-      "🔥 ¡Modo juego ON!"
+      "🚀 ¡Listo, pixelero! / Ready, pixel hero!",
+      "🌟 ¡A por las estrellas! / Reach for the stars!",
+      "🎮 ¡Tú puedes, 8-bit! / You can do it, 8-bit!",
+      "⚡ ¡Vamos, héroe! / Let's go, hero!",
+      "🔥 ¡Modo juego ON! / Game mode ON!"
     ];
     const wellDonePhrases = [
-      "🎉 ¡Eres un pro, pixel!",
-      "🏆 ¡Nivel completado!",
-      "⭐ ¡Súper 8-bit!",
-      "🎈 ¡Victoria retro!",
-      "🌈 ¡Campeón pixelado!"
+      "🎉 ¡Eres un pro, pixel! / You're a pixel pro!",
+      "🏆 ¡Nivel completado! / Level completed!",
+      "⭐ ¡Súper 8-bit! / Super 8-bit!",
+      "🎈 ¡Victoria retro! / Retro victory!",
+      "🌈 ¡Campeón pixelado! / Pixelated champion!"
     ];
     let matched = new Set();
     let quizStarted = false;
@@ -535,6 +545,14 @@ body.dark #themeToggle::before {
       if (audioContext.state === "suspended") {
         audioContext.resume().then(() => {
           console.log("AudioContext resumed");
+          // Initialize TTS with a silent test utterance
+          loadVoices();
+          const testUtterance = new SpeechSynthesisUtterance(" ");
+          testUtterance.volume = 0;
+          testUtterance.onend = () => {
+            console.log("TTS initialized");
+          };
+          speechSynthesis.speak(testUtterance);
         }).catch(e => console.error("Error resuming AudioContext:", e));
       }
     }, { once: true });
@@ -572,6 +590,7 @@ body.dark #themeToggle::before {
         const leaderboardList = document.getElementById("leaderboardList");
         const progressBar = document.getElementById("progressBar");
         const progressStars = document.getElementById("progressStars");
+        const ttsPrompt = document.getElementById("ttsPrompt");
 
         // Sync scrolling between columns
         function syncScroll(source, target) {
@@ -587,9 +606,9 @@ body.dark #themeToggle::before {
         emojiColumn.scrollTop = 0;
         wordColumn.scrollTop = 0;
 
-        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn) {
+        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn || !ttsPrompt) {
           console.error("Missing DOM elements");
-          messages.textContent = "Error: Elementos de la página no encontrados.";
+          messages.textContent = "Error: Elementos de la página no encontrados. / Error: Page elements not found.";
           return;
         }
 
@@ -682,35 +701,28 @@ body.dark #themeToggle::before {
 
         let voices = [];
         let voiceLoadAttempts = 0;
-        const maxVoiceLoadAttempts = 5;
+        const maxVoiceLoadAttempts = 10;
 
         function loadVoices() {
           voices = speechSynthesis.getVoices();
           console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
           voiceLoadAttempts++;
           console.log("Voice load attempt:", voiceLoadAttempts);
-        }
-
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
+          if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
+            setTimeout(loadVoices, 500);
+          }
         }
 
         function getSpanishVoice() {
-          const preferredVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
-          if (preferredVoices.length) {
-            console.log("Selected Google Spanish voice:", preferredVoices[0].name, preferredVoices[0].lang);
-            return preferredVoices[0];
+          const googleVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
+          if (googleVoices.length) {
+            console.log("Selected Google Spanish voice:", googleVoices[0].name, googleVoices[0].lang);
+            return googleVoices[0];
           }
-          const esESVoice = voices.find(v => v.lang === "es-ES");
-          if (esESVoice) {
-            console.log("Selected es-ES voice:", esESVoice.name);
-            return esESVoice;
-          }
-          const esVoice = voices.find(v => v.lang.startsWith("es-"));
-          if (esVoice) {
-            console.log("Selected es-* voice:", esVoice.name, esVoice.lang);
-            return esVoice;
+          const spanishVoices = voices.filter(v => v.lang.startsWith("es-"));
+          if (spanishVoices.length) {
+            console.log("Selected Spanish voice:", spanishVoices[0].name, spanishVoices[0].lang);
+            return spanishVoices[0];
           }
           console.warn("No Spanish voice found");
           return null;
@@ -719,10 +731,12 @@ body.dark #themeToggle::before {
         function speakText(text) {
           if (!window.speechSynthesis) {
             console.error("SpeechSynthesis API not supported");
-            messages.textContent = "Voz no compatible en este dispositivo.";
+            messages.textContent = "Voz no compatible en este dispositivo. / Speech not supported on this device.";
+            ttsPrompt.style.display = "block";
             setTimeout(() => {
               messages.textContent = "";
-            }, 2000);
+              ttsPrompt.style.display = "none";
+            }, 5000);
             isAudioPlaying = false;
             processAudioQueue();
             return;
@@ -730,17 +744,22 @@ body.dark #themeToggle::before {
 
           if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
             console.log("Voices not loaded, retrying...");
-            setTimeout(() => speakText(text), 200);
+            setTimeout(() => {
+              loadVoices();
+              speakText(text);
+            }, 500);
             return;
           }
 
           const spanishVoice = getSpanishVoice();
           if (!spanishVoice) {
             console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-            messages.textContent = "No hay voz en español disponible.";
+            messages.textContent = "No hay voz en español disponible. / No Spanish voice available.";
+            ttsPrompt.style.display = "block";
             setTimeout(() => {
               messages.textContent = "";
-            }, 2000);
+              ttsPrompt.style.display = "none";
+            }, 5000);
             isAudioPlaying = false;
             processAudioQueue();
             return;
@@ -758,10 +777,12 @@ body.dark #themeToggle::before {
           };
           utterance.onerror = (e) => {
             console.error("Speech synthesis error:", e.error, e.message);
-            messages.textContent = "Error al reproducir voz.";
+            messages.textContent = "Error al reproducir voz. / Error playing speech.";
+            ttsPrompt.style.display = "block";
             setTimeout(() => {
               messages.textContent = "";
-            }, 2000);
+              ttsPrompt.style.display = "none";
+            }, 5000);
             isAudioPlaying = false;
             processAudioQueue();
           };
@@ -769,10 +790,15 @@ body.dark #themeToggle::before {
           speechSynthesis.speak(utterance);
         }
 
+        loadVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
         function populateUsernameDropdown() {
           usernameSelect.innerHTML = `
-            <option value="" disabled selected>Selecciona usuario o crea uno nuevo</option>
-            <option value="Guest">Invitado (sin PIN)</option>
+            <option value="" disabled selected>Selecciona usuario o crea uno nuevo / Select user or create new</option>
+            <option value="Guest">Invitado / Guest (sin PIN / no PIN)</option>
           `;
           Object.keys(users)
             .filter(username => username !== "Guest")
@@ -782,7 +808,7 @@ body.dark #themeToggle::before {
               option.textContent = username;
               usernameSelect.appendChild(option);
             });
-          usernameSelect.innerHTML += '<option value="new">Usuario nuevo</option>';
+          usernameSelect.innerHTML += '<option value="new">Usuario nuevo / New user</option>';
         }
 
         function handleUsernameSelection() {
@@ -826,7 +852,7 @@ body.dark #themeToggle::before {
             localStorage.setItem("users", JSON.stringify(users));
           } catch (e) {
             console.error("Failed to save user data:", e);
-            loginError.textContent = "Error al guardar datos.";
+            loginError.textContent = "Error al guardar datos. / Error saving data.";
           }
         }
 
@@ -934,7 +960,7 @@ body.dark #themeToggle::before {
             return finalVocab;
           } catch (e) {
             console.error("Error in selectQuizWords:", e);
-            messages.textContent = "Error seleccionando palabras para el quiz.";
+            messages.textContent = "Error seleccionando palabras para el quiz. / Error selecting quiz words.";
             return shuffle([...vocab]).slice(0, 5);
           }
         }
@@ -1004,7 +1030,7 @@ body.dark #themeToggle::before {
             });
           } catch (e) {
             console.error("Error setting up emoji boxes:", e);
-            messages.textContent = "Error al cargar emojis.";
+            messages.textContent = "Error al cargar emojis. / Error loading emojis.";
           }
         }
 
@@ -1052,7 +1078,7 @@ body.dark #themeToggle::before {
                       if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
                         user.retired.push(word);
                         user.score += 3;
-                        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos`;
+                        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
                         triggerConfetti();
                         setTimeout(() => {
                           messages.textContent = "";
@@ -1088,8 +1114,7 @@ body.dark #themeToggle::before {
                     clearSelections();
                     updateProgress();
                     playAudio("chiptune", "correct");
-                    messages.textContent = "🌟 ¡Punto pixel!";
-
+                    messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
                     if (matched.size === currentVocab.length) {
                       finishQuiz();
                     }
@@ -1101,14 +1126,13 @@ body.dark #themeToggle::before {
                   if (user.retired.includes(word) && user.mastered[word].errorCount >= 2) {
                     user.retired = user.retired.filter(w => w !== word);
                     user.activePool.push(vocab.find(v => v.word === word));
-                    user.mastered[word].correctCount = 0;
                     console.log(`Reintroduced retired word: ${word}`);
                   }
                   user.streak = 0;
                   div.classList.add("incorrect");
                   setTimeout(() => div.classList.remove("incorrect"), 200);
                   playAudio("chiptune", "incorrect");
-                  messages.textContent = "😅 ¡Uy, otro intento!";
+                  messages.textContent = "😅 ¡Uy, otro intento! / Oops, try again!";
                   setTimeout(() => {
                     messages.textContent = "";
                   }, 1500);
@@ -1132,7 +1156,7 @@ body.dark #themeToggle::before {
             });
           } catch (e) {
             console.error("Error setting up word boxes:", e);
-            messages.textContent = "Error al cargar palabras.";
+            messages.textContent = "Error al cargar palabras. / Error loading words.";
           }
         }
 
@@ -1141,7 +1165,7 @@ body.dark #themeToggle::before {
             console.log("Starting quiz for user:", currentUser);
             if (!vocab || vocab.length === 0) {
               console.error("No vocabulary available");
-              messages.textContent = "Error: No se cargó el vocabulario.";
+              messages.textContent = "Error: No se cargó el vocabulario. / Error: Vocabulary not loaded.";
               return;
             }
 
@@ -1171,7 +1195,7 @@ body.dark #themeToggle::before {
             currentVocab = selectQuizWords();
             if (!currentVocab || currentVocab.length < 5) {
               console.error("Invalid vocabulary selected:", currentVocab);
-              messages.textContent = "Error: No hay suficientes palabras para el quiz.";
+              messages.textContent = "Error: No hay suficientes palabras para el quiz. / Error: Not enough words for the quiz.";
               return;
             }
 
@@ -1189,7 +1213,7 @@ body.dark #themeToggle::before {
             }
           } catch (e) {
             console.error("Error starting quiz:", e);
-            messages.textContent = "Error al iniciar el quiz.";
+            messages.textContent = "Error al iniciar el quiz. / Error starting the quiz.";
           }
         }
 
@@ -1247,7 +1271,7 @@ body.dark #themeToggle::before {
             container.style.pointerEvents = "none";
           } catch (e) {
             console.error("Error finishing quiz:", e);
-            messages.textContent = "Error al finalizar el quiz.";
+            messages.textContent = "Error al finalizar el quiz. / Error finishing the quiz.";
           }
         }
 
@@ -1258,7 +1282,7 @@ body.dark #themeToggle::before {
             startQuiz();
           } catch (e) {
             console.error("Error starting new quiz:", e);
-            messages.textContent = "Error al iniciar nuevo quiz.";
+            messages.textContent = "Error al iniciar nuevo quiz. / Error starting new quiz.";
           }
         }
 
@@ -1289,7 +1313,7 @@ body.dark #themeToggle::before {
             }
           } catch (e) {
             console.error("Error refreshing game:", e);
-            messages.textContent = "Error al reiniciar el juego.";
+            messages.textContent = "Error al reiniciar el juego. / Error refreshing the game.";
           }
         }
 
@@ -1313,7 +1337,7 @@ body.dark #themeToggle::before {
             console.log("Checking login:", { username, avatar: avatarInput.value, pin: pinInput.value });
 
             if (!username || username.length > 20 || username.length < 1) {
-              loginError.textContent = "El usuario debe tener entre 1 y 20 caracteres.";
+              loginError.textContent = "El usuario debe tener entre 1 y 20 caracteres. / Username must be 1-20 characters.";
               return false;
             }
 
@@ -1339,7 +1363,7 @@ body.dark #themeToggle::before {
               startBtn.style.display = "inline-block";
               logoutBtn.style.display = "inline-block";
               loginSection.style.display = "none";
-              messages.textContent = "¡Bienvenido, Invitado!";
+              messages.textContent = "¡Bienvenido, Invitado! / Welcome, Guest!";
               hasInteracted = true;
               playMenuMusic();
               updateLeaderboard();
@@ -1350,19 +1374,19 @@ body.dark #themeToggle::before {
 
             if (users[username] && username !== "new") {
               if (pinInput.value !== users[username].pin) {
-                loginError.textContent = "PIN incorrecto.";
+                loginError.textContent = "PIN incorrecto. / Incorrect PIN.";
                 return false;
               }
             }
 
             if (usernameSelect.value === "new") {
               if (users[username]) {
-                loginError.textContent = "El usuario ya existe. Selecciónalo o elige otro.";
+                loginError.textContent = "El usuario ya existe. Selecciónalo o elige otro. / Username already exists. Select it or choose another.";
                 return false;
               }
               const pin = pinInput.value.trim();
               if (pin && !/^\d{4}$/.test(pin)) {
-                loginError.textContent = "El PIN debe ser de 4 dígitos o dejarlo en blanco.";
+                loginError.textContent = "El PIN debe ser de 4 dígitos o dejarlo en blanco. / PIN must be 4 digits or left blank.";
                 return false;
               }
             }
@@ -1400,7 +1424,7 @@ body.dark #themeToggle::before {
             startBtn.style.display = "inline-block";
             logoutBtn.style.display = "inline-block";
             loginSection.style.display = "none";
-            messages.textContent = `¡Bienvenido, ${username}!`;
+            messages.textContent = `¡Bienvenido, ${username}! / Welcome, ${username}!`;
             hasInteracted = true;
             playMenuMusic();
             updateLeaderboard();
@@ -1409,7 +1433,7 @@ body.dark #themeToggle::before {
             return true;
           } catch (e) {
             console.error("Error in checkLogin:", e);
-            loginError.textContent = "Error al iniciar sesión.";
+            loginError.textContent = "Error al iniciar sesión. / Error logging in.";
             return false;
           }
         }
@@ -1448,7 +1472,7 @@ body.dark #themeToggle::before {
             usernameSelect.focus();
           } catch (e) {
             console.error("Error in logoutUser:", e);
-            messages.textContent = "Error al cerrar sesión.";
+            messages.textContent = "Error al cerrar sesión. / Error logging out.";
           }
         }
 
@@ -1532,7 +1556,7 @@ body.dark #themeToggle::before {
             if (!quizStarted) startQuiz();
           } else {
             console.error("startQuiz is not defined");
-            messages.textContent = "Error: Quiz cannot start.";
+            messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
           }
         });
         startBtn.addEventListener("touchstart", (e) => {
@@ -1542,7 +1566,7 @@ body.dark #themeToggle::before {
             if (!quizStarted) startQuiz();
           } else {
             console.error("startQuiz is not defined");
-            messages.textContent = "Error: Quiz cannot start.";
+            messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
           }
         });
         startBtn.addEventListener("keydown", (e) => {
@@ -1552,7 +1576,7 @@ body.dark #themeToggle::before {
               if (!quizStarted) startQuiz();
             } else {
               console.error("startQuiz is not defined");
-              messages.textContent = "Error: Quiz cannot start.";
+              messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
             }
           }
         });
@@ -1646,7 +1670,7 @@ body.dark #themeToggle::before {
         }
       } catch (e) {
         console.error("Initialization error:", e);
-        messages.textContent = "Error al cargar el juego.";
+        messages.textContent = "Error al cargar el juego. / Error loading the game.";
       }
     };
   </script>
