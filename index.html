@@ -32,7 +32,7 @@
     }
     h1 {
       text-align: center;
-      font-size: min(5vw, 1.2rem);
+      font-size: clamp(0.8rem, 5vw, 1.2rem);
       color: #000;
       text-shadow: 2px 2px #fff;
       margin: 5px 0;
@@ -43,7 +43,7 @@
     }
     #score {
       text-align: center;
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.6rem, 4vw, 0.8rem);
       margin: 5px 0;
       color: #fff;
       background: #000;
@@ -71,7 +71,7 @@
       border: 4px solid #fff;
     }
     #progressStars {
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.5rem, 4vw, 0.7rem);
       text-align: center;
       width: 100%;
     }
@@ -101,12 +101,12 @@
       border: 4px solid #000;
       padding: 2px;
       text-align: center;
-      font-size: min(8vw, 2rem);
+      font-size: clamp(2rem, 11vw, 3.5rem);
       cursor: pointer;
       background: #fff;
       width: 100%;
-      min-height: 50px;
-      flex: 1;
+      min-height: clamp(45px, 13vw, 65px);
+      flex: 1 1 auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -125,7 +125,6 @@
       transform: scale(1.05);
       outline: none;
       z-index: 1;
-      transition: border-color 0.2s, background 0.2s, transform 0.2s;
     }
     @media (hover: none) {
       .box:hover:not(.matched) {
@@ -146,26 +145,26 @@
       color: #000;
     }
     .wordBox {
-      font-size: min(4vw, 0.9rem);
+      font-size: clamp(0.9rem, 5.5vw, 1.3rem);
       white-space: normal;
       word-wrap: break-word;
-      line-height: 1.1;
-      min-height: 50px;
-      flex: 1;
+      line-height: 1.2;
+      min-height: clamp(45px, 13vw, 65px);
+      flex: 1 1 auto;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 4px;
+      padding: 2px;
     }
     .wordBox[data-word-length="long"] {
-      font-size: min(3.5vw, 0.6rem);
+      font-size: clamp(0.7rem, 4vw, 1rem);
     }
     .wordBox[data-word-length="medium"] {
-      font-size: min(4vw, 0.8rem);
+      font-size: clamp(0.8rem, 4.5vw, 1.1rem);
     }
     .wordBox[data-word-length="short"] {
-      font-size: min(4.5vw, 0.9rem);
+      font-size: clamp(0.9rem, 5vw, 1.3rem);
     }
     .matched {
       cursor: default;
@@ -203,25 +202,30 @@
         gap: 2px;
         min-width: 45%;
       }
-      .box, .wordBox {
-        min-height: 45px;
-        font-size: min(7vw, 1.8rem);
+      .box {
+        font-size: clamp(1.7rem, 10vw, 3rem);
+        min-height: clamp(40px, 12vw, 60px);
+        padding: 2px;
+      }
+      .wordBox {
+        font-size: clamp(0.8rem, 5vw, 1.2rem);
+        min-height: clamp(40px, 12vw, 60px);
         padding: 2px;
       }
       .wordBox[data-word-length="long"] {
-        font-size: min(5vw, 0.5rem);
+        font-size: clamp(0.6rem, 3.5vw, 0.9rem);
       }
       .wordBox[data-word-length="medium"] {
-        font-size: min(6vw, 0.7rem);
+        font-size: clamp(0.7rem, 4vw, 1rem);
       }
       .wordBox[data-word-length="short"] {
-        font-size: min(7vw, 0.9rem);
+        font-size: clamp(0.8rem, 4.5vw, 1.2rem);
       }
       h1 {
-        font-size: min(6vw, 1rem);
+        font-size: clamp(0.7rem, 5vw, 1rem);
       }
       #score, #messages, #progressBar {
-        font-size: min(5vw, 0.6rem);
+        font-size: clamp(0.5rem, 4vw, 0.7rem);
       }
     }
     @media (max-width: 360px) {
@@ -234,10 +238,13 @@
         min-width: auto;
         max-height: none;
       }
+      .box, .wordBox {
+        min-height: clamp(45px, 11vw, 60px);
+      }
     }
     #messages {
       text-align: center;
-      font-size: min(4vw, 0.8rem);
+      font-size: clamp(0.6rem, 4vw, 0.8rem);
       margin: 5px 0;
       min-height: 30px;
       color: #000;
@@ -268,7 +275,7 @@
     button {
       margin: 4px;
       padding: 6px 10px;
-      font-size: min(3.5vw, 0.6rem);
+      font-size: clamp(0.5rem, 3.5vw, 0.7rem);
       border: 4px solid #000;
       cursor: pointer;
       background: #fff;
@@ -309,7 +316,7 @@
       display: block;
       margin-bottom: 5px;
       color: #000;
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.6rem, 4vw, 0.7rem);
     }
     body.dark #loginSection label {
       color: #fff;
@@ -318,7 +325,7 @@
       width: calc(100% - 14px);
       padding: 6px;
       margin-bottom: 12px;
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.6rem, 4vw, 0.7rem);
       border: 4px solid #000;
       background: #fff;
       color: #000;
@@ -338,7 +345,7 @@
       width: calc(100% - 14px);
       padding: 6px;
       margin-bottom: 12px;
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.6rem, 4vw, 0.7rem);
       border: 4px solid #000;
       background: #fff;
       color: #000;
@@ -356,7 +363,7 @@
     }
     #loginError {
       color: #000;
-      font-size: min(4vw, 0.7rem);
+      font-size: clamp(0.6rem, 4vw, 0.7rem);
       margin-bottom: 8px;
       min-height: 18px;
     }
@@ -479,7 +486,7 @@
         { emoji: "🍽️", word: "comer", type: "verb" },
         { emoji: "🎤", word: "cantar", type: "verb" },
         { emoji: "😴", word: "dormir", type: "verb" },
-        { emoji: "✍️", word: "escribir", type: "verb" }
+        { emoji: "✍️", word: "escribir", type: "verb" },
       ];
     }
 
@@ -560,12 +567,13 @@
 
         if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn) {
           console.error("Missing DOM elements");
+          messages.textContent = "Error: Elementos de la página no encontrados.";
           return;
         }
 
         console.log("Vocabulary loaded:", vocab.length, "words");
 
-        // Function declarations
+        // Audio functions
         function playAudio(type, text) {
           audioQueue.push({ type, text });
           processAudioQueue();
@@ -666,6 +674,11 @@
         }
 
         function getSpanishVoice() {
+          const preferredVoices = voices.filter(v => v.name.includes("Google") && (v.lang === "es-ES" || v.lang.startsWith("es-")));
+          if (preferredVoices.length) {
+            console.log("Selected preferred Google voice:", preferredVoices[0].name, preferredVoices[0].lang);
+            return preferredVoices[0];
+          }
           const esESVoice = voices.find(v => v.lang === "es-ES");
           if (esESVoice) {
             console.log("Selected es-ES voice:", esESVoice.name);
@@ -680,15 +693,44 @@
           return null;
         }
 
-        function speakText(text) {
-          if (!window.speechSynthesis) {
-            console.error("SpeechSynthesis API not supported");
-            document.getElementById("messages").textContent = "Voz no compatible en este dispositivo.";
+        function playFallbackAudio(word) {
+          const vocabItem = vocab.find(v => v.word === word);
+          if (vocabItem && vocabItem.audio) {
+            console.log("Playing fallback audio for:", word, vocabItem.audio);
+            const audio = new Audio(vocabItem.audio);
+            audio.volume = 0.5;
+            audio.play().then(() => {
+              console.log("Fallback audio played successfully");
+              isAudioPlaying = false;
+              processAudioQueue();
+            }).catch(e => {
+              console.error("Error playing fallback audio:", e);
+              messages.textContent = "Error al reproducir audio. Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
+              setTimeout(() => {
+                messages.textContent = "";
+              }, 3000);
+              isAudioPlaying = false;
+              processAudioQueue();
+            });
+          } else {
+            console.warn("No fallback audio available for:", word);
+            messages.textContent = "¡Voz baja? Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
             setTimeout(() => {
-              document.getElementById("messages").textContent = "";
+              messages.textContent = "";
             }, 3000);
             isAudioPlaying = false;
             processAudioQueue();
+          }
+        }
+
+        function speakText(text) {
+          if (!window.speechSynthesis) {
+            console.error("SpeechSynthesis API not supported");
+            messages.textContent = "Voz no compatible en este dispositivo. Ajusta el volumen.";
+            setTimeout(() => {
+              messages.textContent = "";
+            }, 3000);
+            playFallbackAudio(text);
             return;
           }
 
@@ -702,12 +744,11 @@
           const spanishVoice = getSpanishVoice();
           if (!spanishVoice) {
             console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-            document.getElementById("messages").textContent = "No hay voz en español disponible.";
+            messages.textContent = "No hay voz en español disponible. Ajusta el volumen de texto a voz en Configuración > Accesibilidad.";
             setTimeout(() => {
-              document.getElementById("messages").textContent = "";
+              messages.textContent = "";
             }, 3000);
-            isAudioPlaying = false;
-            processAudioQueue();
+            playFallbackAudio(text);
             return;
           }
 
@@ -723,12 +764,11 @@
           };
           utterance.onerror = (e) => {
             console.error("Speech synthesis error:", e.error, e.message);
-            document.getElementById("messages").textContent = "Error al reproducir voz.";
+            messages.textContent = "Error al reproducir voz. Ajusta el volumen de texto en Configuración > Accesibilidad.";
             setTimeout(() => {
-              document.getElementById("messages").textContent = "";
+              messages.textContent = "";
             }, 2000);
-            isAudioPlaying = false;
-            processAudioQueue();
+            playFallbackAudio(text);
           };
           console.log("Speaking text:", text, "with voice:", spanishVoice.name);
           speechSynthesis.speak(utterance);
@@ -739,7 +779,6 @@
             <option value="" disabled selected>Selecciona usuario o crea uno nuevo</option>
             <option value="Guest">Invitado (sin PIN)</option>
           `;
-          const users = JSON.parse(localStorage.getItem("users") || "{}");
           Object.keys(users)
             .filter(username => username !== "Guest")
             .forEach(username => {
@@ -748,11 +787,10 @@
               option.textContent = username;
               usernameSelect.appendChild(option);
             });
-          usernameSelect.innerHTML += '<option value="new">Nuevo usuario</option>';
+          usernameSelect.innerHTML += '<option value="new">Usuario nuevo</option>';
         }
 
         function handleUsernameSelection() {
-          const usernameSelect = document.getElementById("usernameSelect");
           const newUsernameInput = document.getElementById("newUsernameInput");
           const pinInput = document.getElementById("pin");
           newUsernameInput.style.display = usernameSelect.value === "new" ? "block" : "none";
@@ -847,7 +885,7 @@
             let carryovers = preserveCarryovers.length
               ? preserveCarryovers
               : shuffle([...user.lastWords])
-                  .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.correctCount || 0) < 3)
+                  .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.errorCount || 0) < 3)
                   .sort((a, b) => (user.mastered[b]?.errorCount || 0) - (user.mastered[a]?.errorCount || 0))
                   .slice(0, 2);
             const selectedWordsSet = new Set(carryovers);
@@ -855,7 +893,7 @@
 
             let learnedCount = carryovers.filter(w => (user.mastered[w]?.correctCount || 0) > 0).length;
             while (selectedWordsSet.size < 5 && availableBuckets.length > 0) {
-              const preferLearned = learnedCount < 4 && buckets[1].length + buckets[2].length > 0;
+              const preferLearned = learnedCount < 4 && (buckets[1].length + buckets[2].length > 0);
               const targetBucket = preferLearned ? [1, 2] : [0, 1, 2];
               const filteredBuckets = availableBuckets.filter(b => targetBucket.includes(buckets.indexOf(b.words)));
               if (!filteredBuckets.length) break;
@@ -888,7 +926,7 @@
                 .filter(v => !selectedWordsSet.has(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
                 .slice(0, 5 - selectedWordsSet.size);
               extraWords.forEach(v => selectedWordsSet.add(v.word));
-              console.log("Extra words added:", extraWords.map(v => v.word));
+              console.log("Extra words:", extraWords.map(v => v.word));
             }
 
             const selectedWords = Array.from(selectedWordsSet).slice(0, 5);
@@ -902,7 +940,8 @@
             console.log("Selected words:", finalVocab.map(v => v.word));
             return finalVocab;
           } catch (e) {
-            console.error("Error selecting quiz words:", e);
+            console.error("Error in selectQuizWords:", e);
+            messages.textContent = "Error seleccionando palabras para el quiz.";
             return shuffle([...vocab]).slice(0, 5);
           }
         }
@@ -972,6 +1011,7 @@
             });
           } catch (e) {
             console.error("Error setting up emoji boxes:", e);
+            messages.textContent = "Error al cargar emojis.";
           }
         }
 
@@ -986,7 +1026,6 @@
               div.textContent = word;
               div.tabIndex = 0;
               div.setAttribute("aria-label", `Select word ${word}`);
-
               if (word.length > 15) {
                 div.dataset.wordLength = "long";
               } else if (word.length > 10) {
@@ -1030,7 +1069,7 @@
                           console.log(`Level up: ${user.level}`);
                         }
                       }
-                      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
+                      scoreDisplay.textContent = `Score: $${user.score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
                       user.mastered[word].errorCount = 0;
                       user.streak++;
                       saveUserData();
@@ -1100,6 +1139,7 @@
             });
           } catch (e) {
             console.error("Error setting up word boxes:", e);
+            messages.textContent = "Error al cargar palabras.";
           }
         }
 
@@ -1108,18 +1148,18 @@
             console.log("Starting quiz for user:", currentUser);
             if (!vocab || vocab.length === 0) {
               console.error("No vocabulary available");
-              messages.textContent = "Error: No vocabulary loaded.";
+              messages.textContent = "Error: No se cargó el vocabulario.";
               return;
             }
 
-            matched = new Set();
-            errorWords = new Set();
+            matched.clear();
+            errorWords.clear();
             quizStarted = true;
             messages.textContent = "";
             scoreDisplay.style.display = "block";
             progressBar.style.display = "block";
-            progressStars.innerHTML = "◇◇◇◇◇";
-            scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
+            progressStars.innerText = "◇◇◇◇◇";
+            scoreDisplay.innerText = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
             container.style.display = "flex";
             container.style.pointerEvents = "auto";
             buttonsDiv.style.display = "flex";
@@ -1136,6 +1176,12 @@
             messages.textContent = phrase;
 
             currentVocab = selectQuizWords();
+            if (!currentVocab || currentVocab.length < 5) {
+              console.error("Invalid vocabulary selected:", currentVocab);
+              messages.textContent = "Error: No hay suficientes palabras para el quiz.";
+              return;
+            }
+
             setupEmojiBoxes();
             setupWordBoxes();
 
@@ -1208,6 +1254,7 @@
             container.style.pointerEvents = "none";
           } catch (e) {
             console.error("Error finishing quiz:", e);
+            messages.textContent = "Error al finalizar el quiz.";
           }
         }
 
@@ -1218,14 +1265,15 @@
             startQuiz();
           } catch (e) {
             console.error("Error starting new quiz:", e);
+            messages.textContent = "Error al iniciar nuevo quiz.";
           }
         }
 
         function refreshGame() {
           try {
             console.log("Refreshing game");
-            matched = new Set();
-            errorWords = new Set();
+            matched.clear();
+            errorWords.clear();
             selectedEmoji = null;
             messages.textContent = "";
             progressStars.innerHTML = "◇◇◇◇◇";
@@ -1303,6 +1351,7 @@
               startBtn.style.display = "inline-block";
               logoutBtn.style.display = "inline-block";
               loginSection.style.display = "none";
+              messages.textContent = "¡Bienvenido, Invitado!";
               hasInteracted = true;
               playMenuMusic();
               updateLeaderboard();
@@ -1363,6 +1412,7 @@
             startBtn.style.display = "inline-block";
             logoutBtn.style.display = "inline-block";
             loginSection.style.display = "none";
+            messages.textContent = `¡Bienvenido, ${username}!`;
             hasInteracted = true;
             playMenuMusic();
             updateLeaderboard();
@@ -1411,6 +1461,7 @@
             usernameSelect.focus();
           } catch (e) {
             console.error("Error in logoutUser:", e);
+            messages.textContent = "Error al cerrar sesión.";
           }
         }
 
@@ -1608,6 +1659,7 @@
         }
       } catch (e) {
         console.error("Initialization error:", e);
+        messages.textContent = "Error al cargar el juego.";
       }
     };
   </script>
