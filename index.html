@@ -1,116 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <title>NANDOmode</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap" rel="stylesheet">
-  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <!-- Style section below -->
+</head>
+<style>
+/* Define custom properties for light and dark themes */
+:root {
+  --text-color: #000;
+  --background-color: #fff;
+  --border-color: #000;
+  --secondary-border-color: #fff;
+  --button-hover-bg: #000;
+  --button-hover-text: #fff;
+  --box-hover-bg: #FFE4B5;
+  --box-hover-border: #FFA500;
+  --outline-color: #FFD700;
+}
+
+body.dark {
+  --text-color: #fff;
+  --background-color: #000;
+  --border-color: #fff;
+  --secondary-border-color: #000;
+  --button-hover-bg: #fff;
+  --button-hover-text: #000;
+}
+
 * {
   box-sizing: border-box;
 }
-html {
-  overscroll-behavior: none;
-}
+
 body {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
   margin: 0;
-  padding: 5px;
-  background: #fff;
-  color: #000;
-  image-rendering: pixelated;
+  padding: 0;
+  background: var(--background-color);
+  color: var(--text-color);
+  image-rendering: auto;
   transition: background 0.3s, color 0.3s;
   height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
-body.dark {
-  background: #000;
-  color: #fff;
+
+/* Ensure emojis render in full color */
+.box, #progressStars, #themeToggle::before, #avatar option {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
 }
+
 h1 {
   text-align: center;
-  font-size: clamp(0.8rem, 5vw, 1.2rem);
-  color: #000;
-  text-shadow: 1px 1px #fff;
-  margin: 5px 0;
+  font-size: clamp(1.6rem, 5.5vmin, 2.2rem);
+  color: var(--text-color);
+  text-shadow: 1px 1px var(--secondary-border-color);
+  margin: 0.3vmin 0;
+  flex-shrink: 0;
 }
-body.dark h1 {
-  color: #fff;
-  text-shadow: 1px 1px #000;
-}
+
 #score {
   text-align: center;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
-  margin: 5px 0;
-  color: #fff;
-  background: #000;
-  padding: 5px;
-  border: 2px solid #fff;
+  font-size: clamp(1.3rem, 4.5vmin, 1.8rem);
+  margin: 0.3vmin 0;
+  color: var(--button-hover-text);
+  background: var(--button-hover-bg);
+  padding: 0.3vmin;
+  border: 2px solid var(--secondary-border-color);
+  flex-shrink: 0;
 }
-body.dark #score {
-  color: #000;
-  background: #fff;
-  border: 2px solid #000;
-}
+
 #progressBar {
   width: 100%;
-  background: #fff;
-  border: 2px solid #000;
-  height: 22px;
-  margin: 5px 0;
+  background: var(--background-color);
+  border: 2px solid var(--border-color);
+  height: 2.5vmin;
+  margin: 0.3vmin 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 5px;
+  padding: 0 0.3vmin;
+  flex-shrink: 0;
 }
-body.dark #progressBar {
-  background: #000;
-  border: 2px solid #fff;
-}
+
 #progressStars {
-  font-size: clamp(0.9rem, 4.5vw, 1.1rem);
+  font-size: clamp(1.5rem, 4vmin, 2rem);
   text-align: center;
   width: 100%;
   line-height: 1;
 }
+
 #container {
   display: flex;
   flex-direction: column;
-  margin: 5px 0;
+  margin: 0.3vmin 0;
   flex-grow: 1;
   width: 100%;
-  padding: 0 2px;
-  overflow-y: auto;
+  overflow: hidden;
 }
+
 #columnsWrapper {
   display: flex;
   justify-content: space-between;
-  gap: 2px;
+  gap: 0.3vmin;
   width: 100%;
+  flex-grow: 1;
 }
+
 #emojiColumn, #wordColumn {
   width: 50%;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.3vmin;
   flex: 1 1 50%;
 }
+
 .box {
   position: relative;
-  border: 2px solid #000;
-  padding: 5px;
+  border: 2px solid var(--border-color);
+  padding: 0.3vmin;
   text-align: center;
-  font-size: clamp(4rem, 20vmin, 7rem); /* Larger emojis */
+  font-size: clamp(4rem, 17vmin, 7rem); /* Slightly smaller to fit larger words */
   cursor: pointer;
-  background: #fff;
-  width: 100%;
-  flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
-}  flex: 1;
+  background: var(--background-color);
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,19 +138,16 @@ body.dark #progressBar {
   line-height: 1;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  aspect-ratio: 2 / 1;
 }
-body.dark .box {
-  border: 2px solid #fff;
-  background: #000;
-}
+
 .box:hover:not(.matched), .box:focus:not(.matched) {
-  border-color: #FFA500;
-  background: #FFE4B5;
+  border-color: var(--box-hover-border);
+  background: var(--box-hover-bg);
   transform: scale(1.05);
   outline: none;
   z-index: 1;
 }
+
 @media (hover: none) {
   .box:hover:not(.matched) {
     border-color: inherit;
@@ -138,208 +155,194 @@ body.dark .box {
     transform: none;
   }
 }
+
 .box.selected {
-  background: #000;
-  border-color: #fff;
-  color: #fff;
+  background: var(--button-hover-bg);
+  border-color: var(--secondary-border-color);
+  color: var(--button-hover-text);
   transform: scale(1.05);
 }
-body.dark .box.selected {
-  background: #fff;
-  border-color: #000;
-  color: #000;
-}
+
 .wordBox {
-  font-size: clamp(0.9rem, 5.5vw, 1.2rem);
+  font-size: clamp(1.8rem, 7vmin, 2.4rem); /* Larger text */
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.2;
- flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 8px;
+  padding: 0.5vmin;
 }
+
 .wordBox[data-word-length="long"] {
-  font-size: clamp(0.7rem, 4vw, 1rem);
+  font-size: clamp(1.5rem, 6vmin, 2rem); /* Larger for long words */
 }
+
 .wordBox[data-word-length="medium"] {
-  font-size: clamp(0.8rem, 4.5vw, 1.1rem);
+  font-size: clamp(1.6rem, 6.5vmin, 2.2rem);
 }
+
 .wordBox[data-word-length="short"] {
-  font-size: clamp(0.9rem, 5vw, 1.2rem);
+  font-size: clamp(1.8rem, 7vmin, 2.4rem);
 }
+
 .matched {
   cursor: default;
   animation: pixelBounce 0.3s;
 }
+
 .gold {
   background: #FFD700 !important;
   border-color: #B8860B !important;
   color: #000 !important;
 }
+
 .correct {
   background: #00FF00 !important;
   transition: background 0.2s;
 }
+
 .incorrect {
   background: #FF0000 !important;
   animation: pixelShake 0.2s;
   transition: background 0.2s;
 }
+
 @keyframes pixelBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-@keyframes pixelShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}
-#messages {
-  text-align: center;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
-  margin: 5px 0;
-  min-height: 22px;
-  color: #000;
-}
-body.dark #messages {
-  color: #fff;
-}
-#buttons {
-  text-align: center;
-  margin: 5px 0;
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  flex-wrap: wrap;
+  50% { transform: translateY(-0.8vmin); }
 }
 
+@keyframes pixelShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.4vmin); }
+  75% { transform: translateX(0.4vmin); }
 }
+
+#messages {
+  text-align: center;
+  font-size: clamp(1.3rem, 4.5vmin, 1.8rem);
+  margin: 0.3vmin 0;
+  min-height: 2.5vmin;
+  color: var(--text-color);
+  flex-shrink: 0;
+}
+
+#buttons {
+  text-align: center;
+  margin: 0.3vmin 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.8vmin;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
 @keyframes sparkle {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.05); }
 }
+
 #leaderboard {
-  margin: 5px 0;
-  background: #fff;
-  padding: 8px;
-  border: 2px solid #000;
-  max-height: 40vh;
+  margin: 0.3vmin 0;
+  background: var(--background-color);
+  padding: 0.8vmin;
+  border: 2px solid var(--border-color);
+  max-height: 35vh;
   overflow-y: auto;
+  flex-shrink: 0;
 }
-body.dark #leaderboard {
-  background: #000;
-  border: 2px solid #fff;
-}
+
 button {
-  margin: 3px;
-  padding: 5px 10px;
-  font-size: clamp(0.5rem, 3.5vw, 0.7rem);
-  border: 2px solid #000;
+  margin: 0.3vmin;
+  padding: 0.8vmin 1.5vmin; /* More padding for text */
+  font-size: clamp(1.3rem, 5vmin, 1.6rem); /* Larger text */
+  border: 2px solid var(--border-color);
   cursor: pointer;
-  background: #fff;
-  color: #000;
+  background: var(--background-color);
+  color: var(--text-color);
   transition: background 0.3s, outline 0.1s;
   font-family: 'Press Start 2P', cursive;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  height: 30px;
+  height: 6vmin; /* Taller buttons */
+  min-width: 15vmin; /* Ensure enough width for text */
 }
-body.dark button {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
+
 button:hover, button:focus {
-  background: #000;
-  color: #fff;
-  outline: 2px solid #FFD700;
+  background: var(--button-hover-bg);
+  color: var(--button-hover-text);
+  outline: 2px solid var(--outline-color);
 }
-body.dark button:hover, body.dark button:focus {
-  background: #fff;
-  color: #000;
-  outline: 2px solid #FFD700;
-}
+
 #loginSection {
-  max-width: 300px;
-  margin: 12px auto;
-  border: 2px solid #000;
-  padding: 12px;
-  background: #fff;
+  max-width: 90%;
+  margin: 0.8vmin auto;
+  border: 2px solid var(--border-color);
+  padding: 0.8vmin;
+  background: var(--background-color);
+  flex-shrink: 0;
 }
-body.dark #loginSection {
-  border: 2px solid #fff;
-  background: #000;
-}
+
 #loginSection label {
   display: block;
-  margin-bottom: 5px;
-  color: #000;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
+  margin-bottom: 0.3vmin;
+  color: var(--text-color);
+  font-size: clamp(1.3rem, 5vmin, 1.6rem); /* Match button text */
 }
-body.dark #loginSection label {
-  color: #fff;
-}
+
 #loginSection select, #loginSection input {
-  width: calc(100% - 12px);
-  padding: 5px;
-  margin-bottom: 10px;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
+  width: calc(100% - 0.8vmin);
+  padding: 0.8vmin;
+  margin-bottom: 0.8vmin;
+  font-size: clamp(1.3rem, 5vmin, 1.6rem); /* Larger inputs */
+  border: 2px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-color);
   font-family: 'Press Start 2P', cursive;
   touch-action: auto;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 }
-body.dark #loginSection select, body.dark #loginSection input {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
+
 #loginSection select:focus, #loginSection input:focus {
-  outline: 2px solid #FFD700;
+  outline: 2px solid var(--outline-color);
 }
+
 #newUsernameInput {
-  width: calc(100% - 12px);
-  padding: 5px;
-  margin-bottom: 10px;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
+  width: calc(100% - 0.8vmin);
+  padding: 0.8vmin;
+  margin-bottom: 0.8vmin;
+  font-size: clamp(1.3rem, 5vmin, 1.6rem);
+  border: 2px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-color);
   font-family: 'Press Start 2P', cursive;
   touch-action: auto;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 }
-body.dark #newUsernameInput {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
+
 #newUsernameInput:focus {
-  outline: 2px solid #FFD700;
+  outline: 2px solid var(--outline-color);
 }
+
 #loginError {
-  color: #000;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  margin-bottom: 8px;
-  min-height: 18px;
+  color: var(--text-color);
+  font-size: clamp(1.3rem, 5vmin, 1.6rem);
+  margin-bottom: 0.3vmin;
+  min-height: 2.5vmin;
 }
-body.dark #loginError {
-  color: #fff;
-}
+
 #ttsPrompt {
   text-align: center;
-  margin: 6px;
+  margin: 0.3vmin;
   color: #FF0000;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
+  font-size: clamp(1.3rem, 4.5vmin, 1.8rem);
   display: none;
+  flex-shrink: 0;
 }
+
 canvas#confettiCanvas {
   position: fixed;
   top: 0;
@@ -347,14 +350,15 @@ canvas#confettiCanvas {
   pointer-events: none;
   z-index: 1000;
 }
+
 #themeToggle {
   position: fixed;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  background: #fff;
-  border: 2px solid #000;
+  top: 0.8vmin;
+  right: 0.8vmin;
+  width: 4vmin;
+  height: 4vmin;
+  background: var(--background-color);
+  border: 2px solid var(--border-color);
   cursor: pointer;
   z-index: 1001;
   display: flex;
@@ -363,408 +367,258 @@ canvas#confettiCanvas {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-body.dark #themeToggle {
-  background: #000;
-  border: 2px solid #fff;
-}
+
 #themeToggle:hover, #themeToggle:focus {
-  outline: 2px solid #FFD700;
+  outline: 2px solid var(--outline-color);
 }
+
 #themeToggle::before {
   content: '🌞';
-  font-size: 16px;
+  font-size: 2.5vmin;
 }
+
 body.dark #themeToggle::before {
   content: '🌙';
 }
+
 @keyframes fadeOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+
 .fade-out {
   animation: fadeOut 0.5s forwards;
 }
+
 .fade-in {
   animation: fadeIn 0.5s forwards;
 }
-@media (max-width: 768px) {
-  body {
-    padding: 3px;
-  }
-  h1 {
-    font-size: clamp(0.7rem, 4.5vw, 1rem);
-    margin: 3px 0;
-  }
-  #score {
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-    padding: 4px;
-    margin: 3px 0;
-    border: 2px solid #fff;
-  }
-  #progressBar {
-    height: 20px;
-    margin: 3px 0;
-    padding: 0 4px;
-  }
-  #progressStars {
-    font-size: clamp(0.8rem, 4vw, 1rem);
-  }
-  #messages {
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-    min-height: 20px;
-    margin: 3px 0;
-  }
-  #buttons {
-    gap: 4px;
-    margin: 3px 0;
-  }
-  button {
-    padding: 4px 8px;
-    font-size: clamp(0.45rem, 3.2vw, 0.65rem);
-    margin: 2px;
-    border: 2px solid #000;
-    height: 28px;
-  }
-  #columnsWrapper {
-    gap: 2px;
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 2px;
-    flex: 1 1 50%;
-  }
-  .box {
-    font-size: clamp(3.5rem, 17vmin, 6rem);
-flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
-    padding: 4px;
-    border: 2px solid #000;
-    aspect-ratio: 2 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.8rem, 5vw, 1.1rem);
-  flex: 1 0 auto; /* Add this for flexible height */
-    padding: 6px;
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.6rem, 3.5vw, 0.9rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.7rem, 4vw, 1rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.8rem, 4.5vw, 1.1rem);
-  }
-  #wellDoneMessages {
-    height: 13vh;
-    font-size: clamp(0.7rem, 5vmin, 1.4rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 280px;
-    padding: 10px;
-    margin: 10px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 4px;
-    margin-bottom: 8px;
-  }
-  #newUsernameInput {
-    padding: 4px;
-    margin-bottom: 8px;
-  }
-  #leaderboard {
-    padding: 6px;
-    margin: 3px 0;
-  }
-  #ttsPrompt {
-    margin: 5px;
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-  }
-}
-@media (max-width: 480px) and (max-aspect-ratio: 1/1) {
-  body {
-    padding: 2px;
-  }
-  h1 {
-    font-size: clamp(0.6rem, 4vw, 0.9rem);
-    margin: 2px 0;
-  }
-  #score {
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-    padding: 3px;
-    margin: 2px 0;
-    border: 1px solid #fff;
-  }
-  #progressBar {
-    height: 18px;
-    margin: 2px 0;
-    padding: 0 3px;
-  }
-  #progressStars {
-    font-size: clamp(0.7rem, 3.5vw, 0.9rem);
-  }
-  #messages {
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-    min-height: 18px;
-    margin: 2px 0;
-  }
-  #buttons {
-    gap: 3px;
-    margin: 2px 0;
-  }
-  button {
-    padding: 3px 6px;
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    margin: 2px;
-    border: 1px solid #000;
-    height: 26px;
-  }
-  #columnsWrapper {
-  flex: 1;
-  min-height: 0; /* Allow shrinking */
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 1px;
-    flex: 1 1 50%;
-  }
-  .box, .wordBox {
-  height: calc((100vh - 260px) / 5 - 1px);
-    padding: 4px;
-    font-size: clamp(3rem, 14vmin, 5rem);
-    border: 1px solid #000;
-    aspect-ratio: 1.5 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.7rem, 4.5vw, 1rem);
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.5rem, 3vw, 0.8rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.6rem, 3.5vw, 0.9rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.7rem, 4vw, 1rem);
-  }
-  #wellDoneMessages {
-    height: 12vh;
-    font-size: clamp(0.6rem, 4vmin, 1.2rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 260px;
-    padding: 8px;
-    margin: 8px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 3px;
-    margin-bottom: 6px;
-  }
-  #newUsernameInput {
-    padding: 3px;
-    margin-bottom: 6px;
-  }
-  #leaderboard {
-    padding: 5px;
-    margin: 2px 0;
-  }
-  #ttsPrompt {
-    margin: 4px;
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-  }
-  #themeToggle {
-    width: 24px;
-    height: 24px;
-    top: 6px;
-    right: 6px;
-  }
-  #themeToggle::before {
-    font-size: 14px;
-  }
-}
-@media (max-width: 360px) {
-  body {
-    padding: 2px;
-  }
-  h1 {
-    font-size: clamp(0.5rem, 3.8vw, 0.8rem);
-    margin: 2px 0;
-  }
-  #score {
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    padding: 3px;
-    margin: 2px 0;
-    border: 1px solid #fff;
-  }
-  #progressBar {
-    height: 16px;
-    margin: 2px 0;
-    padding: 0 2px;
-  }
-  #progressStars {
-    font-size: clamp(0.6rem, 3.2vw, 0.8rem);
-  }
-  #messages {
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    min-height: 16px;
-    margin: 2px 0;
-  }
-  #buttons {
-    gap: 2px;
-    margin: 2px 0;
-  }
-  button {
-    padding: 3px 6px;
-    font-size: clamp(0.35rem, 2.8vw, 0.55rem);
-    margin: 1px;
-    border: 1px solid #000;
-    height: 24px;
-  }
-  #columnsWrapper {
-    gap: 1px;
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 1px;
-    flex: 1 1 50%;
-  }
-  .box, .wordBox {
-  height: calc((100vh - 240px) / 5 - 1px);
-    padding: 3px;
-    font-size: clamp(2.5rem, 12vmin, 4rem);
-    border: 1px solid #000;
-    aspect-ratio: 1.5 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.6rem, 4vw, 0.9rem);
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.45rem, 2.8vw, 0.7rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.5rem, 3.2vw, 0.8rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.6rem, 3.8vw, 0.9rem);
-  }
-  #wellDoneMessages {
-    height: 10vh;
-    font-size: clamp(0.5rem, 3vmin, 1rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 240px;
-    padding: 6px;
-    margin: 6px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 3px;
-    margin-bottom: 5px;
-  }
-  #newUsernameInput {
-    padding: 3px;
-    margin-bottom: 5px;
-  }
-  #leaderboard {
-    padding: 4px;
-    margin: 2px 0;
-  }
-  #ttsPrompt {
-    margin: 3px;
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-  }
-  #themeToggle {
-    width: 22px;
-    height: 22px;
-    top: 5px;
-    right: 5px;
-  }
-  #themeToggle::before {
-    font-size: 12px;
-  }
+
 #matchedWordBox {
   width: 100%;
-  height: 15vh;
+  height: 8vmin; /* Reduced to fit larger buttons/words */
   text-align: center;
-  font-size: clamp(0.8rem, 10vmin, 2rem);
-  color: #000; /* Black text for Español */
-  background: #fff; /* Permanent white background */
-  margin: 2px 0;
+  font-size: clamp(1.6rem, 7vmin, 2.5rem);
+  color: var(--text-color);
+  background: var(--background-color);
+  margin: 0.3vmin 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #000; /* Black border */
+  border: 2px solid var(--border-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 5px;
-  font-family: 'Press Start 2P', cursive, sans-serif; /* Remove Noto Emoji since image is used */
+  padding: 0 0.3vmin;
+  font-family: 'Press Start 2P', cursive, sans-serif;
+  flex-shrink: 0;
 }
-body.dark #matchedWordBox {
-  color: #000;
-  background: #fff;
-  border: 2px solid #000;
-}
+
 #matchedWordBox span {
   display: inline-block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 #matchedWordBox span img {
-  width: 1.5em;
+  width: 2vmin;
   height: auto;
   vertical-align: middle;
 }
+
 @keyframes wordFlash {
   0% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(1.1); }
   100% { opacity: 0; transform: scale(1); }
 }
+
 .word-flash {
   animation: wordFlash 1s forwards;
-  color: #FF0000; /* Red text */
-  -webkit-text-stroke: 1px #000; /* Black outline */
-  text-stroke: 1px #000; /* Standard outline */
-  font-weight: bold; /* Enhance visibility */
+  color: #FF0000;
+  -webkit-text-stroke: 1px var(--border-color);
+  text-stroke: 1px var(--border-color);
+  font-weight: bold;
 }
-@media (max-width: 480px) {
-  .word-flash {
-    -webkit-text-stroke: 0.5px #000;
-    text-stroke: 0.5px #000;
-  }
-}
+
 @media (max-width: 768px) {
+  h1 {
+    font-size: clamp(1.4rem, 5vmin, 2rem);
+  }
+  #score {
+    font-size: clamp(1.1rem, 4vmin, 1.6rem);
+  }
+  #progressBar {
+    height: 2vmin;
+  }
+  #progressStars {
+    font-size: clamp(1.3rem, 3.5vmin, 1.8rem);
+  }
+  #messages {
+    font-size: clamp(1.1rem, 4vmin, 1.6rem);
+  }
+  button {
+    font-size: clamp(1.1rem, 4.5vmin, 1.4rem);
+    height: 5.5vmin;
+    min-width: 14vmin;
+    padding: 0.7vmin 1.3vmin;
+  }
+  .box {
+    font-size: clamp(3.5rem, 16vmin, 6rem);
+  }
+  .wordBox {
+    font-size: clamp(1.6rem, 6.5vmin, 2.2rem);
+  }
+  .wordBox[data-word-length="long"] {
+    font-size: clamp(1.3rem, 5.5vmin, 1.8rem);
+  }
+  .wordBox[data-word-length="medium"] {
+    font-size: clamp(1.4rem, 6vmin, 2rem);
+  }
+  .wordBox[data-word-length="short"] {
+    font-size: clamp(1.6rem, 6.5vmin, 2.2rem);
+  }
+  #loginSection {
+    padding: 0.7vmin;
+  }
+  #loginSection label, #loginSection select, #loginSection input, #newUsernameInput {
+    font-size: clamp(1.1rem, 4.5vmin, 1.4rem);
+    padding: 0.7vmin;
+  }
+  #ttsPrompt {
+    font-size: clamp(1.1rem, 4vmin, 1.6rem);
+  }
   #matchedWordBox {
-    font-size: clamp(0.7rem, 9vmin, 1.8rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
+    font-size: clamp(1.4rem, 6.5vmin, 2.3rem);
+    height: 7.5vmin;
   }
 }
-@media (max-width: 480px) and (max-aspect-ratio: 1/1) {
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: clamp(1.2rem, 4.5vmin, 1.8rem);
+  }
+  #score {
+    font-size: clamp(0.9rem, 3.5vmin, 1.4rem);
+  }
+  #progressBar {
+    height: 1.8vmin;
+  }
+  #progressStars {
+    font-size: clamp(1.1rem, 3vmin, 1.6rem);
+  }
+  #messages {
+    font-size: clamp(0.9rem, 3.5vmin, 1.4rem);
+  }
+  button {
+    font-size: clamp(0.9rem, 4vmin, 1.2rem);
+    height: 5vmin;
+    min-width: 13vmin;
+    padding: 0.6vmin 1.2vmin;
+  }
+  .box {
+    font-size: clamp(3rem, 14vmin, 5rem);
+  }
+  .wordBox {
+    font-size: clamp(1.4rem, 6vmin, 2rem);
+  }
+  .wordBox[data-word-length="long"] {
+    font-size: clamp(1.1rem, 5vmin, 1.6rem);
+  }
+  .wordBox[data-word-length="medium"] {
+    font-size: clamp(1.2rem, 5.5vmin, 1.8rem);
+  }
+  .wordBox[data-word-length="short"] {
+    font-size: clamp(1.4rem, 6vmin, 2rem);
+  }
+  #loginSection {
+    padding: 0.6vmin;
+  }
+  #loginSection label, #loginSection select, #loginSection input, #newUsernameInput {
+    font-size: clamp(0.9rem, 4vmin, 1.2rem);
+    padding: 0.6vmin;
+  }
+  #ttsPrompt {
+    font-size: clamp(0.9rem, 3.5vmin, 1.4rem);
+  }
   #matchedWordBox {
-    font-size: clamp(0.6rem, 8vmin, 1.6rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
+    font-size: clamp(1.2rem, 6vmin, 2rem);
+    height: 7vmin;
+  }
+  #themeToggle {
+    width: 3.5vmin;
+    height: 3.5vmin;
+  }
+  #themeToggle::before {
+    font-size: 2vmin;
   }
 }
+
 @media (max-width: 360px) {
+  h1 {
+    font-size: clamp(1rem, 4vmin, 1.6rem);
+  }
+  #score {
+    font-size: clamp(0.8rem, 3vmin, 1.2rem);
+  }
+  #progressBar {
+    height: 1.6vmin;
+  }
+  #progressStars {
+    font-size: clamp(0.9rem, 2.8vmin, 1.4rem);
+  }
+  #messages {
+    font-size: clamp(0.8rem, 3vmin, 1.2rem);
+  }
+  button {
+    font-size: clamp(0.8rem, 3.5vmin, 1rem); /* Larger button text */
+    height: 4.5vmin;
+    min-width: 12vmin;
+    padding: 0.5vmin 1vmin;
+  }
+  .box {
+    font-size: clamp(2.5rem, 12vmin, 4rem);
+  }
+  .wordBox {
+    font-size: clamp(1.2rem, 5.5vmin, 1.8rem);
+  }
+  .wordBox[data-word-length="long"] {
+    font-size: clamp(1rem, 4.5vmin, 1.5rem); /* Larger for long words */
+  }
+  .wordBox[data-word-length="medium"] {
+    font-size: clamp(1.1rem, 5vmin, 1.6rem);
+  }
+  .wordBox[data-word-length="short"] {
+    font-size: clamp(1.2rem, 5.5vmin, 1.8rem);
+  }
+  #loginSection {
+    padding: 0.5vmin;
+  }
+  #loginSection label, #loginSection select, #loginSection input, #newUsernameInput {
+    font-size: clamp(0.8rem, 3.5vmin, 1rem);
+    padding: 0.5vmin;
+  }
+  #ttsPrompt {
+    font-size: clamp(0.8rem, 3vmin, 1.2rem);
+  }
   #matchedWordBox {
-    font-size: clamp(0.5rem, 7vmin, 1.4rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
+    font-size: clamp(1rem, 5.5vmin, 1.8rem);
+    height: 6.5vmin;
+  }
+  #themeToggle {
+    width: 3vmin;
+    height: 3vmin;
+  }
+  #themeToggle::before {
+    font-size: 1.8vmin;
   }
 }
-  </style>
+</style>
 </head>
 <body>
   <h1>NANDOmode</h1>
