@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>NANDOmode</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap" rel="stylesheet">
   <style>
 * {
   box-sizing: border-box;
@@ -701,32 +702,37 @@ body.dark #themeToggle::before {
   }
 #matchedWordBox {
   width: 100%;
-  height: 15vh; /* Fixed height, ~20% of screen */
+  height: 15vh;
   text-align: center;
   font-size: clamp(0.8rem, 10vmin, 2rem);
-  color: #fff;
-  text-shadow: 0 0 3px #000, 0 0 6px #000;
-  background: transparent;
+  color: #000; /* Black text for Español */
+  background: #fff; /* Permanent white background */
   margin: 2px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #000;
+  border: 2px solid #000; /* Black border */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 5px;
+  font-family: 'Press Start 2P', cursive, sans-serif; /* Remove Noto Emoji since image is used */
 }
 body.dark #matchedWordBox {
   color: #000;
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
-  border: 2px solid #fff;
+  background: #fff;
+  border: 2px solid #000;
 }
 #matchedWordBox span {
   display: inline-block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+#matchedWordBox span img {
+  width: 1.5em;
+  height: auto;
+  vertical-align: middle;
 }
 @keyframes wordFlash {
   0% { opacity: 1; transform: scale(1); }
@@ -735,23 +741,42 @@ body.dark #matchedWordBox {
 }
 .word-flash {
   animation: wordFlash 1s forwards;
+  color: #FF0000; /* Red text */
+  -webkit-text-stroke: 1px #000; /* Black outline */
+  text-stroke: 1px #000; /* Standard outline */
+  font-weight: bold; /* Enhance visibility */
+}
+@media (max-width: 480px) {
+  .word-flash {
+    -webkit-text-stroke: 0.5px #000;
+    text-stroke: 0.5px #000;
+  }
 }
 @media (max-width: 768px) {
   #matchedWordBox {
     height: 13vh;
     font-size: clamp(0.7rem, 9vmin, 1.8rem);
+    background: #fff;
+    border: 2px solid #000;
+    color: #000;
   }
 }
 @media (max-width: 480px) and (max-aspect-ratio: 1/1) {
   #matchedWordBox {
     height: 12vh;
     font-size: clamp(0.6rem, 8vmin, 1.6rem);
+    background: #fff;
+    border: 2px solid #000;
+    color: #000;
   }
 }
 @media (max-width: 360px) {
   #matchedWordBox {
     height: 10vh;
     font-size: clamp(0.5rem, 7vmin, 1.4rem);
+    background: #fff;
+    border: 2px solid #000;
+    color: #000;
   }
 }
   </style>
@@ -810,7 +835,7 @@ body.dark #matchedWordBox {
       <div id="wordColumn"></div>
     </div>
 <div id="wellDoneMessages">¡Buena Suerte!</div>
-<div id="matchedWordBox">Español 🇪🇸</div>
+<div id="matchedWordBox"><span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span></div>
   </div>
   <canvas id="confettiCanvas"></canvas>
 
@@ -1307,8 +1332,7 @@ function updateMatchedWordBox(word) {
   const span = matchedWordBox.querySelector('span');
   span.classList.add('word-flash');
   span.addEventListener('animationend', () => {
-   matchedWordBox.innerHTML = `<span>Español 🇪🇸</span>`;
-const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+    matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
   }, { once: true });
 }
 
@@ -1503,37 +1527,37 @@ else {
           }
         }
 
-        function startQuiz() {
-          try {
-            console.log("Starting quiz for user:", currentUser);
-            if (!vocab || vocab.length === 0) {
-              console.error("No vocabulary available");
-              messages.textContent = "Error: No se cargó el vocabulario. / Error: Vocabulary not loaded.";
-              return;
-            }
-
-            matched.clear();
-            errorWords.clear();
-            quizStarted = true;
-            messages.textContent = "";
-            scoreDisplay.style.display = "block";
-            progressBar.style.display = "block";
-            progressStars.innerHTML = "☆☆☆☆☆";
-            scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
-            container.style.display = "flex";
-            container.style.pointerEvents = "auto";
-            buttonsDiv.style.display = "flex";
-            startBtn.style.display = "none";
-            quitBtn.style.display = "inline-block";
-            refreshBtn.style.display = "inline-block";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
-            loginSection.style.display = "none";
-            leaderboardDiv.style.display = "none";
-            stopMenuMusic();
-
-            const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
-            messages.textContent = phrase;
+function startQuiz() {
+  try {
+    console.log("Starting quiz for user:", currentUser);
+    if (!vocab || vocab.length === 0) {
+      console.error("No vocabulary available");
+      messages.textContent = "Error: No se cargó el vocabulario. / Error: Vocabulary not loaded.";
+      return;
+    }
+    matched.clear();
+    errorWords.clear();
+    quizStarted = true;
+    messages.textContent = "";
+    scoreDisplay.style.display = "block";
+    progressBar.style.display = "block";
+    progressStars.innerHTML = "☆☆☆☆☆";
+    scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
+    container.style.display = "flex";
+    container.style.pointerEvents = "auto";
+    buttonsDiv.style.display = "flex";
+    startBtn.style.display = "none";
+    quitBtn.style.display = "inline-block";
+    refreshBtn.style.display = "inline-block";
+    playAgainBtn.style.display = "none";
+    logoutBtn.style.display = "none";
+    loginSection.style.display = "none";
+    leaderboardDiv.style.display = "none";
+    stopMenuMusic();
+const matchedWordBox = document.getElementById("matchedWordBox");
+matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
+    const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+    messages.textContent = phrase;
 
             currentVocab = selectQuizWords();
             if (!currentVocab || currentVocab.length < 5) {
@@ -1637,7 +1661,9 @@ function finishQuiz() {
             errorWords.clear();
             selectedEmoji = null;
             messages.textContent = "";
-matchedWordBox.innerHTML = `<span>Español 🇪🇸</span>`;
+
+	        const matchedWordBox = document.getElementById("matchedWordBox");
+matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
             progressStars.innerHTML = "☆☆☆☆☆";
             container.style.pointerEvents = "auto";
             quitBtn.style.display = "inline-block";
