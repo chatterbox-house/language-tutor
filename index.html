@@ -107,7 +107,7 @@ body.dark #progressBar {
   cursor: pointer;
   background: #fff;
   width: 100%;
-  height: calc((100vh - 180px) / 5 - 2px); /* Adjusted for message box */
+height: calc((100vh - 300px) / 5 - 2px); /* Adjusted for two message boxes */
   flex: 1;
   display: flex;
   align-items: center;
@@ -152,7 +152,7 @@ body.dark .box.selected {
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.2;
-  height: calc((100vh - 180px) / 5 - 2px);
+ height: calc((100vh - 300px) / 5 - 2px);
   flex: 1;
   display: flex;
   align-items: center;
@@ -452,7 +452,7 @@ body.dark #themeToggle::before {
   }
   .box {
     font-size: clamp(3.5rem, 17vmin, 6rem);
-    height: calc((100vh - 160px) / 5 - 2px);
+  height: calc((100vh - 280px) / 5 - 2px);
     padding: 4px;
     border: 2px solid #000;
     aspect-ratio: 2 / 1;
@@ -545,7 +545,7 @@ body.dark #themeToggle::before {
     flex: 1 1 50%;
   }
   .box, .wordBox {
-    height: calc((100vh - 140px) / 5 - 1px);
+  height: calc((100vh - 260px) / 5 - 1px);
     padding: 4px;
     font-size: clamp(3rem, 14vmin, 5rem);
     border: 1px solid #000;
@@ -646,7 +646,7 @@ body.dark #themeToggle::before {
     flex: 1 1 50%;
   }
   .box, .wordBox {
-    height: calc((100vh - 120px) / 5 - 1px);
+  height: calc((100vh - 240px) / 5 - 1px);
     padding: 3px;
     font-size: clamp(2.5rem, 12vmin, 4rem);
     border: 1px solid #000;
@@ -698,6 +698,60 @@ body.dark #themeToggle::before {
   }
   #themeToggle::before {
     font-size: 12px;
+  }
+#matchedWordBox {
+  width: 100%;
+  height: 15vh; /* Fixed height, ~20% of screen */
+  text-align: center;
+  font-size: clamp(0.8rem, 10vmin, 2rem);
+  color: #fff;
+  text-shadow: 0 0 3px #000, 0 0 6px #000;
+  background: transparent;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+}
+body.dark #matchedWordBox {
+  color: #000;
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+  border: 2px solid #fff;
+}
+#matchedWordBox span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@keyframes wordFlash {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+.word-flash {
+  animation: wordFlash 1s forwards;
+}
+@media (max-width: 768px) {
+  #matchedWordBox {
+    height: 13vh;
+    font-size: clamp(0.7rem, 9vmin, 1.8rem);
+  }
+}
+@media (max-width: 480px) and (max-aspect-ratio: 1/1) {
+  #matchedWordBox {
+    height: 12vh;
+    font-size: clamp(0.6rem, 8vmin, 1.6rem);
+  }
+}
+@media (max-width: 360px) {
+  #matchedWordBox {
+    height: 10vh;
+    font-size: clamp(0.5rem, 7vmin, 1.4rem);
   }
 }
   </style>
@@ -755,7 +809,8 @@ body.dark #themeToggle::before {
       <div id="emojiColumn"></div>
       <div id="wordColumn"></div>
     </div>
-    <div id="wellDoneMessages">¡Buena Suerte!</div>
+<div id="wellDoneMessages">¡Buena Suerte!</div>
+<div id="matchedWordBox">Español 🇪🇸</div>
   </div>
   <canvas id="confettiCanvas"></canvas>
 
@@ -1246,6 +1301,16 @@ function showWellDoneMessage() {
     wellDoneMessages.textContent = "¡Buena Suerte!";
   }, 2000);
 }
+function updateMatchedWordBox(word) {
+  const matchedWordBox = document.getElementById("matchedWordBox");
+  matchedWordBox.innerHTML = `<span>${word}</span>`;
+  const span = matchedWordBox.querySelector('span');
+  span.classList.add('word-flash');
+  span.addEventListener('animationend', () => {
+   matchedWordBox.innerHTML = `<span>Español 🇪🇸</span>`;
+const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
+  }, { once: true });
+}
 
         function setupEmojiBoxes() {
           try {
@@ -1354,6 +1419,7 @@ if (emojiWord === word) {
         messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
         triggerConfetti();
         showWellDoneMessage();
+        updateMatchedWordBox(word);
         setTimeout(() => {
           messages.textContent = "";
         }, 2000);
@@ -1390,6 +1456,7 @@ if (emojiWord === word) {
     playAudio("chiptune", "correct");
     messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
     showWellDoneMessage();
+    updateMatchedWordBox(word);
     if (matched.size === currentVocab.length) {
       finishQuiz();
     }
@@ -1570,6 +1637,7 @@ function finishQuiz() {
             errorWords.clear();
             selectedEmoji = null;
             messages.textContent = "";
+matchedWordBox.innerHTML = `<span>Español 🇪🇸</span>`;
             progressStars.innerHTML = "☆☆☆☆☆";
             container.style.pointerEvents = "auto";
             quitBtn.style.display = "inline-block";
