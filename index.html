@@ -217,23 +217,7 @@ body.dark #messages {
   gap: 5px;
   flex-wrap: wrap;
 }
-#wellDoneMessages {
-  width: 100%;
-  height: 15vh; /* Fixed height for message box */
-  text-align: center;
-  font-size: clamp(0.8rem, 6vmin, 1.6rem);
-  color: #fff;
-  text-shadow: 0 0 3px #000, 0 0 6px #000;
-  background: transparent;
-  margin: 2px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: sparkle 1.5s infinite;
-}
-body.dark #wellDoneMessages {
-  color: #000;
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+
 }
 @keyframes sparkle {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -835,7 +819,7 @@ body.dark #matchedWordBox {
       <div id="emojiColumn"></div>
       <div id="wordColumn"></div>
     </div>
-<div id="wellDoneMessages">¡Buena Suerte!</div>
+
 <div id="matchedWordBox"><span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span></div>
   </div>
   <canvas id="confettiCanvas"></canvas>
@@ -1319,14 +1303,7 @@ wordColumn.scrollTop = 0;
             console.error("Error clearing selections:", e);
           }
         }
-function showWellDoneMessage() {
-  const wellDoneMessages = document.getElementById("wellDoneMessages");
-  const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
-  wellDoneMessages.textContent = phrase;
-  setTimeout(() => {
-    wellDoneMessages.textContent = "¡Buena Suerte!";
-  }, 2000);
-}
+
 function updateMatchedWordBox(word) {
   const matchedWordBox = document.getElementById("matchedWordBox");
   matchedWordBox.innerHTML = `<span>${word}</span>`;
@@ -1443,7 +1420,6 @@ if (emojiWord === word) {
         user.score += 3;
         messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
         triggerConfetti();
-        showWellDoneMessage();
         updateMatchedWordBox(word);
         setTimeout(() => {
           messages.textContent = "";
@@ -1480,7 +1456,6 @@ if (emojiWord === word) {
     updateProgress();
     playAudio("chiptune", "correct");
     messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
-    showWellDoneMessage();
     updateMatchedWordBox(word);
     if (matched.size === currentVocab.length) {
       finishQuiz();
@@ -1591,7 +1566,6 @@ function finishQuiz() {
     quizStarted = false;
     const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
     messages.textContent = phrase;
-    showWellDoneMessage();
 
     triggerConfetti();
     playAudio("chiptune", "finish");
