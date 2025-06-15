@@ -78,13 +78,18 @@ body.dark #progressBar {
 }
 #container {
   display: flex;
-  justify-content: space-between;
-  gap: 2px;
+  flex-direction: column;
   margin: 5px 0;
   flex-grow: 1;
   width: 100%;
   padding: 0 2px;
   overflow-y: auto;
+}
+#columnsWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+  width: 100%;
 }
 #emojiColumn, #wordColumn {
   width: 50%;
@@ -96,13 +101,13 @@ body.dark #progressBar {
 .box {
   position: relative;
   border: 2px solid #000;
-  padding: 6px;
+  padding: 5px;
   text-align: center;
-  font-size: clamp(3.5rem, 18vmin, 6rem); /* Much larger emojis */
+  font-size: clamp(4rem, 20vmin, 7rem); /* Larger emojis */
   cursor: pointer;
   background: #fff;
   width: 100%;
-  height: calc((100vh - 200px) / 5 - 2px); /* Smaller boxes */
+  height: calc((100vh - 180px) / 5 - 2px); /* Adjusted for message box */
   flex: 1;
   display: flex;
   align-items: center;
@@ -147,7 +152,7 @@ body.dark .box.selected {
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.2;
-  height: calc((100vh - 200px) / 5 - 2px);
+  height: calc((100vh - 180px) / 5 - 2px);
   flex: 1;
   display: flex;
   align-items: center;
@@ -211,13 +216,13 @@ body.dark #messages {
 }
 #wellDoneMessages {
   width: 100%;
-  height: 20vh; /* 20% of screen height */
+  height: 15vh; /* Fixed height for message box */
   text-align: center;
-  font-size: clamp(1rem, 8vmin, 2rem); /* Large, filling text */
+  font-size: clamp(0.8rem, 6vmin, 1.6rem);
   color: #fff;
-  text-shadow: 0 0 3px #000, 0 0 6px #000; /* Black outline */
+  text-shadow: 0 0 3px #000, 0 0 6px #000;
   background: transparent;
-  margin: 5px 0;
+  margin: 2px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,7 +230,7 @@ body.dark #messages {
 }
 body.dark #wellDoneMessages {
   color: #000;
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff; /* White outline */
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
 }
 @keyframes sparkle {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -437,9 +442,8 @@ body.dark #themeToggle::before {
     border: 2px solid #000;
     height: 28px;
   }
-  #container {
+  #columnsWrapper {
     gap: 2px;
-    padding: 0 2px;
   }
   #emojiColumn, #wordColumn {
     width: 50%;
@@ -447,15 +451,15 @@ body.dark #themeToggle::before {
     flex: 1 1 50%;
   }
   .box {
-    font-size: clamp(3rem, 15vmin, 5rem);
-    height: calc((100vh - 180px) / 5 - 2px);
-    padding: 5px;
+    font-size: clamp(3.5rem, 17vmin, 6rem);
+    height: calc((100vh - 160px) / 5 - 2px);
+    padding: 4px;
     border: 2px solid #000;
     aspect-ratio: 2 / 1;
   }
   .wordBox {
     font-size: clamp(0.8rem, 5vw, 1.1rem);
-    height: calc((100vh - 180px) / 5 - 2px);
+    height: calc((100vh - 160px) / 5 - 2px);
     padding: 6px;
   }
   .wordBox[data-word-length="long"] {
@@ -468,9 +472,9 @@ body.dark #themeToggle::before {
     font-size: clamp(0.8rem, 4.5vw, 1.1rem);
   }
   #wellDoneMessages {
-    height: 18vh;
-    font-size: clamp(0.9rem, 7vmin, 1.8rem);
-    margin: 3px 0;
+    height: 13vh;
+    font-size: clamp(0.7rem, 5vmin, 1.4rem);
+    margin: 2px 0;
   }
   #loginSection {
     max-width: 280px;
@@ -532,9 +536,8 @@ body.dark #themeToggle::before {
     border: 1px solid #000;
     height: 26px;
   }
-  #container {
+  #columnsWrapper {
     gap: 1px;
-    padding: 0 1px;
   }
   #emojiColumn, #wordColumn {
     width: 50%;
@@ -542,9 +545,9 @@ body.dark #themeToggle::before {
     flex: 1 1 50%;
   }
   .box, .wordBox {
-    height: calc((100vh - 160px) / 5 - 1px);
+    height: calc((100vh - 140px) / 5 - 1px);
     padding: 4px;
-    font-size: clamp(2.5rem, 12vmin, 4rem);
+    font-size: clamp(3rem, 14vmin, 5rem);
     border: 1px solid #000;
     aspect-ratio: 1.5 / 1;
   }
@@ -561,8 +564,8 @@ body.dark #themeToggle::before {
     font-size: clamp(0.7rem, 4vw, 1rem);
   }
   #wellDoneMessages {
-    height: 16vh;
-    font-size: clamp(0.8rem, 6vmin, 1.6rem);
+    height: 12vh;
+    font-size: clamp(0.6rem, 4vmin, 1.2rem);
     margin: 2px 0;
   }
   #loginSection {
@@ -634,9 +637,8 @@ body.dark #themeToggle::before {
     border: 1px solid #000;
     height: 24px;
   }
-  #container {
+  #columnsWrapper {
     gap: 1px;
-    padding: 0 1px;
   }
   #emojiColumn, #wordColumn {
     width: 50%;
@@ -644,9 +646,9 @@ body.dark #themeToggle::before {
     flex: 1 1 50%;
   }
   .box, .wordBox {
-    height: calc((100vh - 140px) / 5 - 1px);
-    padding: 4px;
-    font-size: clamp(2rem, 10vmin, 3.5rem);
+    height: calc((100vh - 120px) / 5 - 1px);
+    padding: 3px;
+    font-size: clamp(2.5rem, 12vmin, 4rem);
     border: 1px solid #000;
     aspect-ratio: 1.5 / 1;
   }
@@ -663,8 +665,8 @@ body.dark #themeToggle::before {
     font-size: clamp(0.6rem, 3.8vw, 0.9rem);
   }
   #wellDoneMessages {
-    height: 15vh;
-    font-size: clamp(0.7rem, 5vmin, 1.4rem);
+    height: 10vh;
+    font-size: clamp(0.5rem, 3vmin, 1rem);
     margin: 2px 0;
   }
   #loginSection {
@@ -749,10 +751,12 @@ body.dark #themeToggle::before {
   </div>
   <div id="score" style="display:none;">Score: $0</div>
   <div id="container" style="display:none;">
-    <div id="emojiColumn"></div>
-    <div id="wordColumn"></div>
+    <div id="columnsWrapper">
+      <div id="emojiColumn"></div>
+      <div id="wordColumn"></div>
+    </div>
+    <div id="wellDoneMessages">¡Buena Suerte!</div>
   </div>
-  <div id="wellDoneMessages">Good Luck!</div>
   <canvas id="confettiCanvas"></canvas>
 
   <script src="vocab.js"></script>
@@ -1239,7 +1243,7 @@ function showWellDoneMessage() {
   const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
   wellDoneMessages.textContent = phrase;
   setTimeout(() => {
-    wellDoneMessages.textContent = "Good Luck!";
+    wellDoneMessages.textContent = "¡Buena Suerte!";
   }, 2000);
 }
 
