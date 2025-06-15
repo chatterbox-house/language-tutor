@@ -84,7 +84,6 @@ body.dark #progressBar {
   width: 100%;
   padding: 0 2px;
   overflow-y: auto;
-  min-height: 0;
 }
 #emojiColumn, #wordColumn {
   width: 50%;
@@ -92,18 +91,17 @@ body.dark #progressBar {
   flex-direction: column;
   gap: 2px;
   flex: 1 1 50%;
-  min-height: 100%;
 }
 .box {
   position: relative;
   border: 2px solid #000;
   padding: 8px;
   text-align: center;
-  font-size: clamp(1.8rem, 10vw, 3rem);
+  font-size: clamp(2rem, 12vmin, 3.5rem); /* Larger emojis */
   cursor: pointer;
   background: #fff;
   width: 100%;
-  height: calc((100vh - 150px) / 5 - 2px); /* Dynamic height based on viewport */
+  height: calc((100vh - 120px) / 5 - 2px); /* Adjusted for better fit */
   flex: 1;
   display: flex;
   align-items: center;
@@ -112,7 +110,7 @@ body.dark #progressBar {
   line-height: 1.2;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  aspect-ratio: 2 / 1; /* Maintain consistent box shape */
+  aspect-ratio: 2 / 1;
 }
 body.dark .box {
   border: 2px solid #fff;
@@ -148,7 +146,7 @@ body.dark .box.selected {
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.2;
-  height: calc((100vh - 150px) / 5 - 2px);
+  height: calc((100vh - 120px) / 5 - 2px);
   flex: 1;
   display: flex;
   align-items: center;
@@ -209,6 +207,25 @@ body.dark #messages {
   justify-content: center;
   gap: 5px;
   flex-wrap: wrap;
+}
+#wellDoneMessages {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(0.8rem, 5vw, 1rem);
+  color: #FFD700;
+  text-shadow: 0 0 5px #FFD700, 0 0 10px #FF4500;
+  z-index: 10;
+  animation: sparkle 1.5s infinite;
+}
+body.dark #wellDoneMessages {
+  color: #FFA500;
+  text-shadow: 0 0 5px #FFA500, 0 0 10px #FF0000;
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
 }
 #leaderboard {
   margin: 5px 0;
@@ -422,18 +439,17 @@ body.dark #themeToggle::before {
     width: 50%;
     gap: 2px;
     flex: 1 1 50%;
-    min-height: 100%;
   }
   .box {
-    font-size: clamp(1.5rem, 8vw, 2.5rem);
-    height: calc((100vh - 130px) / 5 - 2px);
+    font-size: clamp(1.5rem, 10vmin, 2.5rem);
+    height: calc((100vh - 100px) / 5 - 2px);
     padding: 6px;
     border: 2px solid #000;
     aspect-ratio: 2 / 1;
   }
   .wordBox {
     font-size: clamp(0.8rem, 5vw, 1.1rem);
-    height: calc((100vh - 130px) / 5 - 2px);
+    height: calc((100vh - 100px) / 5 - 2px);
     padding: 6px;
   }
   .wordBox[data-word-length="long"] {
@@ -444,6 +460,10 @@ body.dark #themeToggle::before {
   }
   .wordBox[data-word-length="short"] {
     font-size: clamp(0.8rem, 4.5vw, 1.1rem);
+  }
+  #wellDoneMessages {
+    font-size: clamp(0.7rem, 4.5vw, 0.9rem);
+    bottom: 8px;
   }
   #loginSection {
     max-width: 280px;
@@ -468,7 +488,6 @@ body.dark #themeToggle::before {
   }
 }
 @media (max-width: 480px) and (max-aspect-ratio: 1/1) {
-  /* For square-like screens, e.g., older Android phones */
   body {
     padding: 2px;
   }
@@ -513,14 +532,13 @@ body.dark #themeToggle::before {
     width: 50%;
     gap: 1px;
     flex: 1 1 50%;
-    min-height: 100%;
   }
   .box, .wordBox {
-    height: calc((100vh - 120px) / 5 - 1px);
+    height: calc((100vh - 90px) / 5 - 1px);
     padding: 5px;
-    font-size: clamp(1.3rem, 7vw, 2.2rem);
+    font-size: clamp(1.3rem, 8vmin, 2.2rem);
     border: 1px solid #000;
-    aspect-ratio: 1.5 / 1; /* Adjusted for square screens */
+    aspect-ratio: 1.5 / 1;
   }
   .wordBox {
     font-size: clamp(0.7rem, 4.5vw, 1rem);
@@ -533,6 +551,10 @@ body.dark #themeToggle::before {
   }
   .wordBox[data-word-length="short"] {
     font-size: clamp(0.7rem, 4vw, 1rem);
+  }
+  #wellDoneMessages {
+    font-size: clamp(0.6rem, 4vw, 0.8rem);
+    bottom: 6px;
   }
   #loginSection {
     max-width: 260px;
@@ -567,7 +589,7 @@ body.dark #themeToggle::before {
 }
 @media (max-width: 360px) {
   body {
-    padding:2px;
+    padding: 2px;
   }
   h1 {
     font-size: clamp(0.5rem, 3.8vw, 0.8rem);
@@ -610,12 +632,11 @@ body.dark #themeToggle::before {
     width: 50%;
     gap: 1px;
     flex: 1 1 50%;
-    min-height: 100%;
   }
   .box, .wordBox {
-    height: calc((100vh - 110px) / 5 - 1px);
+    height: calc((100vh - 80px) / 5 - 1px);
     padding: 4px;
-    font-size: clamp(1.2rem, 6.5vw, 2rem);
+    font-size: clamp(1.2rem, 7vmin, 2rem);
     border: 1px solid #000;
     aspect-ratio: 1.5 / 1;
   }
@@ -631,6 +652,10 @@ body.dark #themeToggle::before {
   .wordBox[data-word-length="short"] {
     font-size: clamp(0.6rem, 3.8vw, 0.9rem);
   }
+  #wellDoneMessages {
+    font-size: clamp(0.5rem, 3.8vw, 0.7rem);
+    bottom: 5px;
+  }
   #loginSection {
     max-width: 240px;
     padding: 6px;
@@ -639,7 +664,8 @@ body.dark #themeToggle::before {
   #loginSection select, #loginSection input {
     padding: 3px;
     margin-bottom: 5px;
-  }
+ 
+}
   #newUsernameInput {
     padding: 3px;
     margin-bottom: 5px;
@@ -715,7 +741,8 @@ body.dark #themeToggle::before {
   <div id="container" style="display:none;">
     <div id="emojiColumn"></div>
     <div id="wordColumn"></div>
-  </div>
+<div id="wellDoneMessages" style="display: none;"></div> 
+ </div>
   <canvas id="confettiCanvas"></canvas>
 
   <script src="vocab.js"></script>
@@ -1197,6 +1224,15 @@ wordColumn.scrollTop = 0;
             console.error("Error clearing selections:", e);
           }
         }
+function showWellDoneMessage() {
+  const wellDoneMessages = document.getElementById("wellDoneMessages");
+  const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
+  wellDoneMessages.textContent = phrase;
+  wellDoneMessages.style.display = "block";
+  setTimeout(() => {
+    wellDoneMessages.style.display = "none";
+  }, 2000);
+}
 
         function setupEmojiBoxes() {
           try {
@@ -1292,58 +1328,60 @@ wordColumn.scrollTop = 0;
                 const emojiWord = selectedEmoji.dataset.word;
                 const user = users[currentUser];
 
-                if (emojiWord === word) {
-                  if (!matched.has(word)) {
-                    matched.add(word);
-                    user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
-                    if (!errorWords.has(word)) {
-                      user.mastered[word].correctCount++;
-                      user.score++;
-                      if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
-                        user.retired.push(word);
-                        user.score += 3;
-                        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
-                        triggerConfetti();
-                        setTimeout(() => {
-                          messages.textContent = "";
-                        }, 2000);
-                        if (user.retired.length % 10 === 0) {
-                          user.level++;
-                          console.log(`Level up: ${user.level}`);
-                        }
-                      }
-                      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
-                      user.mastered[word].errorCount = 0;
-                      user.streak++;
-                      saveUserData();
-                    }
-                    const currentEmoji = selectedEmoji;
-                    const currentDiv = div;
-                    currentEmoji.classList.remove("selected");
-                    currentEmoji.classList.add("matched", "correct");
-                    currentDiv.classList.add("matched", "correct");
-                    setTimeout(() => {
-                      if (currentEmoji) {
-                        currentEmoji.classList.remove("correct");
-                        currentEmoji.classList.add("gold");
-                        currentEmoji.tabIndex = -1;
-                      }
-                      if (currentDiv) {
-                        currentDiv.classList.remove("correct");
-                        currentDiv.classList.add("gold");
-                        currentDiv.style.cursor = "default";
-                        currentDiv.tabIndex = -1;
-                      }
-                    }, 200);
-                    clearSelections();
-                    updateProgress();
-                    playAudio("chiptune", "correct");
-                    messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
-                    if (matched.size === currentVocab.length) {
-                      finishQuiz();
-                    }
-                  }
-                } else {
+if (emojiWord === word) {
+  if (!matched.has(word)) {
+    matched.add(word);
+    user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
+    if (!errorWords.has(word)) {
+      user.mastered[word].correctCount++;
+      user.score++;
+      if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
+        user.retired.push(word);
+        user.score += 3;
+        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
+        triggerConfetti();
+        showWellDoneMessage(); // Add sparkly message
+        setTimeout(() => {
+          messages.textContent = "";
+        }, 2000);
+        if (user.retired.length % 10 === 0) {
+          user.level++;
+          console.log(`Level up: ${user.level}`);
+        }
+      }
+      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
+      user.mastered[word].errorCount = 0;
+      user.streak++;
+      saveUserData();
+    }
+    const currentEmoji = selectedEmoji;
+    const currentDiv = div;
+    currentEmoji.classList.remove("selected");
+    currentEmoji.classList.add("matched", "correct");
+    currentDiv.classList.add("matched", "correct");
+    setTimeout(() => {
+      if (currentEmoji) {
+        currentEmoji.classList.remove("correct");
+        currentEmoji.classList.add("gold");
+        currentEmoji.tabIndex = -1;
+      }
+      if (currentDiv) {
+        currentDiv.classList.remove("correct");
+        currentDiv.classList.add("gold");
+        currentDiv.style.cursor = "default";
+        currentDiv.tabIndex = -1;
+      }
+    }, 200);
+    clearSelections();
+    updateProgress();
+    playAudio("chiptune", "correct");
+    messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
+    showWellDoneMessage(); // Add sparkly message for correct match
+    if (matched.size === currentVocab.length) {
+      finishQuiz();
+    }
+  }
+}else {
                   errorWords.add(word);
                   user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
                   user.mastered[word].errorCount++;
@@ -1441,63 +1479,64 @@ wordColumn.scrollTop = 0;
           }
         }
 
-        function finishQuiz() {
-          try {
-            console.log("Finishing quiz");
-            quizStarted = false;
-            const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
-            messages.textContent = phrase;
+function finishQuiz() {
+  try {
+    console.log("Finishing quiz");
+    quizStarted = false;
+    const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
+    messages.textContent = phrase;
+    showWellDoneMessage(); // Show sparkly message
 
-            triggerConfetti();
-            playAudio("chiptune", "finish");
+    triggerConfetti();
+    playAudio("chiptune", "finish");
 
-            container.classList.add("fade-out");
-            scoreDisplay.classList.add("fade-out");
-            progressBar.classList.add("fade-out");
-            messages.classList.add("fade-out");
+    container.classList.add("fade-out");
+    scoreDisplay.classList.add("fade-out");
+    progressBar.classList.add("fade-out");
+    messages.classList.add("fade-out");
 
-            setTimeout(() => {
-              container.style.display = "none";
-              scoreDisplay.style.display = "none";
-              progressBar.style.display = "none";
-              messages.style.display = "none";
-              container.classList.remove("fade-out");
-              scoreDisplay.classList.remove("fade-out");
-              progressBar.classList.remove("fade-out");
-              messages.classList.remove("fade-out");
+    setTimeout(() => {
+      container.style.display = "none";
+      scoreDisplay.style.display = "none";
+      progressBar.style.display = "none";
+      messages.style.display = "none";
+      container.classList.remove("fade-out");
+      scoreDisplay.classList.remove("fade-out");
+      progressBar.classList.remove("fade-out");
+      messages.classList.remove("fade-out");
 
-              updateLeaderboard();
-              leaderboardDiv.style.display = "block";
-              leaderboardDiv.classList.add("fade-in");
+      updateLeaderboard();
+      leaderboardDiv.style.display = "block";
+      leaderboardDiv.classList.add("fade-in");
 
-              buttonsDiv.style.display = "flex";
-              playAgainBtn.style.display = "inline-block";
-              logoutBtn.style.display = "inline-block";
-              quitBtn.style.display = "none";
-              refreshBtn.style.display = "none";
-              startBtn.style.display = "none";
-              buttonsDiv.classList.add("fade-in");
+      buttonsDiv.style.display = "flex";
+      playAgainBtn.style.display = "inline-block";
+      logoutBtn.style.display = "inline-block";
+      quitBtn.style.display = "none";
+      refreshBtn.style.display = "none";
+      startBtn.style.display = "none";
+      buttonsDiv.classList.add("fade-in");
 
-              console.log("Post-game buttons visible:", {
-                buttonsDiv: buttonsDiv.style.display,
-                playAgainBtn: playAgainBtn.style.display,
-                logoutBtn: logoutBtn.style.display
-              });
+      console.log("Post-game buttons visible:", {
+        buttonsDiv: buttonsDiv.style.display,
+        playAgainBtn: playAgainBtn.style.display,
+        logoutBtn: logoutBtn.style.display
+      });
 
-              setTimeout(() => {
-                leaderboardDiv.classList.remove("fade-in");
-                buttonsDiv.classList.remove("fade-in");
-              }, 500);
+      setTimeout(() => {
+        leaderboardDiv.classList.remove("fade-in");
+        buttonsDiv.classList.remove("fade-in");
+      }, 500);
 
-              playAgainBtn.focus();
-            }, 500);
+      playAgainBtn.focus();
+    }, 500);
 
-            container.style.pointerEvents = "none";
-          } catch (e) {
-            console.error("Error finishing quiz:", e);
-            messages.textContent = "Error al finalizar el quiz. / Error finishing the quiz.";
-          }
-        }
+    container.style.pointerEvents = "none";
+  } catch (e) {
+    console.error("Error finishing quiz:", e);
+    messages.textContent = "Error al finalizar el quiz. / Error finishing the quiz.";
+  }
+}
 
         function newQuiz() {
           try {
