@@ -108,8 +108,9 @@ body.dark #progressBar {
   cursor: pointer;
   background: #fff;
   width: 100%;
-height: calc((100vh - 300px) / 5 - 2px); /* Adjusted for two message boxes */
-  flex: 1;
+  flex: 1 0 auto; /* Add this for flexible height */
+  min-height: 15vmin; /* Ensure minimum readable height */
+}  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,7 +154,8 @@ body.dark .box.selected {
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.2;
- height: calc((100vh - 300px) / 5 - 2px);
+ flex: 1 0 auto; /* Add this for flexible height */
+  min-height: 15vmin; /* Ensure minimum readable height */
   flex: 1;
   display: flex;
   align-items: center;
@@ -453,14 +455,15 @@ body.dark #themeToggle::before {
   }
   .box {
     font-size: clamp(3.5rem, 17vmin, 6rem);
-  height: calc((100vh - 280px) / 5 - 2px);
+flex: 1 0 auto; /* Add this for flexible height */
+  min-height: 15vmin; /* Ensure minimum readable height */
     padding: 4px;
     border: 2px solid #000;
     aspect-ratio: 2 / 1;
   }
   .wordBox {
     font-size: clamp(0.8rem, 5vw, 1.1rem);
-    height: calc((100vh - 160px) / 5 - 2px);
+  flex: 1 0 auto; /* Add this for flexible height */
     padding: 6px;
   }
   .wordBox[data-word-length="long"] {
@@ -538,7 +541,8 @@ body.dark #themeToggle::before {
     height: 26px;
   }
   #columnsWrapper {
-    gap: 1px;
+  flex: 1;
+  min-height: 0; /* Allow shrinking */
   }
   #emojiColumn, #wordColumn {
     width: 50%;
@@ -754,7 +758,6 @@ body.dark #matchedWordBox {
 }
 @media (max-width: 768px) {
   #matchedWordBox {
-    height: 13vh;
     font-size: clamp(0.7rem, 9vmin, 1.8rem);
     background: #fff;
     border: 2px solid #000;
@@ -763,7 +766,6 @@ body.dark #matchedWordBox {
 }
 @media (max-width: 480px) and (max-aspect-ratio: 1/1) {
   #matchedWordBox {
-    height: 12vh;
     font-size: clamp(0.6rem, 8vmin, 1.6rem);
     background: #fff;
     border: 2px solid #000;
@@ -772,7 +774,6 @@ body.dark #matchedWordBox {
 }
 @media (max-width: 360px) {
   #matchedWordBox {
-    height: 10vh;
     font-size: clamp(0.5rem, 7vmin, 1.4rem);
     background: #fff;
     border: 2px solid #000;
