@@ -1,2024 +1,1444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>NANDOmode</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap" rel="stylesheet">
-  <style>
-* {
-  box-sizing: border-box;
-}
-html {
-  overscroll-behavior: none;
-}
-body {
-  font-family: 'Press Start 2P', cursive;
-  margin: 0;
-  padding: 5px;
-  background: #fff;
-  color: #000;
-  image-rendering: pixelated;
-  transition: background 0.3s, color 0.3s;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-body.dark {
-  background: #000;
-  color: #fff;
-}
-h1 {
-  text-align: center;
-  font-size: clamp(0.8rem, 5vw, 1.2rem);
-  color: #000;
-  text-shadow: 1px 1px #fff;
-  margin: 5px 0;
-}
-body.dark h1 {
-  color: #fff;
-  text-shadow: 1px 1px #000;
-}
-#score {
-  text-align: center;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
-  margin: 5px 0;
-  color: #fff;
-  background: #000;
-  padding: 5px;
-  border: 2px solid #fff;
-}
-body.dark #score {
-  color: #000;
-  background: #fff;
-  border: 2px solid #000;
-}
-#progressBar {
-  width: 100%;
-  background: #fff;
-  border: 2px solid #000;
-  height: 22px;
-  margin: 5px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 5px;
-}
-body.dark #progressBar {
-  background: #000;
-  border: 2px solid #fff;
-}
-#progressStars {
-  font-size: clamp(0.9rem, 4.5vw, 1.1rem);
-  text-align: center;
-  width: 100%;
-  line-height: 1;
-}
-#container {
-  display: flex;
-  flex-direction: column;
-  margin: 5px 0;
-  flex-grow: 1;
-  width: 100%;
-  padding: 0 2px;
-  overflow-y: auto;
-}
-#columnsWrapper {
-  display: flex;
-  justify-content: space-between;
-  gap: 2px;
-  width: 100%;
-}
-#emojiColumn, #wordColumn {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1 1 50%;
-}
-.box {
-  position: relative;
-  border: 2px solid #000;
-  padding: 5px;
-  text-align: center;
-  font-size: clamp(4rem, 20vmin, 7rem); /* Larger emojis */
-  cursor: pointer;
-  background: #fff;
-  width: 100%;
-  flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
-}  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-  line-height: 1;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  aspect-ratio: 2 / 1;
-}
-body.dark .box {
-  border: 2px solid #fff;
-  background: #000;
-}
-.box:hover:not(.matched), .box:focus:not(.matched) {
-  border-color: #FFA500;
-  background: #FFE4B5;
-  transform: scale(1.05);
-  outline: none;
-  z-index: 1;
-}
-@media (hover: none) {
-  .box:hover:not(.matched) {
-    border-color: inherit;
-    background: inherit;
-    transform: none;
-  }
-}
-.box.selected {
-  background: #000;
-  border-color: #fff;
-  color: #fff;
-  transform: scale(1.05);
-}
-body.dark .box.selected {
-  background: #fff;
-  border-color: #000;
-  color: #000;
-}
-.wordBox {
-  font-size: clamp(0.9rem, 5.5vw, 1.2rem);
-  white-space: normal;
-  word-wrap: break-word;
-  line-height: 1.2;
- flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 8px;
-}
-.wordBox[data-word-length="long"] {
-  font-size: clamp(0.7rem, 4vw, 1rem);
-}
-.wordBox[data-word-length="medium"] {
-  font-size: clamp(0.8rem, 4.5vw, 1.1rem);
-}
-.wordBox[data-word-length="short"] {
-  font-size: clamp(0.9rem, 5vw, 1.2rem);
-}
-.matched {
-  cursor: default;
-  animation: pixelBounce 0.3s;
-}
-.gold {
-  background: #FFD700 !important;
-  border-color: #B8860B !important;
-  color: #000 !important;
-}
-.correct {
-  background: #00FF00 !important;
-  transition: background 0.2s;
-}
-.incorrect {
-  background: #FF0000 !important;
-  animation: pixelShake 0.2s;
-  transition: background 0.2s;
-}
-@keyframes pixelBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-@keyframes pixelShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}
-#messages {
-  text-align: center;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
-  margin: 5px 0;
-  min-height: 22px;
-  color: #000;
-}
-body.dark #messages {
-  color: #fff;
-}
-#buttons {
-  text-align: center;
-  margin: 5px 0;
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-}
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-}
-#leaderboard {
-  margin: 5px 0;
-  background: #fff;
-  padding: 8px;
-  border: 2px solid #000;
-  max-height: 40vh;
-  overflow-y: auto;
-}
-body.dark #leaderboard {
-  background: #000;
-  border: 2px solid #fff;
-}
-button {
-  margin: 3px;
-  padding: 5px 10px;
-  font-size: clamp(0.5rem, 3.5vw, 0.7rem);
-  border: 2px solid #000;
-  cursor: pointer;
-  background: #fff;
-  color: #000;
-  transition: background 0.3s, outline 0.1s;
-  font-family: 'Press Start 2P', cursive;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  height: 30px;
-}
-body.dark button {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
-button:hover, button:focus {
-  background: #000;
-  color: #fff;
-  outline: 2px solid #FFD700;
-}
-body.dark button:hover, body.dark button:focus {
-  background: #fff;
-  color: #000;
-  outline: 2px solid #FFD700;
-}
-#loginSection {
-  max-width: 300px;
-  margin: 12px auto;
-  border: 2px solid #000;
-  padding: 12px;
-  background: #fff;
-}
-body.dark #loginSection {
-  border: 2px solid #fff;
-  background: #000;
-}
-#loginSection label {
-  display: block;
-  margin-bottom: 5px;
-  color: #000;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-}
-body.dark #loginSection label {
-  color: #fff;
-}
-#loginSection select, #loginSection input {
-  width: calc(100% - 12px);
-  padding: 5px;
-  margin-bottom: 10px;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
-  font-family: 'Press Start 2P', cursive;
-  touch-action: auto;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
-}
-body.dark #loginSection select, body.dark #loginSection input {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
-#loginSection select:focus, #loginSection input:focus {
-  outline: 2px solid #FFD700;
-}
-#newUsernameInput {
-  width: calc(100% - 12px);
-  padding: 5px;
-  margin-bottom: 10px;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
-  font-family: 'Press Start 2P', cursive;
-  touch-action: auto;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
-}
-body.dark #newUsernameInput {
-  border: 2px solid #fff;
-  background: #000;
-  color: #fff;
-}
-#newUsernameInput:focus {
-  outline: 2px solid #FFD700;
-}
-#loginError {
-  color: #000;
-  font-size: clamp(0.6rem, 4vw, 0.8rem);
-  margin-bottom: 8px;
-  min-height: 18px;
-}
-body.dark #loginError {
-  color: #fff;
-}
-#ttsPrompt {
-  text-align: center;
-  margin: 6px;
-  color: #FF0000;
-  font-size: clamp(0.6rem, 4vw, 0.9rem);
-  display: none;
-}
-canvas#confettiCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1000;
-}
-#themeToggle {
-  position: fixed;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  background: #fff;
-  border: 2px solid #000;
-  cursor: pointer;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-body.dark #themeToggle {
-  background: #000;
-  border: 2px solid #fff;
-}
-#themeToggle:hover, #themeToggle:focus {
-  outline: 2px solid #FFD700;
-}
-#themeToggle::before {
-  content: '🌞';
-  font-size: 16px;
-}
-body.dark #themeToggle::before {
-  content: '🌙';
-}
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-.fade-out {
-  animation: fadeOut 0.5s forwards;
-}
-.fade-in {
-  animation: fadeIn 0.5s forwards;
-}
-@media (max-width: 768px) {
-  body {
-    padding: 3px;
-  }
-  h1 {
-    font-size: clamp(0.7rem, 4.5vw, 1rem);
-    margin: 3px 0;
-  }
-  #score {
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-    padding: 4px;
-    margin: 3px 0;
-    border: 2px solid #fff;
-  }
-  #progressBar {
-    height: 20px;
-    margin: 3px 0;
-    padding: 0 4px;
-  }
-  #progressStars {
-    font-size: clamp(0.8rem, 4vw, 1rem);
-  }
-  #messages {
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-    min-height: 20px;
-    margin: 3px 0;
-  }
-  #buttons {
-    gap: 4px;
-    margin: 3px 0;
-  }
-  button {
-    padding: 4px 8px;
-    font-size: clamp(0.45rem, 3.2vw, 0.65rem);
-    margin: 2px;
-    border: 2px solid #000;
-    height: 28px;
-  }
-  #columnsWrapper {
-    gap: 2px;
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 2px;
-    flex: 1 1 50%;
-  }
-  .box {
-    font-size: clamp(3.5rem, 17vmin, 6rem);
-flex: 1 0 auto; /* Add this for flexible height */
-  min-height: 15vmin; /* Ensure minimum readable height */
-    padding: 4px;
-    border: 2px solid #000;
-    aspect-ratio: 2 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.8rem, 5vw, 1.1rem);
-  flex: 1 0 auto; /* Add this for flexible height */
-    padding: 6px;
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.6rem, 3.5vw, 0.9rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.7rem, 4vw, 1rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.8rem, 4.5vw, 1.1rem);
-  }
-  #wellDoneMessages {
-    height: 13vh;
-    font-size: clamp(0.7rem, 5vmin, 1.4rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 280px;
-    padding: 10px;
-    margin: 10px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 4px;
-    margin-bottom: 8px;
-  }
-  #newUsernameInput {
-    padding: 4px;
-    margin-bottom: 8px;
-  }
-  #leaderboard {
-    padding: 6px;
-    margin: 3px 0;
-  }
-  #ttsPrompt {
-    margin: 5px;
-    font-size: clamp(0.5rem, 3.5vw, 0.8rem);
-  }
-}
-@media (max-width: 480px) and (max-aspect-ratio: 1/1) {
-  body {
-    padding: 2px;
-  }
-  h1 {
-    font-size: clamp(0.6rem, 4vw, 0.9rem);
-    margin: 2px 0;
-  }
-  #score {
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-    padding: 3px;
-    margin: 2px 0;
-    border: 1px solid #fff;
-  }
-  #progressBar {
-    height: 18px;
-    margin: 2px 0;
-    padding: 0 3px;
-  }
-  #progressStars {
-    font-size: clamp(0.7rem, 3.5vw, 0.9rem);
-  }
-  #messages {
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-    min-height: 18px;
-    margin: 2px 0;
-  }
-  #buttons {
-    gap: 3px;
-    margin: 2px 0;
-  }
-  button {
-    padding: 3px 6px;
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    margin: 2px;
-    border: 1px solid #000;
-    height: 26px;
-  }
-  #columnsWrapper {
-  flex: 1;
-  min-height: 0; /* Allow shrinking */
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 1px;
-    flex: 1 1 50%;
-  }
-  .box, .wordBox {
-  height: calc((100vh - 260px) / 5 - 1px);
-    padding: 4px;
-    font-size: clamp(3rem, 14vmin, 5rem);
-    border: 1px solid #000;
-    aspect-ratio: 1.5 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.7rem, 4.5vw, 1rem);
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.5rem, 3vw, 0.8rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.6rem, 3.5vw, 0.9rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.7rem, 4vw, 1rem);
-  }
-  #wellDoneMessages {
-    height: 12vh;
-    font-size: clamp(0.6rem, 4vmin, 1.2rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 260px;
-    padding: 8px;
-    margin: 8px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 3px;
-    margin-bottom: 6px;
-  }
-  #newUsernameInput {
-    padding: 3px;
-    margin-bottom: 6px;
-  }
-  #leaderboard {
-    padding: 5px;
-    margin: 2px 0;
-  }
-  #ttsPrompt {
-    margin: 4px;
-    font-size: clamp(0.45rem, 3.2vw, 0.7rem);
-  }
-  #themeToggle {
-    width: 24px;
-    height: 24px;
-    top: 6px;
-    right: 6px;
-  }
-  #themeToggle::before {
-    font-size: 14px;
-  }
-}
-@media (max-width: 360px) {
-  body {
-    padding: 2px;
-  }
-  h1 {
-    font-size: clamp(0.5rem, 3.8vw, 0.8rem);
-    margin: 2px 0;
-  }
-  #score {
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    padding: 3px;
-    margin: 2px 0;
-    border: 1px solid #fff;
-  }
-  #progressBar {
-    height: 16px;
-    margin: 2px 0;
-    padding: 0 2px;
-  }
-  #progressStars {
-    font-size: clamp(0.6rem, 3.2vw, 0.8rem);
-  }
-  #messages {
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-    min-height: 16px;
-    margin: 2px 0;
-  }
-  #buttons {
-    gap: 2px;
-    margin: 2px 0;
-  }
-  button {
-    padding: 3px 6px;
-    font-size: clamp(0.35rem, 2.8vw, 0.55rem);
-    margin: 1px;
-    border: 1px solid #000;
-    height: 24px;
-  }
-  #columnsWrapper {
-    gap: 1px;
-  }
-  #emojiColumn, #wordColumn {
-    width: 50%;
-    gap: 1px;
-    flex: 1 1 50%;
-  }
-  .box, .wordBox {
-  height: calc((100vh - 240px) / 5 - 1px);
-    padding: 3px;
-    font-size: clamp(2.5rem, 12vmin, 4rem);
-    border: 1px solid #000;
-    aspect-ratio: 1.5 / 1;
-  }
-  .wordBox {
-    font-size: clamp(0.6rem, 4vw, 0.9rem);
-  }
-  .wordBox[data-word-length="long"] {
-    font-size: clamp(0.45rem, 2.8vw, 0.7rem);
-  }
-  .wordBox[data-word-length="medium"] {
-    font-size: clamp(0.5rem, 3.2vw, 0.8rem);
-  }
-  .wordBox[data-word-length="short"] {
-    font-size: clamp(0.6rem, 3.8vw, 0.9rem);
-  }
-  #wellDoneMessages {
-    height: 10vh;
-    font-size: clamp(0.5rem, 3vmin, 1rem);
-    margin: 2px 0;
-  }
-  #loginSection {
-    max-width: 240px;
-    padding: 6px;
-    margin: 6px auto;
-  }
-  #loginSection select, #loginSection input {
-    padding: 3px;
-    margin-bottom: 5px;
-  }
-  #newUsernameInput {
-    padding: 3px;
-    margin-bottom: 5px;
-  }
-  #leaderboard {
-    padding: 4px;
-    margin: 2px 0;
-  }
-  #ttsPrompt {
-    margin: 3px;
-    font-size: clamp(0.4rem, 3vw, 0.6rem);
-  }
-  #themeToggle {
-    width: 22px;
-    height: 22px;
-    top: 5px;
-    right: 5px;
-  }
-  #themeToggle::before {
-    font-size: 12px;
-  }
-#matchedWordBox {
-  width: 100%;
-  height: 15vh;
-  text-align: center;
-  font-size: clamp(0.8rem, 10vmin, 2rem);
-  color: #000; /* Black text for Español */
-  background: #fff; /* Permanent white background */
-  margin: 2px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #000; /* Black border */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 5px;
-  font-family: 'Press Start 2P', cursive, sans-serif; /* Remove Noto Emoji since image is used */
-}
-body.dark #matchedWordBox {
-  color: #000;
-  background: #fff;
-  border: 2px solid #000;
-}
-#matchedWordBox span {
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#matchedWordBox span img {
-  width: 1.5em;
-  height: auto;
-  vertical-align: middle;
-}
-@keyframes wordFlash {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1); }
-}
-.word-flash {
-  animation: wordFlash 1s forwards;
-  color: #FF0000; /* Red text */
-  -webkit-text-stroke: 1px #000; /* Black outline */
-  text-stroke: 1px #000; /* Standard outline */
-  font-weight: bold; /* Enhance visibility */
-}
-@media (max-width: 480px) {
-  .word-flash {
-    -webkit-text-stroke: 0.5px #000;
-    text-stroke: 0.5px #000;
-  }
-}
-@media (max-width: 768px) {
-  #matchedWordBox {
-    font-size: clamp(0.7rem, 9vmin, 1.8rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
-  }
-}
-@media (max-width: 480px) and (max-aspect-ratio: 1/1) {
-  #matchedWordBox {
-    font-size: clamp(0.6rem, 8vmin, 1.6rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
-  }
-}
-@media (max-width: 360px) {
-  #matchedWordBox {
-    font-size: clamp(0.5rem, 7vmin, 1.4rem);
-    background: #fff;
-    border: 2px solid #000;
-    color: #000;
-  }
-}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANDOmode - Learn Spanish Vocabulary</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive, 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        #game-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(10, 15, 30, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            position: relative;
+            border: 6px solid #4a4a8a;
+        }
+        
+        .screen {
+            display: none;
+            padding: 30px 20px;
+            min-height: 600px;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+            line-height: 1.3;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin: 25px 0 15px;
+            letter-spacing: 4px;
+            color: #f8f8f8;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(78, 205, 196, 0.5);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #ffe66d;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin: 15px 0;
+            color: #4ecdc4;
+        }
+        
+        button {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 15px;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #ff4757;
+        }
+        
+        button:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(145deg, #ff8e8e, #ff6b6b);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+        
+        .mode-btn {
+            min-width: 200px;
+            margin: 12px;
+            padding: 18px;
+            font-size: 1.2rem;
+            border-radius: 15px;
+        }
+        
+        .mode-btn.easy { 
+            background: linear-gradient(145deg, #3a7, #4bc); 
+            border: 3px solid #2aa;
+        }
+        .mode-btn.medium { 
+            background: linear-gradient(145deg, #47a, #58c); 
+            border: 3px solid #36b;
+        }
+        .mode-btn.hard { 
+            background: linear-gradient(145deg, #a54, #d66); 
+            border: 3px solid #c33;
+        }
+        
+        #start-screen {
+            background: radial-gradient(circle at center, #1e3a5f, #132238);
+            text-align: center;
+        }
+        
+        .username-container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 3px solid #4ecdc4;
+        }
+        
+        #username-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            border: 3px solid #ff6b6b;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .avatar-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .avatar {
+            font-size: 5rem;
+            margin: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 3px solid transparent;
+            animation: avatarPulse 2s infinite ease-in-out;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.15);
+            background: rgba(255, 255, 255, 0.1);
+            animation: none;
+        }
+        
+        .avatar.selected {
+            transform: scale(1.25);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+            border: 3px solid #ffe66d;
+            animation: none;
+        }
+        
+        @keyframes avatarPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .color-picker {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .color-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 12px;
+            cursor: pointer;
+            border: 3px solid #555;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            transform: scale(1.25);
+            border: 4px solid white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        
+        #game-screen {
+            background: radial-gradient(circle at center, #1a2a3a, #0d1b2a);
+        }
+        
+        .game-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 3px solid #4a4a8a;
+        }
+        
+        .game-header div {
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 10px 5px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            border: 2px solid #4ecdc4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .player-avatar {
+            font-size: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .game-header .progress-container {
+            grid-column: 1 / span 4;
+            width: 100%;
+            margin: 10px 0 0;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            height: 30px;
+            border: 2px solid #4a4a8a;
+            overflow: hidden;
+            padding: 0;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.9rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        .game-board {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            min-height: 400px;
+            gap: 20px;
+        }
+        
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(30, 40, 70, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 120px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(100, 100, 200, 0.3);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(40, 50, 90, 0.9);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            border-color: rgba(100, 200, 255, 0.5);
+        }
+        
+        .card.selected {
+            background: rgba(100, 200, 255, 0.3);
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.6);
+            border: 3px solid rgba(100, 200, 255, 0.7);
+        }
+        
+        .card.correct {
+            background: rgba(100, 255, 100, 0.3);
+            animation: pulse 0.5s ease;
+        }
+        
+        .card.incorrect {
+            background: rgba(255, 100, 100, 0.3);
+            animation: shake 0.5s ease;
+        }
+        
+        .card.matched {
+            background: rgba(100, 255, 100, 0.5);
+            border: 3px solid #4ecdc4;
+            box-shadow: 0 0 15px rgba(100, 255, 100, 0.8);
+            pointer-events: none;
+            cursor: default;
+        }
+        
+        .emoji-card {
+            font-size: 3.5rem;
+        }
+        
+        .word-card {
+            font-size: 1.6rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding: 15px;
+        }
+        
+        #round-end-screen {
+            background: radial-gradient(circle at center, #2a3a2a, #1a2a1a);
+            text-align: center;
+        }
+        
+        .round-result {
+            font-size: 1.8rem;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 3px solid #4ecdc4;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: fall 3s linear forwards;
+        }
+        
+        #leaderboard-screen {
+            background: radial-gradient(circle at center, #2a2a3a, #1a1a2a);
+        }
+        
+        .leaderboard-container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #4ecdc4;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid rgba(100, 100, 200, 0.3);
+        }
+        
+        th {
+            background: rgba(50, 50, 100, 0.8);
+            color: #ffe66d;
+        }
+        
+        tr:nth-child(even) {
+            background: rgba(40, 40, 80, 0.4);
+        }
+        
+        .leaderboard-avatar {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        #game-over-screen {
+            background: radial-gradient(circle at center, #3a2a2a, #2a1a1a);
+            text-align: center;
+        }
+        
+        .milestone-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffe66d;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 3px solid #4ecdc4;
+            font-size: 1.2rem;
+            z-index: 1000;
+            animation: fadeInOut 3s ease forwards;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(100, 255, 100, 0.6); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(100, 255, 100, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(100, 255, 100, 0.6); }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            50% { transform: translateX(15px); }
+            75% { transform: translateX(-15px); }
+            100% { transform: translateX(0); }
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(800px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10% { opacity: 1; transform: translate(-50%, 0); }
+            90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.6rem; }
+            h3 { font-size: 1.2rem; }
+            
+            .game-header {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .game-header div:nth-child(1), .game-header div:nth-child(2) {
+                grid-column: 1 / span 2;
+            }
+            
+            .game-header .progress-container {
+                grid-column: 1 / span 2;
+            }
+            
+            .game-board {
+                flex-direction: row;
+                gap: 10px;
+            }
+            
+            .column {
+                flex: 1;
+                min-width: 45%;
+            }
+            
+            .card {
+                height: 100px;
+                padding: 10px;
+            }
+            
+            .emoji-card { font-size: 2.5rem; }
+            .word-card { font-size: 1.2rem; }
+            
+            button { padding: 12px 20px; font-size: 1.1rem; }
+            .mode-btn { min-width: 160px; padding: 15px; }
+            
+            .avatar { font-size: 4rem; margin: 8px; }
+            .player-avatar { font-size: 1.5rem; }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; letter-spacing: 2px; }
+            h2 { font-size: 1.3rem; }
+            
+            .game-header {
+                grid-template-columns: 1fr 1fr;
+                padding: 10px;
+                gap: 5px;
+            }
+            
+            .game-header div {
+                font-size: 0.9rem;
+                padding: 8px 5px;
+            }
+            
+            .progress-text {
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                height: 90px;
+            }
+            
+            .emoji-card { font-size: 2.2rem; }
+            .word-card { font-size: 1rem; }
+            
+            .avatar { font-size: 3.5rem; }
+            .color-option { width: 50px; height: 50px; margin: 5px; }
+            .player-avatar { font-size: 1.2rem; }
+        }
+        
+        @media (max-width: 360px) {
+            h1 { font-size: 1.5rem; letter-spacing: 1px; }
+            h2 { font-size: 1.1rem; }
+            h3 { font-size: 1rem; }
+            .card { height: 80px; }
+            .emoji-card { font-size: 2rem; }
+            .word-card { font-size: 0.9rem; }
+            .mode-btn { min-width: 140px; padding: 12px; font-size: 1rem; }
+            .avatar { font-size: 3rem; }
+            .color-option { width: 45px; height: 45px; }
+            .player-avatar { font-size: 1rem; }
+        }
+        
+        .theme-green { background: radial-gradient(circle at center, #1a3a2a, #0d2a1a); }
+        .theme-blue { background: radial-gradient(circle at center, #1a2a3a, #0d1b2a); }
+        .theme-red { background: radial-gradient(circle at center, #3a1a1a, #2a0d0d); }
+        .theme-purple { background: radial-gradient(circle at center, #3a1a3a, #2a0d2a); }
+        .theme-orange { background: radial-gradient(circle at center, #3a2a1a, #2a1a0d); }
+        
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
-  <h1>NANDOmode</h1>
-  <button id="themeToggle" title="Toggle Light/Dark Mode" aria-label="Toggle theme" tabindex="0"></button>
-
-  <div id="leaderboard" style="display:none;">
-    <h2>Leaderboard</h2>
-    <ol id="leaderboardList"></ol>
-  </div>
-
-  <div id="loginSection">
-    <div id="loginError"></div>
-    <label for="usernameSelect">Usuario / User:</label>
-    <select id="usernameSelect" tabindex="0" aria-label="Select user">
-      <option value="" disabled selected>Selecciona usuario o crea uno nuevo / Select user or create new</option>
-      <option value="Guest">Invitado / Guest (sin PIN / no PIN)</option>
-      <option value="new">Usuario nuevo / New user</option>
-    </select>
-    <input type="text" id="newUsernameInput" placeholder="Ingresa nuevo usuario (1-20 caracteres) / Enter new username (1-20 characters)" maxlength="20" autocomplete="off" style="display: none; margin-top: 6px;" tabindex="0" aria-label="New username">
-    <label for="avatar">Avatar:</label>
-    <select id="avatar" tabindex="0" aria-label="Select avatar">
-      <option value="😺">😺 Gato / Cat</option>
-      <option value="🐶">🐶 Perro / Dog</option>
-      <option value="🦁">🦁 León / Lion</option>
-      <option value="🐻">🐻 Oso / Bear</option>
-      <option value="🦊">🦊 Zorro / Fox</option>
-    </select>
-    <label for="pin">PIN (4 dígitos, opcional para nuevos usuarios / 4 digits, optional for new users):</label>
-    <input type="password" id="pin" placeholder="Ingresa PIN de 4 dígitos / Enter 4-digit PIN" maxlength="4" autocomplete="off" tabindex="0" aria-label="Enter PIN">
-    <button id="loginBtn" tabindex="0" aria-label="Login or create account">Iniciar sesión / Crear cuenta / Login or Create account</button>
-  </div>
-
-  <div id="ttsPrompt">
-    Por favor, instala o habilita el motor de texto a voz en español en la configuración de tu dispositivo. / Please install or enable the Spanish text-to-speech engine in your device settings.
-  </div>
-
-  <div id="buttons" style="display:none;">
-    <button id="startBtn" tabindex="0" aria-label="Start quiz">Start Quiz</button>
-    <button id="quitBtn" style="display:none;" tabindex="0" aria-label="Quit quiz">Quit</button>
-    <button id="playAgainBtn" style="display:none;" tabindex="0" aria-label="Play again">Play Again</button>
-    <button id="logoutBtn" style="display:none;" tabindex="0" aria-label="Logout">Logout</button>
-    <button id="refreshBtn" style="display:none;" tabindex="0" aria-label="Refresh quiz">Refresh</button>
-  </div>
-
-  <div id="messages"></div>
-  <div id="progressBar" style="display:none;">
-    <div id="progressStars"></div>
-  </div>
-  <div id="score" style="display:none;">Score: $0</div>
-  <div id="container" style="display:none;">
-    <div id="columnsWrapper">
-      <div id="emojiColumn"></div>
-      <div id="wordColumn"></div>
+    <div id="game-container">
+        <div class="debug-info" id="debug-info">Vocab Loading...</div>
+        
+        <div id="start-screen" class="screen active">
+            <h1>NANDOmode</h1>
+            <h2>Learn Spanish Vocabulary</h2>
+            
+            <div class="username-container">
+                <h3>Enter Your Username:</h3>
+                <input type="text" id="username-input" placeholder="Type your username..." maxlength="20" aria-label="Enter username">
+                <button id="save-username" aria-label="Save username and continue">Save & Continue</button>
+            </div>
+            
+            <div class="avatar-container">
+                <div class="avatar" data-avatar="👾" role="button" tabindex="0" aria-label="Select avatar: Alien">👾</div>
+                <div class="avatar" data-avatar="🦊" role="button" tabindex="0" aria-label="Select avatar: Fox">🦊</div>
+                <div class="avatar selected" data-avatar="🐉" role="button" tabindex="0" aria-label="Select avatar: Dragon">🐉</div>
+                <div class="avatar" data-avatar="🦄" role="button" tabindex="0" aria-label="Select avatar: Unicorn">🦄</div>
+                <div class="avatar" data-avatar="🤖" role="button" tabindex="0" aria-label="Select avatar: Robot">🤖</div>
+                <div class="avatar" data-avatar="👻" role="button" tabindex="0" aria-label="Select avatar: Ghost">👻</div>
+                <div class="avatar" data-avatar="🐧" role="button" tabindex="0" aria-label="Select avatar: Penguin">🐧</div>
+                <div class="avatar" data-avatar="🦖" role="button" tabindex="0" aria-label="Select avatar: Dinosaur">🦖</div>
+            </div>
+            
+            <div class="color-picker">
+                <div class="color-option selected" style="background: #3a7;" data-color="green" role="button" tabindex="0" aria-label="Select green theme"></div>
+                <div class="color-option" style="background: #47a;" data-color="blue" role="button" tabindex="0" aria-label="Select blue theme"></div>
+                <div class="color-option" style="background: #a54;" data-color="red" role="button" tabindex="0" aria-label="Select red theme"></div>
+                <div class="color-option" style="background: #a37;" data-color="purple" role="button" tabindex="0" aria-label="Select purple theme"></div>
+                <div class="color-option" style="background: #ea6;" data-color="orange" role="button" tabindex="0" aria-label="Select orange theme"></div>
+            </div>
+            
+            <h3>Select Game Mode:</h3>
+            <div class="btn-group">
+                <button class="mode-btn easy" data-mode="easy" aria-label="Start easy mode">Easy Mode</button>
+                <button class="mode-btn medium" data-mode="medium" aria-label="Start medium mode">Medium Mode</button>
+                <button class="mode-btn hard" data-mode="hard" aria-label="Start hard mode">Hard Mode</button>
+            </div>
+        </div>
+        
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="player-info">
+                    <span class="player-avatar" id="player-avatar">🐉</span>
+                    Player: <span id="player-name">Guest</span>
+                </div>
+                <div>Score: <span id="score">0</span></div>
+                <div>Streak: <span id="streak">0</span></div>
+                <div>Progress: <span id="progress">0</span>/100</div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-text"><span id="completed">0</span>/100 (<span id="percent-complete">0</span>%)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-board">
+                <div class="column" id="column-left"></div>
+                <div class="column" id="column-right"></div>
+            </div>
+            
+            <div class="btn-group">
+                <button id="refresh-btn" aria-label="Refresh round">Refresh</button>
+                <button id="quit-btn" aria-label="Quit to main menu">Quit</button>
+            </div>
+        </div>
+        
+        <div id="round-end-screen" class="screen">
+            <h2>Well Done!</h2>
+            <div class="round-result">
+                Round Score: <span id="round-score">0</span><br>
+                Total Score: <span id="total-score">0</span>
+            </div>
+            <div class="btn-group">
+                <button id="continue-btn" aria-label="Continue to leaderboard">Continue</button>
+                <button id="quit-round-btn" aria-label="Quit to main menu">Quit</button>
+            </div>
+        </div>
+        
+        <div id="leaderboard-screen" class="screen">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard-container">
+                <h3>Your Progress</h3>
+                <p>Words Completed: <span id="progress-count">0</span>/100</p>
+                <p>Total Score: <span id="progress-score">0</span></p>
+                <p>Current Streak: <span id="progress-streak">0</span></p>
+                
+                <h3>Top Scores</h3>
+                <table id="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="btn-group">
+                <button id="continue-leader-btn" aria-label="Continue to next round">Continue</button>
+                <button id="quit-leader-btn" aria-label="Quit to main menu">Quit</button>
+            </div>
+        </div>
+        
+        <div id="game-over-screen" class="screen">
+            <h2>Game Complete!</h2>
+            <div class="round-result">
+                Congratulations <span id="final-player">Player</span>!<br>
+                You've mastered 100 Spanish words!<br>
+                Final Score: <span id="final-score">0</span>
+            </div>
+            <div class="leaderboard-container">
+                <h3>Hall of Fame</h3>
+                <table id="final-leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="btn-group">
+                <button id="play-again-btn" aria-label="Play again">Play Again</button>
+                <button id="main-menu-btn" aria-label="Return to main menu">Main Menu</button>
+            </div>
+        </div>
     </div>
 
-<div id="matchedWordBox"><span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span></div>
-  </div>
-  <canvas id="confettiCanvas"></canvas>
+    <script src="vocab.js"></script>
+    
+    <script>
+        const debugInfo = document.getElementById('debug-info');
+        let isProcessingClick = false;
+        let lastTTSTime = 0;
+        const ttsDebounce = 1000;
+        const milestones = [25, 50, 75, 100];
+        
+        const gameState = {
+            currentScreen: 'start',
+            player: { name: 'Guest', avatar: '🐉', theme: 'green' },
+            mode: '',
+            score: 0,
+            streak: 0,
+            completedWords: 0,
+            wordProgress: {},
+            currentRound: { 
+                pairs: [], 
+                leftColumn: [], 
+                rightColumn: [], 
+                selectedLeft: null, 
+                selectedRight: null, 
+                matchedPairs: [], 
+                roundScore: 0 
+            },
+            leaderboard: []
+        };
 
-  <script src="vocab.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
-    console.log("Main script loaded successfully");
+        const screens = {
+            start: document.getElementById('start-screen'),
+            game: document.getElementById('game-screen'),
+            roundEnd: document.getElementById('round-end-screen'),
+            leaderboard: document.getElementById('leaderboard-screen'),
+            gameOver: document.getElementById('game-over-screen')
+        };
 
-    // Fallback vocabulary
-    if (typeof vocab === "undefined") {
-      console.warn("vocab.js not loaded, using fallback vocabulary");
-      window.vocab = [
-        { emoji: "🏃", word: "correr", type: "verb" },
-        { emoji: "🍽️", word: "comer", type: "verb" },
-        { emoji: "🎤", word: "cantar", type: "verb" },
-        { emoji: "😴", word: "dormir", type: "verb" },
-        { emoji: "✍️", word: "escribir", type: "verb" },
-      ];
-    }
-
-    // Shuffle vocab to ensure random order
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-    vocab = shuffle([...vocab]);
-
-    let users = JSON.parse(localStorage.getItem("users") || "{}");
-    const goodLuckPhrases = [
-      "🚀 ¡Listo, pixelero! / Ready, pixel hero!",
-      "🌟 ¡A por las estrellas! / Reach for the stars!",
-      "🎮 ¡Tú puedes, 8-bit! / You can do it, 8-bit!",
-      "⚡ ¡Vamos, héroe! / Let's go, hero!",
-      "🔥 ¡Modo juego ON! / Game mode ON!"
-    ];
-    const wellDonePhrases = [
-      "🎉 ¡Eres un pro, pixel! / You're a pixel pro!",
-      "🏆 ¡Nivel completado! / Level completed!",
-      "⭐ ¡Súper 8-bit! / Super 8-bit!",
-      "🎈 ¡Victoria retro! / Retro victory!",
-      "🌈 ¡Campeón pixelado! / Pixelated champion!"
-    ];
-    let matched = new Set();
-    let quizStarted = false;
-    let currentUser = null;
-    let selectedEmoji = null;
-    let errorWords = new Set();
-    let currentVocab = [];
-
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    document.addEventListener("click", () => {
-      if (audioContext.state === "suspended") {
-        audioContext.resume().then(() => {
-          console.log("AudioContext resumed");
-          loadVoices();
-          const testUtterance = new SpeechSynthesisUtterance(" ");
-          testUtterance.volume = 0;
-          testUtterance.onend = () => {
-            console.log("TTS initialized");
-          };
-          speechSynthesis.speak(testUtterance);
-        }).catch(e => console.error("Error resuming AudioContext:", e));
-      }
-    }, { once: true });
-    let menuMusicOscillator = null;
-    let menuMusicGainNode = null;
-    let hasInteracted = false;
-
-    let audioQueue = [];
-    let isAudioPlaying = false;
-
-    window.onload = function() {
-      try {
-        console.log("Window loaded, initializing app");
-
-        // DOM elements
-        const emojiColumn = document.getElementById("emojiColumn");
-        const wordColumn = document.getElementById("wordColumn");
-        const scoreDisplay = document.getElementById("score");
-        const messages = document.getElementById("messages");
-        const startBtn = document.getElementById("startBtn");
-        const quitBtn = document.getElementById("quitBtn");
-        const playAgainBtn = document.getElementById("playAgainBtn");
-        const logoutBtn = document.getElementById("logoutBtn");
-        const refreshBtn = document.getElementById("refreshBtn");
-        const container = document.getElementById("container");
-        const loginSection = document.getElementById("loginSection");
-        const loginBtn = document.getElementById("loginBtn");
-        const usernameSelect = document.getElementById("usernameSelect");
-        const newUsernameInput = document.getElementById("newUsernameInput");
-        const avatarInput = document.getElementById("avatar");
-        const pinInput = document.getElementById("pin");
-        const loginError = document.getElementById("loginError");
-        const buttonsDiv = document.getElementById("buttons");
-        const leaderboardDiv = document.getElementById("leaderboard");
-        const leaderboardList = document.getElementById("leaderboardList");
-        const progressBar = document.getElementById("progressBar");
-        const progressStars = document.getElementById("progressStars");
-        const ttsPrompt = document.getElementById("ttsPrompt");
-
-// Sync scrolling between columns
-function syncScroll(source, target) {
-  target.scrollTop = source.scrollTop;
-}
-
-emojiColumn.addEventListener("scroll", () => syncScroll(emojiColumn, wordColumn));
-wordColumn.addEventListener("scroll", () => syncScroll(wordColumn, emojiColumn));
-
-// Reset scroll position
-emojiColumn.scrollTop = 0;
-wordColumn.scrollTop = 0;
-
-        if (!loginBtn || !usernameSelect || !newUsernameInput || !pinInput || !loginError || !startBtn || !refreshBtn || !quitBtn || !playAgainBtn || !logoutBtn || !ttsPrompt) {
-          console.error("Missing DOM elements");
-          messages.textContent = "Error: Elementos de la página no encontrados. / Error: Page elements not found.";
-          return;
-        }
-
-        console.log("Vocabulary loaded:", vocab.length, "words");
-
-        // Audio functions
-        function playAudio(type, text) {
-          audioQueue.push({ type, text });
-          processAudioQueue();
-        }
-
-        function processAudioQueue() {
-          if (isAudioPlaying || audioQueue.length === 0) return;
-          isAudioPlaying = true;
-          const { type, text } = audioQueue.shift();
-
-          if (type === "speech") {
-            speakText(text);
-          } else if (type === "chiptune") {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            if (text === "correct") {
-              oscillator.type = "square";
-              oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
-              gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-              oscillator.start();
-              oscillator.stop(audioContext.currentTime + 0.5);
-            } else if (text === "incorrect") {
-              oscillator.type = "square";
-              oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-              gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-              oscillator.start();
-              oscillator.stop(audioContext.currentTime + 0.5);
-            } else if (text === "finish") {
-              oscillator.type = "square";
-              gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-              oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-              oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.3);
-              oscillator.frequency.setValueAtTime(1100, audioContext.currentTime + 0.6);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
-              oscillator.start();
-              oscillator.stop(audioContext.currentTime + 1);
+        function initGame() {
+            if (window.vocab && window.vocab.length > 0) {
+                debugInfo.textContent = `Vocab loaded: ${window.vocab.length} words`;
+            } else {
+                debugInfo.textContent = "Error: vocab.js not loaded!";
+                console.error("vocab.js not loaded or empty");
+                return;
             }
-            setTimeout(() => {
-              isAudioPlaying = false;
-              processAudioQueue();
-            }, text === "finish" ? 1000 : 500);
-          }
-        }
-
-        function playMenuMusic() {
-          if (!hasInteracted || menuMusicOscillator) return;
-          menuMusicOscillator = audioContext.createOscillator();
-          menuMusicGainNode = audioContext.createGain();
-          menuMusicOscillator.connect(menuMusicGainNode);
-          menuMusicGainNode.connect(audioContext.destination);
-          menuMusicOscillator.type = "square";
-          menuMusicGainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-          const notes = [440, 494, 523, 587, 659, 587, 523, 494];
-          let time = audioContext.currentTime;
-          notes.forEach((freq, i) => {
-            menuMusicOscillator.frequency.setValueAtTime(freq, time + i * 0.2);
-          });
-          menuMusicOscillator.start();
-          menuMusicOscillator.onended = () => {
-            if (menuMusicOscillator) playMenuMusic();
-          };
-          setTimeout(() => {
-            if (menuMusicOscillator) menuMusicOscillator.stop();
-          }, 1600);
-        }
-
-        function stopMenuMusic() {
-          if (menuMusicOscillator) {
-            menuMusicGainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-            menuMusicOscillator.stop(audioContext.currentTime + 0.1);
-            menuMusicOscillator = null;
-            menuMusicGainNode = null;
-          }
-        }
-
-        function toggleTheme() {
-          document.body.classList.toggle("dark");
-          localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-        }
-
-        let voices = [];
-        let voiceLoadAttempts = 0;
-        const maxVoiceLoadAttempts = 10;
-
-        function loadVoices() {
-          voices = speechSynthesis.getVoices();
-          console.log("Available voices:", voices.map(v => ({ name: v.name, lang: v.lang })));
-          voiceLoadAttempts++;
-          console.log("Voice load attempt:", voiceLoadAttempts);
-          if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
-            setTimeout(loadVoices, 500);
-          }
-        }
-
-        function getSpanishVoice() {
-          const googleVoices = voices.filter(v => v.name.includes("Google") && v.lang.startsWith("es-"));
-          if (googleVoices.length) {
-            console.log("Selected Google Spanish voice:", googleVoices[0].name, googleVoices[0].lang);
-            return googleVoices[0];
-          }
-          const spanishVoices = voices.filter(v => v.lang.startsWith("es-"));
-          if (spanishVoices.length) {
-            console.log("Selected Spanish voice:", spanishVoices[0].name, spanishVoices[0].lang);
-            return spanishVoices[0];
-          }
-          console.warn("No Spanish voice found");
-          return null;
-        }
-
-        function speakText(text) {
-          if (!window.speechSynthesis) {
-            console.error("SpeechSynthesis API not supported");
-            messages.textContent = "Voz no compatible en este dispositivo. / Speech not supported on this device.";
-            ttsPrompt.style.display = "block";
-            setTimeout(() => {
-              messages.textContent = "";
-              ttsPrompt.style.display = "none";
-            }, 5000);
-            isAudioPlaying = false;
-            processAudioQueue();
-            return;
-          }
-
-          if (!voices.length && voiceLoadAttempts < maxVoiceLoadAttempts) {
-            console.log("Voices not loaded, retrying...");
-            setTimeout(() => {
-              loadVoices();
-              speakText(text);
-            }, 500);
-            return;
-          }
-
-          const spanishVoice = getSpanishVoice();
-          if (!spanishVoice) {
-            console.warn("No Spanish voice available after", voiceLoadAttempts, "attempts");
-            messages.textContent = "No hay voz en español disponible. / No Spanish voice available.";
-            ttsPrompt.style.display = "block";
-            setTimeout(() => {
-              messages.textContent = "";
-              ttsPrompt.style.display = "none";
-            }, 5000);
-            isAudioPlaying = false;
-            processAudioQueue();
-            return;
-          }
-
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.voice = spanishVoice;
-          utterance.lang = "es-ES";
-          utterance.rate = 0.9;
-          utterance.volume = 1.0;
-          utterance.onend = () => {
-            console.log("Speech finished:", text);
-            isAudioPlaying = false;
-            processAudioQueue();
-          };
-          utterance.onerror = (e) => {
-            console.error("Speech synthesis error:", e.error, e.message);
-            messages.textContent = "Error al reproducir voz. / Error playing speech.";
-            ttsPrompt.style.display = "block";
-            setTimeout(() => {
-              messages.textContent = "";
-              ttsPrompt.style.display = "none";
-            }, 5000);
-            isAudioPlaying = false;
-            processAudioQueue();
-          };
-          console.log("Speaking text:", text, "with voice:", spanishVoice.name);
-          speechSynthesis.speak(utterance);
-        }
-
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
-        }
-
-        function populateUsernameDropdown() {
-          usernameSelect.innerHTML = `
-            <option value="" disabled selected>Selecciona usuario o crea uno nuevo / Select user or create new</option>
-            <option value="Guest">Invitado / Guest (sin PIN / no PIN)</option>
-          `;
-          Object.keys(users)
-            .filter(username => username !== "Guest")
-            .forEach(username => {
-              const option = document.createElement("option");
-              option.value = username;
-              option.textContent = username;
-              usernameSelect.appendChild(option);
-            });
-          usernameSelect.innerHTML += '<option value="new">Usuario nuevo / New user</option>';
-        }
-
-        function handleUsernameSelection() {
-          newUsernameInput.style.display = usernameSelect.value === "new" ? "block" : "none";
-          if (usernameSelect.value !== "new" && usernameSelect.value !== "Guest" && usernameSelect.value !== "") {
-            pinInput.value = users[usernameSelect.value]?.pin || "";
-          } else {
-            pinInput.value = "";
-          }
-          if (usernameSelect.value === "Guest") {
-            pinInput.disabled = true;
-            pinInput.value = "";
-          } else {
-            pinInput.disabled = false;
-          }
-        }
-
-        function triggerConfetti() {
-          function confettiBurst() {
-            confetti({
-              particleCount: 50,
-              spread: 70,
-              origin: { y: 0.6 },
-              shapes: ['square'],
-              colors: ['#000', '#fff', '#FFD700', '#00FF00']
-            });
-          }
-          confettiBurst();
-          setTimeout(confettiBurst, 300);
-          setTimeout(confettiBurst, 600);
-          setTimeout(() => confetti.reset(), 2000);
-        }
-
-        function updateProgress() {
-          const stars = matched.size;
-          progressStars.innerHTML = "🌟".repeat(stars) + "☆".repeat(5 - stars);
-        }
-
-        function saveUserData() {
-          try {
-            localStorage.setItem("users", JSON.stringify(users));
-          } catch (e) {
-            console.error("Failed to save user data:", e);
-            loginError.textContent = "Error al guardar datos. / Error saving data.";
-          }
-        }
-
-        function selectQuizWords(preserveCarryovers = []) {
-          try {
-            console.log("Selecting quiz words for user:", currentUser);
-            const user = users[currentUser];
-            user.mastered = user.mastered || {};
-            user.retired = user.retired || [];
-            user.activePool = user.activePool || shuffle([...vocab]).slice(0, 30);
-            user.lastWords = user.lastWords || [];
-            user.roundCount = user.roundCount || 0;
-            user.level = user.level || 1;
-            user.badges = user.badges || [];
-            user.streak = user.streak || 0;
-            if (!preserveCarryovers.length) user.roundCount++;
-
-            const retiredCount = user.retired.length;
-            if (retiredCount >= 5 && retiredCount % 5 === 0) {
-              const newWords = shuffle([...vocab])
-                .filter(v => !user.activePool.some(p => p.word === v.word) && !user.retired.includes(v.word))
-                .slice(0, 5);
-              user.activePool.push(...newWords);
-              console.log("Added new words to activePool:", newWords.map(v => v.word));
-            }
-
-            if (user.roundCount % 10 === 0 && user.retired.length > 0 && !preserveCarryovers.length) {
-              console.log("Triggering review round");
-              const retiredWords = shuffle([...user.retired]).slice(0, 2);
-              const nonRetiredWords = shuffle([...user.activePool])
-                .filter(v => !user.retired.includes(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
-                .slice(0, 3);
-              const selectedWords = [...retiredWords.map(word => vocab.find(v => v.word === word)), ...nonRetiredWords];
-              user.lastWords = selectedWords.map(v => v.word);
-              saveUserData();
-              return selectedWords.slice(0, 5);
-            }
-
-            const buckets = [[], [], []];
-            user.activePool.forEach(v => {
-              const correctCount = user.mastered[v.word]?.correctCount || 0;
-              if (correctCount < 3) buckets[correctCount].push(v);
-            });
-
-            const weights = [0.2, 0.5, 0.3];
-            const availableBuckets = buckets.map((b, i) => ({ words: b, weight: weights[i] }))
-              .filter(b => b.words.length > 0);
-
-            let carryovers = preserveCarryovers.length
-              ? preserveCarryovers
-              : shuffle([...user.lastWords])
-                  .filter(word => user.activePool.some(v => v.word === word) && (user.mastered[word]?.errorCount || 0) < 3)
-                  .sort((a, b) => (user.mastered[b]?.errorCount || 0) - (user.mastered[a]?.errorCount || 0))
-                  .slice(0, 2);
-            const selectedWordsSet = new Set(carryovers);
-            console.log("Carryovers:", carryovers);
-
-            let learnedCount = carryovers.filter(w => (user.mastered[w]?.correctCount || 0) > 0).length;
-            while (selectedWordsSet.size < 5 && availableBuckets.length > 0) {
-              const preferLearned = learnedCount < 4 && (buckets[1].length + buckets[2].length > 0);
-              const targetBucket = preferLearned ? [1, 2] : [0, 1, 2];
-              const filteredBuckets = availableBuckets.filter(b => targetBucket.includes(buckets.indexOf(b.words)));
-              if (!filteredBuckets.length) break;
-
-              const totalWeight = filteredBuckets.reduce((sum, b) => sum + b.weight, 0);
-              let rand = Math.random() * totalWeight;
-              let selectedBucket = null;
-              for (const bucket of filteredBuckets) {
-                rand -= bucket.weight;
-                if (rand <= 0) {
-                  selectedBucket = bucket;
-                  break;
+            
+            try {
+                const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
+                if (savedLeaderboard) {
+                    gameState.leaderboard = JSON.parse(savedLeaderboard);
                 }
-              }
-              if (!selectedBucket) selectedBucket = filteredBuckets[filteredBuckets.length - 1];
-
-              const eligibleWords = selectedBucket.words.filter(v => !selectedWordsSet.has(v.word));
-              if (eligibleWords.length > 0) {
-                const word = shuffle([...eligibleWords])
-                  .sort((a, b) => (user.mastered[b.word]?.errorCount || 0) - (user.mastered[a.word]?.errorCount || 0))[0];
-                selectedWordsSet.add(word.word);
-                if ((user.mastered[word.word]?.correctCount || 0) > 0) learnedCount++;
-              } else {
-                availableBuckets.splice(availableBuckets.indexOf(selectedBucket), 1);
-              }
+            } catch (e) {
+                console.warn("Error loading leaderboard:", e);
             }
-
-            if (selectedWordsSet.size < 5) {
-              const extraWords = shuffle([...user.activePool])
-                .filter(v => !selectedWordsSet.has(v.word) && (user.mastered[v.word]?.correctCount || 0) < 3)
-                .slice(0, 5 - selectedWordsSet.size);
-              extraWords.forEach(v => selectedWordsSet.add(v.word));
-              console.log("Extra words:", extraWords.map(v => v.word));
-            }
-
-            const selectedWords = Array.from(selectedWordsSet).slice(0, 5);
-            const finalVocab = vocab.filter(v => selectedWords.includes(v.word));
-            if (new Set(finalVocab.map(v => v.word)).size !== finalVocab.length) {
-              console.error("Duplicates detected:", finalVocab.map(v => v.word));
-              return selectQuizWords(preserveCarryovers);
-            }
-            user.lastWords = finalVocab.map(v => v.word);
-            saveUserData();
-            console.log("Selected words:", finalVocab.map(v => v.word));
-            return finalVocab;
-          } catch (e) {
-            console.error("Error in selectQuizWords:", e);
-            messages.textContent = "Error seleccionando palabras para el quiz. / Error selecting quiz words.";
-            return shuffle([...vocab]).slice(0, 5);
-          }
+            
+            loadPlayerProgress();
+            setupEventListeners();
+            updatePlayerUI();
+            updateProgressBar();
         }
 
-        function clearSelections() {
-          selectedEmoji = null;
-          try {
-            [...emojiColumn.children].forEach(el => el.classList.remove("selected"));
-          } catch (e) {
-            console.error("Error clearing selections:", e);
-          }
+        function setupEventListeners() {
+            document.getElementById('save-username').addEventListener('click', saveUsername);
+            
+            document.querySelectorAll('.avatar').forEach(avatar => {
+                avatar.addEventListener('click', selectAvatar.bind(null, avatar));
+                avatar.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') selectAvatar(avatar);
+                });
+            });
+
+            document.querySelectorAll('.color-option').forEach(color => {
+                color.addEventListener('click', selectColor.bind(null, color));
+                color.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') selectColor(color);
+                });
+            });
+
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    gameState.mode = btn.dataset.mode;
+                    startNewGame();
+                });
+            });
+
+            document.getElementById('refresh-btn').addEventListener('click', startNewRound);
+            document.getElementById('quit-btn').addEventListener('click', quitToMainMenu);
+            document.getElementById('continue-btn').addEventListener('click', showLeaderboard);
+            document.getElementById('quit-round-btn').addEventListener('click', quitToMainMenu);
+            document.getElementById('continue-leader-btn').addEventListener('click', startNewRound);
+            document.getElementById('quit-leader-btn').addEventListener('click', quitToMainMenu);
+            document.getElementById('play-again-btn').addEventListener('click', startNewGame);
+            document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
         }
 
-function updateMatchedWordBox(word) {
-  const matchedWordBox = document.getElementById("matchedWordBox");
-  matchedWordBox.innerHTML = `<span>${word}</span>`;
-  const span = matchedWordBox.querySelector('span');
-  span.classList.add('word-flash');
-  span.addEventListener('animationend', () => {
-    matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
-  }, { once: true });
-}
+        function selectAvatar(avatar) {
+            document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
+            avatar.classList.add('selected');
+            gameState.player.avatar = avatar.dataset.avatar;
+            updatePlayerUI();
+        }
 
-        function setupEmojiBoxes() {
-          try {
-            console.log("Setting up emoji boxes");
-            emojiColumn.innerHTML = "";
-            const shuffledVocab = shuffle([...currentVocab.slice(0, 5)]);
-            shuffledVocab.forEach(({ emoji, word }, index) => {
-              const div = document.createElement("div");
-              div.className = "box";
-              div.textContent = emoji;
-              div.dataset.word = word;
-              div.tabIndex = 0;
-              div.setAttribute("aria-label", `Select emoji ${emoji}`);
-              div.style.cursor = matched.has(word) ? "default" : "pointer";
+        function selectColor(color) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+            color.classList.add('selected');
+            gameState.player.theme = color.dataset.color;
+        }
 
-              if (matched.has(word)) {
-                div.classList.add("matched", "gold");
-                div.style.cursor = "default";
-                div.tabIndex = -1;
-              }
+        function updatePlayerUI() {
+            document.getElementById('player-name').textContent = gameState.player.name;
+            document.getElementById('final-player').textContent = gameState.player.name;
+            const avatarElement = document.getElementById('player-avatar');
+            if (avatarElement) avatarElement.textContent = gameState.player.avatar;
+        }
 
-              const handleSelection = (e) => {
-                e.preventDefault();
-                if (matched.has(word)) return;
-
-                if (selectedEmoji === div) {
-                  clearSelections();
-                  return;
-                }
-
-                clearSelections();
-                selectedEmoji = div;
-                div.classList.add("selected");
-                if (audioContext.state === "suspended") {
-                  audioContext.resume().then(() => {
-                    playAudio("speech", word);
-                  }).catch(e => console.error("Error resuming AudioContext:", e));
+        function saveUsername() {
+            const usernameInput = document.getElementById('username-input');
+            const username = usernameInput.value.trim();
+            
+            if (username) {
+                const isNewUser = !localStorage.getItem(`nandomodeProgress_${username}`);
+                gameState.player.name = username;
+                
+                if (isNewUser) {
+                    gameState.score = 0;
+                    gameState.streak = 0;
+                    gameState.completedWords = 0;
+                    gameState.wordProgress = {};
+                    gameState.currentRound = { 
+                        pairs: [], 
+                        leftColumn: [], 
+                        rightColumn: [], 
+                        selectedLeft: null, 
+                        selectedRight: null, 
+                        matchedPairs: [], 
+                        roundScore: 0 
+                    };
                 } else {
-                  playAudio("speech", word);
+                    loadPlayerProgress();
                 }
-              };
+                
+                updatePlayerUI();
+                savePlayerProgress();
+                usernameInput.value = '';
+                usernameInput.placeholder = `Welcome, ${username}!`;
+                
+                const btn = document.getElementById('save-username');
+                btn.textContent = isNewUser ? '✓ New User Created!' : '✓ Saved!';
+                setTimeout(() => btn.textContent = 'Save & Continue', 1500);
+            }
+        }
 
-              div.addEventListener("click", handleSelection);
-              div.addEventListener("touchstart", (e) => {
-                e.preventDefault();
-                handleSelection(e);
-              });
-              div.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleSelection(e);
+        function savePlayerProgress() {
+            try {
+                const playerData = {
+                    name: gameState.player.name,
+                    avatar: gameState.player.avatar,
+                    theme: gameState.player.theme,
+                    wordProgress: gameState.wordProgress,
+                    completedWords: gameState.completedWords,
+                    score: gameState.score,
+                    streak: gameState.streak
+                };
+                localStorage.setItem(`nandomodeProgress_${gameState.player.name}`, JSON.stringify(playerData));
+                localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
+            } catch (e) {
+                console.warn("Error saving player progress:", e);
+            }
+        }
+
+        function loadPlayerProgress() {
+            try {
+                const savedName = localStorage.getItem('nandomodeCurrentPlayer');
+                if (savedName && savedName === gameState.player.name) {
+                    const savedData = localStorage.getItem(`nandomodeProgress_${savedName}`);
+                    if (savedData) {
+                        const playerData = JSON.parse(savedData);
+                        gameState.player.name = playerData.name || 'Guest';
+                        gameState.player.avatar = playerData.avatar || '🐉';
+                        gameState.player.theme = playerData.theme || 'green';
+                        gameState.wordProgress = playerData.wordProgress || {};
+                        gameState.completedWords = playerData.completedWords || 0;
+                        gameState.score = playerData.score || 0;
+                        gameState.streak = playerData.streak || 0;
+                        
+                        document.getElementById('username-input').placeholder = `Welcome back, ${gameState.player.name}!`;
+                        document.querySelectorAll('.avatar').forEach(avatar => {
+                            avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
+                        });
+                        document.querySelectorAll('.color-option').forEach(color => {
+                            color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
+                        });
+                        updatePlayerUI();
+                        return;
+                    }
                 }
-              });
+            } catch (e) {
+                console.warn("Error loading player progress:", e);
+            }
+            gameState.player.name = 'Guest';
+            gameState.player.avatar = '🐉';
+            gameState.player.theme = 'green';
+            gameState.score = 0;
+            gameState.streak = 0;
+            gameState.completedWords = 0;
+            gameState.wordProgress = {};
+            updatePlayerUI();
+        }
 
-              emojiColumn.appendChild(div);
+        function startNewGame() {
+            document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
+            startNewRound();
+            savePlayerProgress();
+        }
+
+        function startNewRound() {
+            generateRoundData();
+            updateGameUI();
+            showScreen('game');
+        }
+
+        function sanitizePairId(word) {
+            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substr(2, 5);
+        }
+
+        function generateRoundData() {
+            gameState.currentRound = {
+                pairs: [],
+                leftColumn: [],
+                rightColumn: [],
+                selectedLeft: null,
+                selectedRight: null,
+                matchedPairs: [],
+                roundScore: 0
+            };
+            
+            const newWords = getNewWords(3);
+            const reviewWords = getReviewWords(2);
+            const roundWords = shuffleArray([...newWords, ...reviewWords]);
+            
+            debugInfo.textContent = `Round words: ${roundWords.join(', ')}`;
+            
+            roundWords.forEach(word => {
+                const vocabItem = window.vocab.find(item => item.word === word);
+                if (vocabItem) {
+                    const pairId = sanitizePairId(word);
+                    gameState.currentRound.pairs.push({
+                        pairId,
+                        word: vocabItem.word,
+                        emoji: vocabItem.emoji,
+                        type: vocabItem.type
+                    });
+                }
             });
-          } catch (e) {
-            console.error("Error setting up emoji boxes:", e);
-            messages.textContent = "Error al cargar emojis. / Error loading emojis.";
-          }
-        }
-
-        function setupWordBoxes() {
-          try {
-            console.log("Setting up word boxes");
-            wordColumn.innerHTML = "";
-            const shuffled = shuffle([...currentVocab.slice(0, 5)]);
-            shuffled.forEach(({ word }, index) => {
-              const div = document.createElement("div");
-              div.className = "box wordBox";
-              div.textContent = word;
-              div.tabIndex = 0;
-              div.setAttribute("aria-label", `Select word ${word}`);
-              if (word.length > 15) {
-                div.dataset.wordLength = "long";
-              } else if (word.length > 10) {
-                div.dataset.wordLength = "medium";
-              } else {
-                div.dataset.wordLength = "short";
-              }
-
-              if (matched.has(word)) {
-                div.classList.add("matched", "gold");
-                div.style.cursor = "default";
-                div.tabIndex = -1;
-              } else {
-                div.style.cursor = "pointer";
-              }
-
-              const handleSelection = (e) => {
-                e.preventDefault();
-                if (!selectedEmoji || matched.has(word)) return;
-
-                const emojiWord = selectedEmoji.dataset.word;
-                const user = users[currentUser];
-
-if (emojiWord === word) {
-  if (!matched.has(word)) {
-    matched.add(word);
-    user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
-    if (!errorWords.has(word)) {
-      user.mastered[word].correctCount++;
-      user.score++;
-      if (user.mastered[word].correctCount >= 3 && !user.retired.includes(word)) {
-        user.retired.push(word);
-        user.score += 3;
-        messages.textContent = `🎉 ¡"${word}" dominada! +3 puntos / "${word}" mastered! +3 points`;
-        triggerConfetti();
-        updateMatchedWordBox(word);
-        setTimeout(() => {
-          messages.textContent = "";
-        }, 2000);
-        if (user.retired.length % 10 === 0) {
-          user.level++;
-          console.log(`Level up: ${user.level}`);
-        }
-      }
-      scoreDisplay.innerHTML = `Score: $${user.score} | Retired: ${user.retired.length}/${vocab.length}`;
-      user.mastered[word].errorCount = 0;
-      user.streak++;
-      saveUserData();
-    }
-    const currentEmoji = selectedEmoji;
-    const currentDiv = div;
-    currentEmoji.classList.remove("selected");
-    currentEmoji.classList.add("matched", "correct");
-    currentDiv.classList.add("matched", "correct");
-    setTimeout(() => {
-      if (currentEmoji) {
-        currentEmoji.classList.remove("correct");
-        currentEmoji.classList.add("gold");
-        currentEmoji.tabIndex = -1;
-      }
-      if (currentDiv) {
-        currentDiv.classList.remove("correct");
-        currentDiv.classList.add("gold");
-        currentDiv.style.cursor = "default";
-        currentDiv.tabIndex = -1;
-      }
-    }, 200);
-    clearSelections();
-    updateProgress();
-    playAudio("chiptune", "correct");
-    messages.textContent = "🌟 ¡Punto pixel! / Pixel point!";
-    updateMatchedWordBox(word);
-    if (matched.size === currentVocab.length) {
-      finishQuiz();
-    }
-  }
-}
-else {
-                  errorWords.add(word);
-                  user.mastered[word] = user.mastered[word] || { correctCount: 0, errorCount: 0 };
-                  user.mastered[word].errorCount++;
-                  if (user.retired.includes(word) && user.mastered[word].errorCount >= 2) {
-                    user.retired = user.retired.filter(w => w !== word);
-                    user.activePool.push(vocab.find(v => v.word === word));
-                    console.log(`Reintroduced retired word: ${word}`);
-                  }
-                  user.streak = 0;
-                  div.classList.add("incorrect");
-                  setTimeout(() => div.classList.remove("incorrect"), 200);
-                  playAudio("chiptune", "incorrect");
-                  messages.textContent = "😅 ¡Uy, otro intento! / Oops, try again!";
-                  setTimeout(() => {
-                    messages.textContent = "";
-                  }, 1500);
-                  clearSelections();
-                  saveUserData();
-                }
-              };
-
-              div.addEventListener("click", handleSelection);
-              div.addEventListener("touchstart", (e) => {
-                e.preventDefault();
-                handleSelection(e);
-              });
-              div.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleSelection(e);
-                }
-              });
-
-              wordColumn.appendChild(div);
-            });
-          } catch (e) {
-            console.error("Error setting up word boxes:", e);
-            messages.textContent = "Error al cargar palabras. / Error loading words.";
-          }
-        }
-
-function startQuiz() {
-  try {
-    console.log("Starting quiz for user:", currentUser);
-    if (!vocab || vocab.length === 0) {
-      console.error("No vocabulary available");
-      messages.textContent = "Error: No se cargó el vocabulario. / Error: Vocabulary not loaded.";
-      return;
-    }
-    matched.clear();
-    errorWords.clear();
-    quizStarted = true;
-    messages.textContent = "";
-    scoreDisplay.style.display = "block";
-    progressBar.style.display = "block";
-    progressStars.innerHTML = "☆☆☆☆☆";
-    scoreDisplay.innerHTML = `Score: $${users[currentUser].score} | Retired: ${users[currentUser].retired.length}/${vocab.length}`;
-    container.style.display = "flex";
-    container.style.pointerEvents = "auto";
-    buttonsDiv.style.display = "flex";
-    startBtn.style.display = "none";
-    quitBtn.style.display = "inline-block";
-    refreshBtn.style.display = "inline-block";
-    playAgainBtn.style.display = "none";
-    logoutBtn.style.display = "none";
-    loginSection.style.display = "none";
-    leaderboardDiv.style.display = "none";
-    stopMenuMusic();
-const matchedWordBox = document.getElementById("matchedWordBox");
-matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
-    const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
-    messages.textContent = phrase;
-
-            currentVocab = selectQuizWords();
-            if (!currentVocab || currentVocab.length < 5) {
-              console.error("Invalid vocabulary selected:", currentVocab);
-              messages.textContent = "Error: No hay suficientes palabras para el quiz. / Error: Not enough words for the quiz.";
-              return;
-            }
-
-            setupEmojiBoxes();
-            setupWordBoxes();
-
-            console.log("Game buttons visible:", {
-              buttonsDiv: buttonsDiv.style.display,
-              refreshBtn: refreshBtn.style.display,
-              quitBtn: quitBtn.style.display
-            });
-
-            if (emojiColumn.children[0]) {
-              emojiColumn.children[0].focus();
-            }
-          } catch (e) {
-            console.error("Error starting quiz:", e);
-            messages.textContent = "Error al iniciar el quiz. / Error starting the quiz.";
-          }
-        }
-
-function finishQuiz() {
-  try {
-    console.log("Finishing quiz");
-    quizStarted = false;
-    const phrase = wellDonePhrases[Math.floor(Math.random() * wellDonePhrases.length)];
-    messages.textContent = phrase;
-
-    triggerConfetti();
-    playAudio("chiptune", "finish");
-
-    container.classList.add("fade-out");
-    scoreDisplay.classList.add("fade-out");
-    progressBar.classList.add("fade-out");
-    messages.classList.add("fade-out");
-
-    setTimeout(() => {
-      container.style.display = "none";
-      scoreDisplay.style.display = "none";
-      progressBar.style.display = "none";
-      messages.style.display = "none";
-      container.classList.remove("fade-out");
-      scoreDisplay.classList.remove("fade-out");
-      progressBar.classList.remove("fade-out");
-      messages.classList.remove("fade-out");
-
-      updateLeaderboard();
-      leaderboardDiv.style.display = "block";
-      leaderboardDiv.classList.add("fade-in");
-
-      buttonsDiv.style.display = "flex";
-      playAgainBtn.style.display = "inline-block";
-      logoutBtn.style.display = "inline-block";
-      quitBtn.style.display = "none";
-      refreshBtn.style.display = "none";
-      startBtn.style.display = "none";
-      buttonsDiv.classList.add("fade-in");
-
-      console.log("Post-game buttons visible:", {
-        buttonsDiv: buttonsDiv.style.display,
-        playAgainBtn: playAgainBtn.style.display,
-        logoutBtn: logoutBtn.style.display
-      });
-
-      setTimeout(() => {
-        leaderboardDiv.classList.remove("fade-in");
-        buttonsDiv.classList.remove("fade-in");
-      }, 500);
-
-      playAgainBtn.focus();
-    }, 500);
-
-    container.style.pointerEvents = "none";
-  } catch (e) {
-    console.error("Error finishing quiz:", e);
-    messages.textContent = "Error al finalizar el quiz. / Error finishing the quiz.";
-  }
-}
-
-        function newQuiz() {
-          try {
-            console.log("Starting new quiz");
-            leaderboardDiv.style.display = "none";
-            startQuiz();
-          } catch (e) {
-            console.error("Error starting new quiz:", e);
-            messages.textContent = "Error al iniciar nuevo quiz. / Error starting new quiz.";
-          }
-        }
-
-        function refreshGame() {
-          try {
-            console.log("Refreshing game");
-            matched.clear();
-            errorWords.clear();
-            selectedEmoji = null;
-            messages.textContent = "";
-
-	        const matchedWordBox = document.getElementById("matchedWordBox");
-matchedWordBox.innerHTML = `<span>Español <img src="https://flagcdn.com/24x18/es.png" alt="Spanish flag" style="width: 1.5em; vertical-align: middle;"></span>`;
-            progressStars.innerHTML = "☆☆☆☆☆";
-            container.style.pointerEvents = "auto";
-            quitBtn.style.display = "inline-block";
-            refreshBtn.style.display = "inline-block";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
-
-            const previousCarryovers = [...users[currentUser].lastWords];
-            currentVocab = selectQuizWords(previousCarryovers);
-            setupEmojiBoxes();
-            setupWordBoxes();
-
-            const phrase = goodLuckPhrases[Math.floor(Math.random() * goodLuckPhrases.length)];
-            messages.textContent = phrase;
-
-            if (emojiColumn.children[0]) {
-              emojiColumn.children[0].focus();
-            }
-          } catch (e) {
-            console.error("Error refreshing game:", e);
-            messages.textContent = "Error al reiniciar el juego. / Error refreshing the game.";
-          }
-        }
-
-        function updateLeaderboard() {
-          try {
-            const sortedUsers = Object.entries(users)
-              .sort((a, b) => b[1].score - a[1].score);
-            leaderboardList.innerHTML = sortedUsers
-              .map(([user, data]) => `<li>${data.avatar} ${user}: $${data.score}</li>`)
-              .join("");
-            leaderboardDiv.style.display = currentUser ? "block" : "none";
-          } catch (e) {
-            console.error("Error updating leaderboard:", e);
-          }
-        }
-
-        function checkLogin() {
-          try {
-            let username = usernameSelect.value === "new" ? newUsernameInput.value.trim() : usernameSelect.value;
-
-            console.log("Checking login:", { username, avatar: avatarInput.value, pin: pinInput.value });
-
-            if (!username || username.length > 20 || username.length < 1) {
-              loginError.textContent = "El usuario debe tener entre 1 y 20 caracteres. / Username must be 1-20 characters.";
-              return false;
-            }
-
-            if (username === "Guest") {
-              currentUser = "Guest";
-              users["Guest"] = users["Guest"] || {
-                pin: "",
-                avatar: avatarInput.value,
-                score: 0,
-                mastered: {},
-                retired: [],
-                activePool: shuffle([...vocab]).slice(0, 30),
-                lastWords: [],
-                roundCount: 0,
-                level: 1,
-                badges: [],
-                streak: 0
-              };
-              saveUserData();
-              loginError.textContent = "";
-              sessionStorage.setItem("currentUser", currentUser);
-              buttonsDiv.style.display = "flex";
-              startBtn.style.display = "inline-block";
-              logoutBtn.style.display = "inline-block";
-              loginSection.style.display = "none";
-              messages.textContent = "¡Bienvenido, Invitado! / Welcome, Guest!";
-              hasInteracted = true;
-              playMenuMusic();
-              updateLeaderboard();
-              console.log("Guest login successful");
-              startBtn.focus();
-              return true;
-            }
-
-            if (users[username] && username !== "new") {
-              if (pinInput.value !== users[username].pin) {
-                loginError.textContent = "PIN incorrecto. / Incorrect PIN.";
-                return false;
-              }
-            }
-
-            if (usernameSelect.value === "new") {
-              if (users[username]) {
-                loginError.textContent = "El usuario ya existe. Selecciónalo o elige otro. / Username already exists. Select it or choose another.";
-                return false;
-              }
-              const pin = pinInput.value.trim();
-              if (pin && !/^\d{4}$/.test(pin)) {
-                loginError.textContent = "El PIN debe ser de 4 dígitos o dejarlo en blanco. / PIN must be 4 digits or left blank.";
-                return false;
-              }
-            }
-
-            if (!users[username]) {
-              users[username] = {
-                pin: pinInput.value.trim() || "0000",
-                avatar: avatarInput.value,
-                score: 0,
-                mastered: {},
-                retired: [],
-                activePool: shuffle([...vocab]).slice(0, 30),
-                lastWords: [],
-                roundCount: 0,
-                level: 1,
-                badges: [],
-                streak: 0
-              };
-              saveUserData();
-              populateUsernameDropdown();
+            
+            gameState.currentRound.pairs = shuffleArray([...gameState.currentRound.pairs]);
+            
+            const emojis = gameState.currentRound.pairs.map(pair => ({
+                pairId: pair.pairId,
+                type: 'emoji',
+                value: pair.emoji
+            }));
+            const words = gameState.currentRound.pairs.map(pair => ({
+                pairId: pair.pairId,
+                type: 'word',
+                value: pair.word
+            }));
+            
+            const shuffledEmojis = shuffleArray([...emojis]);
+            const shuffledWords = shuffleArray([...words]);
+            
+            if (gameState.mode === 'easy') {
+                gameState.currentRound.leftColumn = shuffledEmojis;
+                gameState.currentRound.rightColumn = shuffledWords;
             } else {
-              users[username].avatar = avatarInput.value;
-              const newWords = vocab.filter(v => !users[username].activePool.some(p => p.word === v.word) && !users[username].retired.includes(v.word));
-              if (newWords.length > 0) {
-                users[username].activePool.push(...newWords.slice(0, 5));
-                console.log("Added new words to existing user’s activePool:", newWords.slice(0, 5).map(v => v.word));
-                saveUserData();
-              }
+                gameState.currentRound.leftColumn = shuffledWords;
+                gameState.currentRound.rightColumn = shuffledEmojis;
             }
-
-            loginError.textContent = "";
-            currentUser = username;
-            sessionStorage.setItem("currentUser", currentUser);
-            buttonsDiv.style.display = "flex";
-            startBtn.style.display = "inline-block";
-            logoutBtn.style.display = "inline-block";
-            loginSection.style.display = "none";
-            messages.textContent = `¡Bienvenido, ${username}! / Welcome, ${username}!`;
-            hasInteracted = true;
-            playMenuMusic();
-            updateLeaderboard();
-            console.log("Login successful for", username);
-            startBtn.focus();
-            return true;
-          } catch (e) {
-            console.error("Error in checkLogin:", e);
-            loginError.textContent = "Error al iniciar sesión. / Error logging in.";
-            return false;
-          }
+            
+            console.log('Generated pairs:', gameState.currentRound.pairs.map(p => `${p.word} (${p.pairId})`));
+            console.log('Left Column:', gameState.currentRound.leftColumn.map(item => `${item.value} (${item.pairId})`));
+            console.log('Right Column:', gameState.currentRound.rightColumn.map(item => `${item.value} (${item.pairId})`));
         }
 
-        function logoutUser() {
-          try {
-            saveUserData();
-            currentUser = null;
-            quizStarted = false;
-            matched.clear();
-            errorWords.clear();
-            selectedEmoji = null;
-            currentVocab = [];
-
-            loginSection.style.display = "block";
-            buttonsDiv.style.display = "none";
-            container.style.display = "none";
-            scoreDisplay.style.display = "none";
-            progressBar.style.display = "none";
-            messages.textContent = "";
-            loginError.textContent = "";
-            pinInput.value = "";
-            usernameSelect.value = "";
-            newUsernameInput.value = "";
-            newUsernameInput.style.display = "none";
-            startBtn.style.display = "inline-block";
-            quitBtn.style.display = "none";
-            playAgainBtn.style.display = "none";
-            logoutBtn.style.display = "none";
-            refreshBtn.style.display = "none";
-            pinInput.disabled = false;
-            sessionStorage.removeItem("currentUser");
-            hasInteracted = true;
-            playMenuMusic();
-            populateUsernameDropdown();
-            usernameSelect.focus();
-          } catch (e) {
-            console.error("Error in logoutUser:", e);
-            messages.textContent = "Error al cerrar sesión. / Error logging out.";
-          }
-        }
-
-        // Event listeners
-        const themeToggle = document.getElementById("themeToggle");
-        if (themeToggle) {
-          themeToggle.addEventListener("click", () => {
-            hasInteracted = true;
-            toggleTheme();
-          });
-          themeToggle.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            hasInteracted = true;
-            toggleTheme();
-          });
-          themeToggle.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-              hasInteracted = true;
-              toggleTheme();
+        function getNewWords(count) {
+            const unseenWords = window.vocab
+                .filter(item => !gameState.wordProgress[item.word])
+                .map(item => item.word);
+            
+            if (unseenWords.length < count) {
+                const seenWords = Object.keys(gameState.wordProgress).filter(word => gameState.wordProgress[word] < 3);
+                const candidates = [...unseenWords, ...seenWords];
+                return shuffleArray(candidates).slice(0, count);
             }
-          });
-          if (localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark");
-          }
+            
+            return shuffleArray(unseenWords).slice(0, count);
         }
 
-        loginBtn.addEventListener("click", () => {
-          console.log("Login button clicked");
-          checkLogin();
-        });
-        loginBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Login button touched");
-          checkLogin();
-        });
-        loginBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Login button activated with Enter");
-            checkLogin();
-          }
-        });
+        function getReviewWords(count) {
+            const reviewCandidates = Object.keys(gameState.wordProgress)
+                .filter(word => gameState.wordProgress[word] > 0 && gameState.wordProgress[word] < 3);
+            
+            if (reviewCandidates.length < count) {
+                return getNewWords(count);
+            }
+            
+            return shuffleArray(reviewCandidates).slice(0, count);
+        }
 
-        usernameSelect.addEventListener("change", handleUsernameSelection);
-        usernameSelect.addEventListener("touchstart", (e) => {
-          e.stopPropagation();
-          handleUsernameSelection();
-        });
-        usernameSelect.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            handleUsernameSelection();
-          }
-        });
+        function updateGameUI() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('streak').textContent = gameState.streak;
+            document.getElementById('progress').textContent = gameState.completedWords;
+            document.getElementById('completed').textContent = gameState.completedWords;
+            document.getElementById('percent-complete').textContent = Math.round((gameState.completedWords / 100) * 100);
+            updateProgressBar();
+            
+            const leftColumn = document.getElementById('column-left');
+            const rightColumn = document.getElementById('column-right');
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+            
+            gameState.currentRound.leftColumn.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                card.dataset.pairId = item.pairId;
+                card.dataset.type = item.type;
+                card.textContent = item.value;
+                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Select card: ${item.value}`);
+                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                    card.classList.add('matched');
+                }
+                
+                card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+                });
+                
+                leftColumn.appendChild(card);
+                console.log(`Rendered left card: pairId=${item.pairId}, type=${item.type}, value=${item.value}, index=${index}`);
+            });
+            
+            gameState.currentRound.rightColumn.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                card.dataset.pairId = item.pairId;
+                card.dataset.type = item.type;
+                card.textContent = item.value;
+                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Select card: ${item.value}`);
+                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                    card.classList.add('matched');
+                }
+                
+                card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
+                });
+                
+                rightColumn.appendChild(card);
+                console.log(`Rendered right card: pairId=${item.pairId}, type=${item.type}, value=${item.value}, index=${index}`);
+            });
+            
+            if (gameState.currentRound.matchedPairs.length === 5) {
+                console.log('All pairs matched, ending round');
+                endRound();
+            }
+        }
 
-        newUsernameInput.addEventListener("input", () => {
-          loginError.textContent = "";
-        });
-        newUsernameInput.addEventListener("touchstart", (e) => {
-          e.stopPropagation();
-        });
-        newUsernameInput.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            checkLogin();
-          }
-        });
+        function updateProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            const percent = Math.min(100, (gameState.completedWords / 100) * 100);
+            progressBar.style.width = `${percent}%`;
+        }
 
-        pinInput.addEventListener("input", () => {
-          loginError.textContent = "";
-        });
-        pinInput.addEventListener("touchstart", (e) => {
-          e.stopPropagation();
-        });
-        pinInput.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            checkLogin();
-          }
-        });
-
-        startBtn.addEventListener("click", () => {
-          console.log("Start Quiz button clicked");
-          if (typeof startQuiz === "function") {
-            if (!quizStarted) startQuiz();
-          } else {
-            console.error("startQuiz is not defined");
-            messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
-          }
-        });
-        startBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Start Quiz button touched");
-          if (typeof startQuiz === "function") {
-            if (!quizStarted) startQuiz();
-          } else {
-            console.error("startQuiz is not defined");
-            messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
-          }
-        });
-        startBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Start Quiz button activated with Enter");
-            if (typeof startQuiz === "function") {
-              if (!quizStarted) startQuiz();
+        function handleCardClick(column, pairId, index) {
+            if (isProcessingClick || gameState.currentRound.matchedPairs.includes(pairId)) {
+                console.log(`Skipped click: isProcessing=${isProcessingClick}, pairId=${pairId}, matched=${gameState.currentRound.matchedPairs.includes(pairId)}`);
+                return;
+            }
+            isProcessingClick = true;
+            
+            const columnData = column === 'left' ? gameState.currentRound.leftColumn : gameState.currentRound.rightColumn;
+            const item = columnData[index];
+            if (!item || item.pairId !== pairId) {
+                console.error(`Item mismatch: pairId=${pairId}, index=${index}, column=${column}, found=${!!item}`);
+                isProcessingClick = false;
+                return;
+            }
+            
+            const card = document.querySelector(`.card[data-pair-id="${pairId}"][data-type="${item.type}"]`);
+            if (!card || card.classList.contains('matched')) {
+                console.error(`Invalid card: pairId=${pairId}, type=${item.type}, column=${column}, found=${!!card}`);
+                isProcessingClick = false;
+                return;
+            }
+            
+            if (gameState.mode !== 'hard' && column === 'left') {
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === pairId);
+                if (pair && (gameState.mode === 'easy' || gameState.mode === 'medium')) {
+                    const now = Date.now();
+                    if (now - lastTTSTime >= ttsDebounce) {
+                        speakWord(pair.word);
+                        lastTTSTime = now;
+                        console.log(`TTS triggered: word=${pair.word}`);
+                    }
+                }
+            }
+            
+            if (column === 'left') {
+                if (gameState.currentRound.selectedLeft) {
+                    const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedLeft}"]`);
+                    if (prevCard) prevCard.classList.remove('selected');
+                }
+                gameState.currentRound.selectedLeft = pairId;
+                card.classList.add('selected');
             } else {
-              console.error("startQuiz is not defined");
-              messages.textContent = "Error: No se puede iniciar el quiz. / Error: Quiz cannot start.";
+                if (gameState.currentRound.selectedRight) {
+                    const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedRight}"]`);
+                    if (prevCard) prevCard.classList.remove('selected');
+                }
+                gameState.currentRound.selectedRight = pairId;
+                card.classList.add('selected');
             }
-          }
-        });
-
-        quitBtn.addEventListener("click", () => {
-          console.log("Quit button clicked");
-          finishQuiz();
-        });
-        quitBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Quit button touched");
-          finishQuiz();
-        });
-        quitBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Quit button activated with Enter");
-            finishQuiz();
-          }
-        });
-
-        playAgainBtn.addEventListener("click", () => {
-          console.log("Play Again button clicked");
-          newQuiz();
-        });
-        playAgainBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Play Again button touched");
-          newQuiz();
-        });
-        playAgainBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Play Again button activated with Enter");
-            newQuiz();
-          }
-        });
-
-        logoutBtn.addEventListener("click", () => {
-          console.log("Logout button clicked");
-          logoutUser();
-        });
-        logoutBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Logout button touched");
-          logoutUser();
-        });
-        logoutBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Logout button activated with Enter");
-            logoutUser();
-          }
-        });
-
-        refreshBtn.addEventListener("click", () => {
-          console.log("Refresh button clicked");
-          refreshGame();
-        });
-        refreshBtn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
-          console.log("Refresh button touched");
-          refreshGame();
-        });
-        refreshBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            console.log("Refresh button activated with Enter");
-            refreshGame();
-          }
-        });
-
-        const savedUser = sessionStorage.getItem("currentUser");
-        if (savedUser && (users[savedUser] || savedUser === "Guest")) {
-          currentUser = savedUser;
-          usernameSelect.value = savedUser;
-          avatarInput.value = users[savedUser]?.avatar || "😺";
-          if (savedUser !== "Guest") {
-            const newWords = vocab.filter(v => !users[savedUser].activePool.some(p => p.word === v.word) && !users[savedUser].retired.includes(v.word));
-            if (newWords.length > 0) {
-              users[savedUser].activePool.push(...newWords.slice(0, 5));
-              saveUserData();
+            
+            console.log(`Selected: left=${gameState.currentRound.selectedLeft}, right=${gameState.currentRound.selectedRight}`);
+            
+            if (gameState.currentRound.selectedLeft && gameState.currentRound.selectedRight) {
+                checkMatch();
+            } else {
+                isProcessingClick = false;
             }
-          }
-          buttonsDiv.style.display = "flex";
-          startBtn.style.display = "inline-block";
-          logoutBtn.style.display = "inline-block";
-          loginSection.style.display = "none";
-          updateLeaderboard();
-          startBtn.focus();
-        } else {
-          loginSection.style.display = "block";
-          populateUsernameDropdown();
-          usernameSelect.focus();
         }
-      } catch (e) {
-        console.error("Initialization error:", e);
-        messages.textContent = "Error al cargar el juego. / Error loading the game.";
-      }
-    };
-  </script>
+
+        function checkMatch() {
+            const leftId = gameState.currentRound.selectedLeft;
+            const rightId = gameState.currentRound.selectedRight;
+            
+            console.log(`Checking match: leftId=${leftId}, rightId=${rightId}, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
+            
+            const leftCard = document.querySelector(`.card[data-pair-id="${leftId}"]`);
+            const rightCard = document.querySelector(`.card[data-pair-id="${rightId}"]`);
+            
+            if (!leftCard || !rightCard) {
+                console.error(`Cards not found in checkMatch: leftCard=${leftCard}, rightCard=${rightCard}, leftId=${leftId}, rightId=${rightId}`);
+                resetSelections();
+                return;
+            }
+            
+            if (leftId === rightId) {
+                leftCard.classList.add('correct');
+                rightCard.classList.add('correct');
+                playSound('correct');
+                
+                gameState.score++;
+                gameState.streak++;
+                gameState.currentRound.roundScore++;
+                
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
+                if (pair) {
+                    gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
+                    if (gameState.wordProgress[pair.word] === 3) {
+                        gameState.completedWords++;
+                        checkMilestone();
+                    }
+                }
+                
+                gameState.currentRound.matchedPairs.push(leftId);
+                console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
+                
+                if (gameState.streak % 10 === 0) {
+                    gameState.score += 5;
+                }
+                
+                setTimeout(() => {
+                    leftCard.classList.remove('correct');
+                    rightCard.classList.remove('correct');
+                    leftCard.classList.add('matched');
+                    rightCard.classList.add('matched');
+                    leftCard.tabIndex = -1;
+                    rightCard.tabIndex = -1;
+                    gameState.currentRound.selectedLeft = null;
+                    gameState.currentRound.selectedRight = null;
+                    isProcessingClick = false;
+                    
+                    if (gameState.currentRound.matchedPairs.length === 5) {
+                        console.log('All pairs matched, ending round');
+                        endRound();
+                    } else {
+                        updateGameUI();
+                    }
+                }, 500);
+            } else {
+                leftCard.classList.add('incorrect');
+                rightCard.classList.add('incorrect');
+                playSound('incorrect');
+                
+                gameState.score = Math.max(0, gameState.score - 1);
+                gameState.streak = 0;
+                
+                setTimeout(() => {
+                    leftCard.classList.remove('selected', 'incorrect');
+                    rightCard.classList.remove('selected', 'incorrect');
+                    gameState.currentRound.selectedLeft = null;
+                    gameState.currentRound.selectedRight = null;
+                    isProcessingClick = false;
+                    updateGameUI();
+                }, 1000);
+            }
+            
+            savePlayerProgress();
+        }
+
+        function resetSelections() {
+            gameState.currentRound.selectedLeft = null;
+            gameState.currentRound.selectedRight = null;
+            document.querySelectorAll('.card.selected').forEach(card => card.classList.remove('selected'));
+            isProcessingClick = false;
+            updateGameUI();
+        }
+
+        function checkMilestone() {
+            const previousWords = gameState.completedWords - 1;
+            const currentWords = gameState.completedWords;
+            if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
+                showMilestoneNotification(currentWords);
+                createConfetti(document.getElementById('game-screen'), 20);
+            }
+        }
+
+        function showMilestoneNotification(words) {
+            const notification = document.createElement('div');
+            notification.className = 'milestone-notification';
+            notification.textContent = `Milestone: ${words}/100 Words Mastered!`;
+            document.getElementById('game-container').appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function endRound() {
+            if (gameState.currentRound.roundScore === 5) {
+                gameState.score += gameState.currentRound.roundScore;
+            }
+            
+            document.getElementById('round-score').textContent = gameState.currentRound.roundScore;
+            document.getElementById('total-score').textContent = gameState.score;
+            savePlayerProgress();
+            
+            setTimeout(() => {
+                createConfetti(document.getElementById('round-end-screen'), 50);
+                showScreen('roundEnd');
+            }, 1000);
+        }
+
+        function showLeaderboard() {
+            document.getElementById('progress-count').textContent = gameState.completedWords;
+            document.getElementById('progress-score').textContent = gameState.score;
+            document.getElementById('progress-streak').textContent = gameState.streak;
+            
+            const tableBody = document.querySelector('#leaderboard-table tbody');
+            tableBody.innerHTML = '';
+            
+            const topScores = [...gameState.leaderboard].sort((a, b) => b.score - a.score).slice(0, 10);
+            
+            topScores.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><span class="leaderboard-avatar">${entry.avatar || '🐉'}</span>${entry.name}</td>
+                    <td>${entry.score}</td>
+                    <td>${new Date(entry.date).toLocaleDateString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            if (gameState.completedWords >= 100) {
+                endGame();
+            } else {
+                showScreen('leaderboard');
+            }
+        }
+
+        function endGame() {
+            gameState.leaderboard.push({
+                name: gameState.player.name,
+                avatar: gameState.player.avatar,
+                score: gameState.score,
+                date: new Date().toISOString()
+            });
+            
+            gameState.leaderboard.sort((a, b) => b.score - a.score);
+            gameState.leaderboard = gameState.leaderboard.slice(0, 20);
+            
+            try {
+                localStorage.setItem('nandomodeLeaderboard', JSON.stringify(gameState.leaderboard));
+            } catch (e) {
+                console.warn("Error saving leaderboard:", e);
+            }
+            
+            document.getElementById('final-score').textContent = gameState.score;
+            
+            const tableBody = document.querySelector('#final-leaderboard tbody');
+            tableBody.innerHTML = '';
+            
+            const topScores = [...gameState.leaderboard].slice(0, 10);
+            
+            topScores.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><span class="leaderboard-avatar">${entry.avatar || '🐉'}</span>${entry.name}</td>
+                    <td>${entry.score}</td>
+                    <td>${new Date(entry.date).toLocaleDateString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            showScreen('gameOver');
+        }
+
+        function quitToMainMenu() {
+            showScreen('start');
+        }
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.remove('active'));
+            screens[screenName].classList.add('active');
+            gameState.currentScreen = screenName;
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function playSound(type) {
+            if (!window.AudioContext && !window.webkitAudioContext) {
+                console.warn("Web Audio API not supported.");
+                return;
+            }
+            
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                if (context.state === 'suspended') {
+                    context.resume().then(() => {
+                        createSound(context, type);
+                    });
+                } else {
+                    createSound(context, type);
+                }
+                console.log(`Playing sound: ${type}`);
+            } catch (e) {
+                console.warn("Error playing sound:", e);
+            }
+        }
+
+        function createSound(context, type) {
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, context.currentTime);
+                gainNode.gain.setValueAtTime(0.3, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1046.50, context.currentTime + 0.2);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
+            } else if (type === 'incorrect') {
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(220, context.currentTime);
+                gainNode.gain.setValueAtTime(0.3, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(110, context.currentTime + 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
+            }
+            
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.3);
+        }
+
+        function createConfetti(container, count) {
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ffbe0b', '#fb5607', '#8338ec'];
+            
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                confetti.style.width = `${Math.random() * 8 + 4}px`;
+                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                container.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'es-ES';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                console.warn("SpeechSynthesis not supported.");
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
 </body>
 </html>
