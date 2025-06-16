@@ -1665,5 +1665,11 @@
 
         window.addEventListener('DOMContentLoaded', initGame);
     </script>
+      if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log("Service Worker registered!"))
+      .catch(err => console.error("SW registration failed:", err));
+  }
+</script>
 </body>
 </html>
