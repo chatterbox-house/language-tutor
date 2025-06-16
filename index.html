@@ -161,6 +161,18 @@
             margin: 15px 0;
         }
         
+        #user-select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            border: 3px solid #ff6b6b;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            margin: 15px 0;
+        }
+        
         .avatar-container {
             display: flex;
             justify-content: center;
@@ -235,7 +247,7 @@
         
         .game-header {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             padding: 15px;
             background: rgba(0, 0, 0, 0.4);
@@ -269,7 +281,7 @@
         }
         
         .game-header .progress-container {
-            grid-column: 1 / span 4;
+            grid-column: 1 / span 2;
             width: 100%;
             margin: 10px 0 0;
             background: rgba(0, 0, 0, 0.5);
@@ -294,7 +306,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: white;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
@@ -304,20 +316,21 @@
             justify-content: space-around;
             margin: 20px 0;
             min-height: 400px;
-            gap: 20px;
+            gap: 10px;
         }
         
         .column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
+            min-width: 45%;
         }
         
         .card {
             background: rgba(30, 40, 70, 0.8);
             border-radius: 15px;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -371,7 +384,7 @@
             padding: 15px;
         }
         
-        #round-end-screen {
+        #round-complete-screen {
             background: radial-gradient(circle at center, #2a3a2a, #1a2a1a);
             text-align: center;
         }
@@ -389,17 +402,18 @@
         
         .confetti {
             position: absolute;
-            width: 15px;
-            height: 15px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            animation: fall 3s linear forwards;
+            animation: fall 2s linear forwards;
         }
         
-        #leaderboard-screen {
+        #trophy-room-screen {
             background: radial-gradient(circle at center, #2a2a3a, #1a1a2a);
+            text-align: center;
         }
         
-        .leaderboard-container {
+        .trophy-container {
             max-width: 700px;
             margin: 20px auto;
             background: rgba(0, 0, 0, 0.4);
@@ -408,33 +422,39 @@
             border: 3px solid #4ecdc4;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: rgba(30, 30, 60, 0.6);
+        .trophy-item {
+            font-size: 3rem;
+            margin: 15px;
+            display: inline-block;
+            animation: trophySpin 2s infinite linear;
+        }
+        
+        #emoji-store-screen {
+            background: radial-gradient(circle at center, #2a2a3a, #1a1a2a);
+            text-align: center;
+        }
+        
+        .emoji-store-container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #4ecdc4;
+        }
+        
+        .emoji-item {
+            display: inline-flex;
+            align-items: center;
+            margin: 10px;
+            padding: 10px;
+            background: rgba(30, 40, 70, 0.8);
             border-radius: 10px;
-            overflow: hidden;
+            cursor: pointer;
         }
         
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid rgba(100, 100, 200, 0.3);
-        }
-        
-        th {
-            background: rgba(50, 50, 100, 0.8);
-            color: #ffe66d;
-        }
-        
-        tr:nth-child(even) {
-            background: rgba(40, 40, 80, 0.4);
-        }
-        
-        .leaderboard-avatar {
-            font-size: 1.5rem;
-            margin-right: 10px;
+        .emoji-item.purchased {
+            background: rgba(100, 255, 100, 0.5);
         }
         
         #game-over-screen {
@@ -452,6 +472,21 @@
             padding: 15px 30px;
             border-radius: 10px;
             border: 3px solid #4ecdc4;
+            font-size: 1.2rem;
+            z-index: 1000;
+            animation: fadeInOut 3s ease forwards;
+        }
+        
+        .error-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 100, 100, 0.8);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 3px solid #ff4757;
             font-size: 1.2rem;
             z-index: 1000;
             animation: fadeInOut 3s ease forwards;
@@ -483,6 +518,11 @@
             100% { opacity: 0; transform: translate(-50%, -20px); }
         }
         
+        @keyframes trophySpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.6rem; }
@@ -511,12 +551,12 @@
             }
             
             .card {
-                height: 100px;
-                padding: 10px;
+                height: 120px;
+                padding: 15px;
             }
             
-            .emoji-card { font-size: 2.5rem; }
-            .word-card { font-size: 1.2rem; }
+            .emoji-card { font-size: 2.8rem; }
+            .word-card { font-size: 1.4rem; }
             
             button { padding: 12px 20px; font-size: 1.1rem; }
             .mode-btn { min-width: 160px; padding: 15px; }
@@ -536,20 +576,21 @@
             }
             
             .game-header div {
-                font-size: 0.9rem;
+                font-size: 1rem;
                 padding: 8px 5px;
             }
             
             .progress-text {
-                font-size: 0.8rem;
+                font-size: 1rem;
             }
             
             .card {
-                height: 90px;
+                height: 120px;
+                padding: 15px;
             }
             
-            .emoji-card { font-size: 2.2rem; }
-            .word-card { font-size: 1rem; }
+            .emoji-card { font-size: 2.5rem; }
+            .word-card { font-size: 1.2rem; }
             
             .avatar { font-size: 3.5rem; }
             .color-option { width: 50px; height: 50px; margin: 5px; }
@@ -560,9 +601,9 @@
             h1 { font-size: 1.5rem; letter-spacing: 1px; }
             h2 { font-size: 1.1rem; }
             h3 { font-size: 1rem; }
-            .card { height: 80px; }
-            .emoji-card { font-size: 2rem; }
-            .word-card { font-size: 0.9rem; }
+            .card { height: 120px; }
+            .emoji-card { font-size: 2.2rem; }
+            .word-card { font-size: 1.1rem; }
             .mode-btn { min-width: 140px; padding: 12px; font-size: 1rem; }
             .avatar { font-size: 3rem; }
             .color-option { width: 45px; height: 45px; }
@@ -574,31 +615,22 @@
         .theme-red { background: radial-gradient(circle at center, #3a1a1a, #2a0d0d); }
         .theme-purple { background: radial-gradient(circle at center, #3a1a3a, #2a0d2a); }
         .theme-orange { background: radial-gradient(circle at center, #3a2a1a, #2a1a0d); }
-        
-        .debug-info {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            z-index: 1000;
-        }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <div class="debug-info" id="debug-info">Vocab Loading...</div>
+        <div id="error-notification" class="error-notification" style="display: none;"></div>
         
         <div id="start-screen" class="screen active">
             <h1>NANDOmode</h1>
             <h2>Learn Spanish Vocabulary</h2>
             
             <div class="username-container">
-                <h3>Enter Your Username:</h3>
-                <input type="text" id="username-input" placeholder="Type your username..." maxlength="20" aria-label="Enter username">
+                <h3>Select or Enter Username:</h3>
+                <select id="user-select" aria-label="Select existing user">
+                    <option value="">New User</option>
+                </select>
+                <input type="text" id="username-input" placeholder="Type new username..." maxlength="20" aria-label="Enter new username">
                 <button id="save-username" aria-label="Save username and continue">Save & Continue</button>
             </div>
             
@@ -621,6 +653,12 @@
                 <div class="color-option" style="background: #ea6;" data-color="orange" role="button" tabindex="0" aria-label="Select orange theme"></div>
             </div>
             
+            <div class="btn-group">
+                <button id="quick-play-btn" aria-label="Quick play as guest">Quick Play</button>
+                <button id="trophy-room-btn" aria-label="View trophy room">Trophy Room</button>
+                <button id="emoji-store-btn" aria-label="Visit emoji store">Emoji Store</button>
+            </div>
+            
             <h3>Select Game Mode:</h3>
             <div class="btn-group">
                 <button class="mode-btn easy" data-mode="easy" aria-label="Start easy mode">Easy Mode</button>
@@ -635,7 +673,7 @@
                     <span class="player-avatar" id="player-avatar">🐉</span>
                     Player: <span id="player-name">Guest</span>
                 </div>
-                <div>Score: <span id="score">0</span></div>
+                <div>Points: <span id="score">0</span></div>
                 <div>Streak: <span id="streak">0</span></div>
                 <div>Progress: <span id="progress">0</span>/100</div>
                 <div class="progress-container">
@@ -656,65 +694,58 @@
             </div>
         </div>
         
-        <div id="round-end-screen" class="screen">
+        <div id="round-complete-screen" class="screen">
             <h2>Well Done!</h2>
-            <div class="round-result">
-                Round Score: <span id="round-score">0</span><br>
-                Total Score: <span id="total-score">0</span>
+            <div class="round-result" role="alert">
+                Round Points: <span id="round-score">0</span><br>
+                Total Points: <span id="total-score">0</span><br>
+                Words Mastered: <span id="progress-count">0</span>/100<br>
+                Current Streak: <span id="progress-streak">0</span>
+            </div>
+            <div class="trophy-container">
+                <h3>Your Rewards</h3>
+                <div id="trophy-display"></div>
             </div>
             <div class="btn-group">
-                <button id="continue-btn" aria-label="Continue to leaderboard">Continue</button>
+                <button id="next-round-btn" aria-label="Continue to next round">Next Round</button>
                 <button id="quit-round-btn" aria-label="Quit to main menu">Quit</button>
+                <button id="trophy-room-btn-round" aria-label="View trophy room">Trophy Room</button>
+                <button id="emoji-store-btn-round" aria-label="Visit emoji store">Emoji Store</button>
             </div>
         </div>
         
-        <div id="leaderboard-screen" class="screen">
-            <h2>Leaderboard</h2>
-            <div class="leaderboard-container">
-                <h3>Your Progress</h3>
-                <p>Words Completed: <span id="progress-count">0</span>/100</p>
-                <p>Total Score: <span id="progress-score">0</span></p>
-                <p>Current Streak: <span id="progress-streak">0</span></p>
-                
-                <h3>Top Scores</h3>
-                <table id="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Player</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <div id="trophy-room-screen" class="screen">
+            <h2>Trophy Room</h2>
+            <div class="trophy-container">
+                <h3>Your Achievements</h3>
+                <div id="trophy-list"></div>
             </div>
             <div class="btn-group">
-                <button id="continue-leader-btn" aria-label="Continue to next round">Continue</button>
-                <button id="quit-leader-btn" aria-label="Quit to main menu">Quit</button>
+                <button id="back-to-menu-btn" aria-label="Return to main menu">Main Menu</button>
+            </div>
+        </div>
+        
+        <div id="emoji-store-screen" class="screen">
+            <h2>Emoji Store</h2>
+            <div class="emoji-store-container">
+                <h3>Your Points: <span id="store-points">0</span></h3>
+                <div id="emoji-list"></div>
+            </div>
+            <div class="btn-group">
+                <button id="back-to-menu-btn-store" aria-label="Return to main menu">Main Menu</button>
             </div>
         </div>
         
         <div id="game-over-screen" class="screen">
             <h2>Game Complete!</h2>
-            <div class="round-result">
+            <div class="round-result" role="alert">
                 Congratulations <span id="final-player">Player</span>!<br>
                 You've mastered 100 Spanish words!<br>
-                Final Score: <span id="final-score">0</span>
+                Final Points: <span id="final-score">0</span>
             </div>
-            <div class="leaderboard-container">
-                <h3>Hall of Fame</h3>
-                <table id="final-leaderboard">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Player</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="trophy-container">
+                <h3>Your Rewards</h3>
+                <div id="final-trophy-display"></div>
             </div>
             <div class="btn-group">
                 <button id="play-again-btn" aria-label="Play again">Play Again</button>
@@ -726,17 +757,40 @@
     <script src="vocab.js"></script>
     
     <script>
-        const debugInfo = document.getElementById('debug-info');
+        const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
         let lastTTSTime = 0;
         const ttsDebounce = 1000;
         const milestones = [25, 50, 75, 100];
         
+        const emojiStore = [
+            { emoji: '🌟', points: 50, name: 'Star' },
+            { emoji: '🏆', points: 100, name: 'Trophy' },
+            { emoji: '🚀', points: 200, name: 'Rocket' },
+            { emoji: '🦁', points: 500, name: 'Lion' },
+            { emoji: '🌈', points: 1000, name: 'Rainbow' }
+        ];
+        
+        const defaultVocab = [
+            { word: 'gato', emoji: '😺', type: 'noun' },
+            { word: 'perro', emoji: '🐶', type: 'noun' },
+            { word: 'sol', emoji: '☀️', type: 'noun' },
+            { word: 'luna', emoji: '🌙', type: 'noun' },
+            { word: 'casa', emoji: '🏠', type: 'noun' }
+        ];
+
         const gameState = {
             currentScreen: 'start',
-            player: { name: 'Guest', avatar: '🐉', theme: 'green' },
+            player: {
+                name: 'Guest',
+                avatar: '🐉',
+                theme: 'green',
+                emoji: '',
+                points: 0,
+                purchasedEmojis: [],
+                rewards: { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } }
+            },
             mode: '',
-            score: 0,
             streak: 0,
             completedWords: 0,
             wordProgress: {},
@@ -747,7 +801,7 @@
                 selectedLeft: null, 
                 selectedRight: null, 
                 matchedPairs: [], 
-                roundScore: 0 
+                roundPoints: 0 
             },
             leaderboard: []
         };
@@ -755,18 +809,24 @@
         const screens = {
             start: document.getElementById('start-screen'),
             game: document.getElementById('game-screen'),
-            roundEnd: document.getElementById('round-end-screen'),
-            leaderboard: document.getElementById('leaderboard-screen'),
+            roundComplete: document.getElementById('round-complete-screen'),
+            trophyRoom: document.getElementById('trophy-room-screen'),
+            emojiStore: document.getElementById('emoji-store-screen'),
             gameOver: document.getElementById('game-over-screen')
         };
 
+        function showError(message) {
+            const notification = document.getElementById('error-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
+        }
+
         function initGame() {
-            if (window.vocab && window.vocab.length > 0) {
-                debugInfo.textContent = `Vocab loaded: ${window.vocab.length} words`;
-            } else {
-                debugInfo.textContent = "Error: vocab.js not loaded!";
-                console.error("vocab.js not loaded or empty");
-                return;
+            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
+            if (!window.vocab || window.vocab.length === 0) {
+                console.warn("vocab.js not loaded, using default vocab");
+                showError("Oops! Word list didn't load. Using backup words.");
             }
             
             try {
@@ -776,16 +836,42 @@
                 }
             } catch (e) {
                 console.warn("Error loading leaderboard:", e);
+                showError("Couldn't load leaderboard. Starting fresh!");
             }
             
+            populateUserSelect();
             loadPlayerProgress();
             setupEventListeners();
             updatePlayerUI();
             updateProgressBar();
         }
 
+        function populateUserSelect() {
+            const userSelect = document.getElementById('user-select');
+            userSelect.innerHTML = '<option value="">New User</option>';
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('nandomodeProgress_')) {
+                    const username = key.replace('nandomodeProgress_', '');
+                    const option = document.createElement('option');
+                    option.value = username;
+                    option.textContent = username;
+                    userSelect.appendChild(option);
+                }
+            });
+            const savedName = localStorage.getItem('nandomodeCurrentPlayer');
+            if (savedName) userSelect.value = savedName;
+        }
+
         function setupEventListeners() {
             document.getElementById('save-username').addEventListener('click', saveUsername);
+            document.getElementById('user-select').addEventListener('change', loadSelectedUser);
+            document.getElementById('quick-play-btn').addEventListener('click', quickPlay);
+            document.getElementById('trophy-room-btn').addEventListener('click', showTrophyRoom);
+            document.getElementById('emoji-store-btn').addEventListener('click', showEmojiStore);
+            document.getElementById('trophy-room-btn-round').addEventListener('click', showTrophyRoom);
+            document.getElementById('emoji-store-btn-round').addEventListener('click', showEmojiStore);
+            document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
+            document.getElementById('back-to-menu-btn-store').addEventListener('click', quitToMainMenu);
             
             document.querySelectorAll('.avatar').forEach(avatar => {
                 avatar.addEventListener('click', selectAvatar.bind(null, avatar));
@@ -810,10 +896,8 @@
 
             document.getElementById('refresh-btn').addEventListener('click', startNewRound);
             document.getElementById('quit-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('continue-btn').addEventListener('click', showLeaderboard);
+            document.getElementById('next-round-btn').addEventListener('click', startNewRound);
             document.getElementById('quit-round-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('continue-leader-btn').addEventListener('click', startNewRound);
-            document.getElementById('quit-leader-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('play-again-btn').addEventListener('click', startNewGame);
             document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
         }
@@ -832,47 +916,89 @@
         }
 
         function updatePlayerUI() {
-            document.getElementById('player-name').textContent = gameState.player.name;
-            document.getElementById('final-player').textContent = gameState.player.name;
+            const displayName = gameState.player.emoji ? `${gameState.player.name} ${gameState.player.emoji}` : gameState.player.name;
+            document.getElementById('player-name').textContent = displayName;
+            document.getElementById('final-player').textContent = displayName;
             const avatarElement = document.getElementById('player-avatar');
             if (avatarElement) avatarElement.textContent = gameState.player.avatar;
+        }
+
+        function loadSelectedUser() {
+            const userSelect = document.getElementById('user-select');
+            const username = userSelect.value;
+            if (username) {
+                gameState.player.name = username;
+                loadPlayerProgress();
+                document.getElementById('username-input').style.display = 'none';
+            } else {
+                document.getElementById('username-input').style.display = 'block';
+                gameState.player.name = 'Guest';
+                gameState.player.avatar = '🐉';
+                gameState.player.theme = 'green';
+                gameState.player.emoji = '';
+                gameState.player.points = 0;
+                gameState.player.purchasedEmojis = [];
+                gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
+                gameState.streak = 0;
+                gameState.completedWords = 0;
+                gameState.wordProgress = {};
+                updatePlayerUI();
+            }
         }
 
         function saveUsername() {
             const usernameInput = document.getElementById('username-input');
             const username = usernameInput.value.trim();
+            if (!username) return;
             
-            if (username) {
-                const isNewUser = !localStorage.getItem(`nandomodeProgress_${username}`);
-                gameState.player.name = username;
-                
-                if (isNewUser) {
-                    gameState.score = 0;
-                    gameState.streak = 0;
-                    gameState.completedWords = 0;
-                    gameState.wordProgress = {};
-                    gameState.currentRound = { 
-                        pairs: [], 
-                        leftColumn: [], 
-                        rightColumn: [], 
-                        selectedLeft: null, 
-                        selectedRight: null, 
-                        matchedPairs: [], 
-                        roundScore: 0 
-                    };
-                } else {
-                    loadPlayerProgress();
-                }
-                
-                updatePlayerUI();
-                savePlayerProgress();
-                usernameInput.value = '';
-                usernameInput.placeholder = `Welcome, ${username}!`;
-                
-                const btn = document.getElementById('save-username');
-                btn.textContent = isNewUser ? '✓ New User Created!' : '✓ Saved!';
-                setTimeout(() => btn.textContent = 'Save & Continue', 1500);
+            const isNewUser = !localStorage.getItem(`nandomodeProgress_${username}`);
+            gameState.player.name = username;
+            
+            if (isNewUser) {
+                gameState.player.points = 0;
+                gameState.player.purchasedEmojis = [];
+                gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
+                gameState.streak = 0;
+                gameState.completedWords = 0;
+                gameState.wordProgress = {};
+                gameState.currentRound = { 
+                    pairs: [], 
+                    leftColumn: [], 
+                    rightColumn: [], 
+                    selectedLeft: null, 
+                    selectedRight: null, 
+                    matchedPairs: [], 
+                    roundPoints: 0 
+                };
+            } else {
+                loadPlayerProgress();
             }
+            
+            updatePlayerUI();
+            savePlayerProgress();
+            usernameInput.value = '';
+            usernameInput.placeholder = `Welcome, ${username}!`;
+            
+            const btn = document.getElementById('save-username');
+            btn.textContent = isNewUser ? '✓ New User Created!' : '✓ Saved!';
+            setTimeout(() => btn.textContent = 'Save & Continue', 1500);
+            
+            populateUserSelect();
+        }
+
+        function quickPlay() {
+            gameState.player.name = 'Guest';
+            gameState.player.avatar = '🐉';
+            gameState.player.theme = 'green';
+            gameState.player.emoji = '';
+            gameState.player.points = 0;
+            gameState.player.purchasedEmojis = [];
+            gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
+            gameState.streak = 0;
+            gameState.completedWords = 0;
+            gameState.wordProgress = {};
+            updatePlayerUI();
+            showScreen('start');
         }
 
         function savePlayerProgress() {
@@ -881,15 +1007,20 @@
                     name: gameState.player.name,
                     avatar: gameState.player.avatar,
                     theme: gameState.player.theme,
+                    emoji: gameState.player.emoji,
+                    points: gameState.player.points,
+                    purchasedEmojis: gameState.player.purchasedEmojis,
+                    rewards: gameState.player.rewards,
                     wordProgress: gameState.wordProgress,
                     completedWords: gameState.completedWords,
-                    score: gameState.score,
-                    streak: gameState.streak
+                    streak: gameState.streak,
+                    lastActive: new Date().toISOString()
                 };
                 localStorage.setItem(`nandomodeProgress_${gameState.player.name}`, JSON.stringify(playerData));
                 localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
             } catch (e) {
                 console.warn("Error saving player progress:", e);
+                showError("Couldn't save progress. Try again!");
             }
         }
 
@@ -903,9 +1034,12 @@
                         gameState.player.name = playerData.name || 'Guest';
                         gameState.player.avatar = playerData.avatar || '🐉';
                         gameState.player.theme = playerData.theme || 'green';
+                        gameState.player.emoji = playerData.emoji || '';
+                        gameState.player.points = playerData.points || 0;
+                        gameState.player.purchasedEmojis = playerData.purchasedEmojis || [];
+                        gameState.player.rewards = playerData.rewards || { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
                         gameState.wordProgress = playerData.wordProgress || {};
                         gameState.completedWords = playerData.completedWords || 0;
-                        gameState.score = playerData.score || 0;
                         gameState.streak = playerData.streak || 0;
                         
                         document.getElementById('username-input').placeholder = `Welcome back, ${gameState.player.name}!`;
@@ -921,11 +1055,15 @@
                 }
             } catch (e) {
                 console.warn("Error loading player progress:", e);
+                showError("Couldn't load your progress. Starting fresh!");
             }
             gameState.player.name = 'Guest';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
-            gameState.score = 0;
+            gameState.player.emoji = '';
+            gameState.player.points = 0;
+            gameState.player.purchasedEmojis = [];
+            gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
@@ -942,10 +1080,14 @@
             generateRoundData();
             updateGameUI();
             showScreen('game');
+            if (!isMobile) {
+                const roundWords = gameState.currentRound.pairs.map(p => p.word).join(', ');
+                showNotification(`Round Words: ${roundWords}`);
+            }
         }
 
         function sanitizePairId(word) {
-            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substr(2, 5);
+            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         }
 
         function generateRoundData() {
@@ -956,17 +1098,18 @@
                 selectedLeft: null,
                 selectedRight: null,
                 matchedPairs: [],
-                roundScore: 0
+                roundPoints: 0
             };
             
+            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
             const newWords = getNewWords(3);
             const reviewWords = getReviewWords(2);
             const roundWords = shuffleArray([...newWords, ...reviewWords]);
             
-            debugInfo.textContent = `Round words: ${roundWords.join(', ')}`;
+            console.log(`Round words: ${roundWords.join(', ')}`);
             
             roundWords.forEach(word => {
-                const vocabItem = window.vocab.find(item => item.word === word);
+                const vocabItem = vocab.find(item => item.word === word);
                 if (vocabItem) {
                     const pairId = sanitizePairId(word);
                     gameState.currentRound.pairs.push({
@@ -1008,7 +1151,8 @@
         }
 
         function getNewWords(count) {
-            const unseenWords = window.vocab
+            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
+            const unseenWords = vocab
                 .filter(item => !gameState.wordProgress[item.word])
                 .map(item => item.word);
             
@@ -1033,7 +1177,7 @@
         }
 
         function updateGameUI() {
-            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('score').textContent = gameState.player.points;
             document.getElementById('streak').textContent = gameState.streak;
             document.getElementById('progress').textContent = gameState.completedWords;
             document.getElementById('completed').textContent = gameState.completedWords;
@@ -1113,6 +1257,7 @@
             if (!item || item.pairId !== pairId) {
                 console.error(`Item mismatch: pairId=${pairId}, index=${index}, column=${column}, found=${!!item}`);
                 isProcessingClick = false;
+                showError("Oops! Something went wrong. Try again!");
                 return;
             }
             
@@ -1120,12 +1265,13 @@
             if (!card || card.classList.contains('matched')) {
                 console.error(`Invalid card: pairId=${pairId}, type=${item.type}, column=${column}, found=${!!card}`);
                 isProcessingClick = false;
+                showError("Oops! Something went wrong. Try again!");
                 return;
             }
             
             if (gameState.mode !== 'hard' && column === 'left') {
                 const pair = gameState.currentRound.pairs.find(p => p.pairId === pairId);
-                if (pair && (gameState.mode === 'easy' || gameState.mode === 'medium')) {
+                if (pair) {
                     const now = Date.now();
                     if (now - lastTTSTime >= ttsDebounce) {
                         speakWord(pair.word);
@@ -1172,6 +1318,7 @@
             if (!leftCard || !rightCard) {
                 console.error(`Cards not found in checkMatch: leftCard=${leftCard}, rightCard=${rightCard}, leftId=${leftId}, rightId=${rightId}`);
                 resetSelections();
+                showError("Oops! Something went wrong. Try again!");
                 return;
             }
             
@@ -1180,9 +1327,9 @@
                 rightCard.classList.add('correct');
                 playSound('correct');
                 
-                gameState.score++;
+                gameState.player.points += 10;
                 gameState.streak++;
-                gameState.currentRound.roundScore++;
+                gameState.currentRound.roundPoints += 10;
                 
                 const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
                 if (pair) {
@@ -1190,6 +1337,7 @@
                     if (gameState.wordProgress[pair.word] === 3) {
                         gameState.completedWords++;
                         checkMilestone();
+                        checkModeCompletion();
                     }
                 }
                 
@@ -1197,8 +1345,11 @@
                 console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
                 
                 if (gameState.streak % 10 === 0) {
-                    gameState.score += 5;
+                    gameState.player.points += 50;
+                    showNotification('Streak Bonus: +50 Points!');
                 }
+                
+                checkEmojiPurchase();
                 
                 setTimeout(() => {
                     leftCard.classList.remove('correct');
@@ -1223,7 +1374,6 @@
                 rightCard.classList.add('incorrect');
                 playSound('incorrect');
                 
-                gameState.score = Math.max(0, gameState.score - 1);
                 gameState.streak = 0;
                 
                 setTimeout(() => {
@@ -1251,67 +1401,155 @@
             const previousWords = gameState.completedWords - 1;
             const currentWords = gameState.completedWords;
             if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
-                showMilestoneNotification(currentWords);
+                showNotification(`Milestone: ${currentWords}/100 Words Mastered!`);
                 createConfetti(document.getElementById('game-screen'), 20);
             }
         }
 
-        function showMilestoneNotification(words) {
+        function checkModeCompletion() {
+            if (gameState.completedWords >= 100) {
+                const modeRewards = gameState.player.rewards[gameState.mode];
+                modeRewards.medals++;
+                showNotification(`🎖️ ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Medal Earned!`);
+                createConfetti(document.getElementById('game-screen'), 20);
+                
+                if (modeRewards.medals >= 10) {
+                    modeRewards.medals = 0;
+                    modeRewards.trophies++;
+                    showNotification(`🏆 ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Trophy Earned!`);
+                    createConfetti(document.getElementById('game-screen'), 20);
+                }
+                
+                if (modeRewards.trophies >= 10) {
+                    modeRewards.trophies = 0;
+                    modeRewards.crowns++;
+                    showNotification(`👑 ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Crown Earned!`);
+                    createConfetti(document.getElementById('game-screen'), 20);
+                }
+                
+                savePlayerProgress();
+            }
+        }
+
+        function checkEmojiPurchase() {
+            const affordableEmojis = emojiStore.filter(item => !gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points);
+            if (affordableEmojis.length > 0) {
+                const emoji = affordableEmojis[0];
+                gameState.player.purchasedEmojis.push(emoji.emoji);
+                gameState.player.emoji = emoji.emoji;
+                gameState.player.points -= emoji.points;
+                showNotification(`Purchased ${emoji.name} Emoji ${emoji.emoji}!`);
+                updatePlayerUI();
+                savePlayerProgress();
+            }
+        }
+
+        function showNotification(message) {
             const notification = document.createElement('div');
             notification.className = 'milestone-notification';
-            notification.textContent = `Milestone: ${words}/100 Words Mastered!`;
+            notification.textContent = message;
             document.getElementById('game-container').appendChild(notification);
             setTimeout(() => notification.remove(), 3000);
         }
 
         function endRound() {
-            if (gameState.currentRound.roundScore === 5) {
-                gameState.score += gameState.currentRound.roundScore;
+            if (gameState.currentRound.roundPoints === 50) {
+                gameState.player.points += 50;
+                showNotification('Perfect Round: +50 Points!');
             }
             
-            document.getElementById('round-score').textContent = gameState.currentRound.roundScore;
-            document.getElementById('total-score').textContent = gameState.score;
-            savePlayerProgress();
-            
-            setTimeout(() => {
-                createConfetti(document.getElementById('round-end-screen'), 50);
-                showScreen('roundEnd');
-            }, 1000);
-        }
-
-        function showLeaderboard() {
+            document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
+            document.getElementById('total-score').textContent = gameState.player.points;
             document.getElementById('progress-count').textContent = gameState.completedWords;
-            document.getElementById('progress-score').textContent = gameState.score;
             document.getElementById('progress-streak').textContent = gameState.streak;
             
-            const tableBody = document.querySelector('#leaderboard-table tbody');
-            tableBody.innerHTML = '';
+            updateTrophyDisplay(document.getElementById('trophy-display'));
             
-            const topScores = [...gameState.leaderboard].sort((a, b) => b.score - a.score).slice(0, 10);
+            savePlayerProgress();
+            checkEmojiPurchase();
             
-            topScores.forEach((entry, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><span class="leaderboard-avatar">${entry.avatar || '🐉'}</span>${entry.name}</td>
-                    <td>${entry.score}</td>
-                    <td>${new Date(entry.date).toLocaleDateString()}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+            setTimeout(() => {
+                createConfetti(document.getElementById('round-complete-screen'), 20);
+                showScreen('roundComplete');
+            }, 1000);
             
             if (gameState.completedWords >= 100) {
                 endGame();
-            } else {
-                showScreen('leaderboard');
             }
+        }
+
+        function showTrophyRoom() {
+            const trophyList = document.getElementById('trophy-list');
+            updateTrophyDisplay(trophyList);
+            showScreen('trophyRoom');
+        }
+
+        function updateTrophyDisplay(container) {
+            container.innerHTML = '';
+            const modes = ['easy', 'medium', 'hard'];
+            modes.forEach(mode => {
+                const rewards = gameState.player.rewards[mode];
+                const modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
+                if (rewards.medals > 0) {
+                    const medalDiv = document.createElement('div');
+                    medalDiv.className = 'trophy-item';
+                    medalDiv.textContent = mode === 'easy' ? '🥉' : mode === 'medium' ? '🥈' : '🥇';
+                    medalDiv.title = `${rewards.medals} ${modeName} Medals`;
+                    container.appendChild(medalDiv);
+                }
+                if (rewards.trophies > 0) {
+                    const trophyDiv = document.createElement('div');
+                    trophyDiv.className = 'trophy-item';
+                    trophyDiv.textContent = '🏆';
+                    trophyDiv.title = `${rewards.trophies} ${modeName} Trophies`;
+                    container.appendChild(trophyDiv);
+                }
+                if (rewards.crowns > 0) {
+                    const crownDiv = document.createElement('div');
+                    crownDiv.className = 'trophy-item';
+                    crownDiv.textContent = '👑';
+                    crownDiv.title = `${rewards.crowns} ${modeName} Crowns`;
+                    container.appendChild(crownDiv);
+                }
+            });
+            if (container.innerHTML === '') {
+                container.textContent = 'No rewards yet! Keep playing!';
+            }
+        }
+
+        function showEmojiStore() {
+            const emojiList = document.getElementById('emoji-list');
+            emojiList.innerHTML = '';
+            document.getElementById('store-points').textContent = gameState.player.points;
+            
+            emojiStore.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `emoji-item ${gameState.player.purchasedEmojis.includes(item.emoji) ? 'purchased' : ''}`;
+                div.innerHTML = `${item.emoji} ${item.name} (${item.points} Points)`;
+                div.setAttribute('role', 'button');
+                div.setAttribute('aria-label', `Select ${item.name} emoji`);
+                if (!gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points) {
+                    div.addEventListener('click', () => {
+                        gameState.player.purchasedEmojis.push(item.emoji);
+                        gameState.player.emoji = item.emoji;
+                        gameState.player.points -= item.points;
+                        savePlayerProgress();
+                        showEmojiStore();
+                        updatePlayerUI();
+                        showNotification(`Purchased ${item.name} Emoji ${item.emoji}!`);
+                    });
+                }
+                emojiList.appendChild(div);
+            });
+            
+            showScreen('emojiStore');
         }
 
         function endGame() {
             gameState.leaderboard.push({
                 name: gameState.player.name,
                 avatar: gameState.player.avatar,
-                score: gameState.score,
+                score: gameState.player.points,
                 date: new Date().toISOString()
             });
             
@@ -1322,31 +1560,17 @@
                 localStorage.setItem('nandomodeLeaderboard', JSON.stringify(gameState.leaderboard));
             } catch (e) {
                 console.warn("Error saving leaderboard:", e);
+                showError("Couldn't save leaderboard. Try again!");
             }
             
-            document.getElementById('final-score').textContent = gameState.score;
-            
-            const tableBody = document.querySelector('#final-leaderboard tbody');
-            tableBody.innerHTML = '';
-            
-            const topScores = [...gameState.leaderboard].slice(0, 10);
-            
-            topScores.forEach((entry, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><span class="leaderboard-avatar">${entry.avatar || '🐉'}</span>${entry.name}</td>
-                    <td>${entry.score}</td>
-                    <td>${new Date(entry.date).toLocaleDateString()}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
+            document.getElementById('final-score').textContent = gameState.player.points;
+            updateTrophyDisplay(document.getElementById('final-trophy-display'));
             showScreen('gameOver');
         }
 
         function quitToMainMenu() {
             showScreen('start');
+            populateUserSelect();
         }
 
         function showScreen(screenName) {
@@ -1413,17 +1637,17 @@
         function createConfetti(container, count) {
             const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ffbe0b', '#fb5607', '#8338ec'];
             
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < Math.min(count, 20); i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = `${Math.random() * 100}%`;
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
-                confetti.style.width = `${Math.random() * 8 + 4}px`;
-                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                confetti.style.animationDuration = `${Math.random() * 1 + 1}s`;
+                confetti.style.width = `${Math.random() * 6 + 4}px`;
+                confetti.style.height = `${Math.random() * 6 + 4}px`;
                 container.appendChild(confetti);
                 
-                setTimeout(() => confetti.remove(), 3000);
+                setTimeout(() => confetti.remove(), 2000);
             }
         }
 
