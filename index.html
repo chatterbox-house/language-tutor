@@ -823,6 +823,16 @@
         }
 
         function initGame() {
+            // Check if localStorage is available
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+            } catch (e) {
+                console.error("LocalStorage not available:", e);
+                showError("Your browser settings prevent saving progress. Please enable localStorage.");
+                return;
+            }
+            
             const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
             if (!window.vocab || window.vocab.length === 0) {
                 console.warn("vocab.js not loaded, using default vocab");
@@ -849,17 +859,36 @@
         function populateUserSelect() {
             const userSelect = document.getElementById('user-select');
             userSelect.innerHTML = '<option value="">New User</option>';
-            Object.keys(localStorage).forEach(key => {
+            
+            // Get all keys from localStorage
+            const keys = Object.keys(localStorage);
+            
+            // Filter and process user data
+            const users = [];
+            keys.forEach(key => {
                 if (key.startsWith('nandomodeProgress_')) {
                     const username = key.replace('nandomodeProgress_', '');
-                    const option = document.createElement('option');
-                    option.value = username;
-                    option.textContent = username;
-                    userSelect.appendChild(option);
+                    users.push(username);
                 }
             });
+            
+            // Sort users alphabetically
+            users.sort();
+            
+            // Add users to select
+            users.forEach(username => {
+                const option = document.createElement('option');
+                option.value = username;
+                option.textContent = username;
+                userSelect.appendChild(option);
+            });
+            
+            // Set the selected user if one exists
             const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-            if (savedName) userSelect.value = savedName;
+            if (savedName && users.includes(savedName)) {
+                userSelect.value = savedName;
+                loadSelectedUser();
+            }
         }
 
         function setupEventListeners() {
@@ -926,64 +955,125 @@
         function loadSelectedUser() {
             const userSelect = document.getElementById('user-select');
             const username = userSelect.value;
+            
             if (username) {
-                gameState.player.name = username;
-                loadPlayerProgress();
-                document.getElementById('username-input').style.display = 'none';
-            } else {
-                document.getElementById('username-input').style.display = 'block';
-                gameState.player.name = 'Guest';
-                gameState.player.avatar = '🐉';
-                gameState.player.theme = 'green';
-                gameState.player.emoji = '';
-                gameState.player.points = 0;
-                gameState.player.purchasedEmojis = [];
-                gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
-                gameState.streak = 0;
-                gameState.completedWords = 0;
-                gameState.wordProgress = {};
-                updatePlayerUI();
+                try {
+                    const savedData = localStorage.getItem(`nandomodeProgress_${username}`);
+                    if (savedData) {
+                        const playerData = JSON.parse(savedData);
+                        
+                        // Update game state with loaded data
+                        gameState.player.name = playerData.name || username;
+                        gameState.player.avatar = playerData.avatar || '🐉';
+                        gameState.player.theme = playerData.theme || 'green';
+                        gameState.player.emoji = playerData.emoji || '';
+                        gameState.player.points = playerData.points || 0;
+                        gameState.player.purchasedEmojis = playerData.purchasedEmojis || [];
+                        gameState.player.rewards = playerData.rewards || { 
+                            easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                            medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                            hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        };
+                        gameState.streak = playerData.streak || 0;
+                        gameState.completedWords = playerData.completedWords || 0;
+                        gameState.wordProgress = playerData.wordProgress || {};
+                        
+                        // Update UI elements
+                        updatePlayerUI();
+                        
+                        // Update avatar and color selection
+                        document.querySelectorAll('.avatar').forEach(avatar => {
+                            avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
+                        });
+                        
+                        document.querySelectorAll('.color-option').forEach(color => {
+                            color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
+                        });
+                        
+                        document.getElementById('username-input').placeholder = `Welcome back, ${username}!`;
+                        document.getElementById('username-input').style.display = 'none';
+                        
+                        // Save current player
+                        localStorage.setItem('nandomodeCurrentPlayer', username);
+                        
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Error loading user data:", e);
+                    showError("Error loading user data. Starting fresh.");
+                }
             }
+            
+            // If no user selected or error occurred
+            document.getElementById('username-input').style.display = 'block';
+            document.getElementById('username-input').placeholder = 'Type new username...';
+            gameState.player.name = 'Guest';
+            gameState.player.avatar = '🐉';
+            gameState.player.theme = 'green';
+            gameState.player.emoji = '';
+            gameState.player.points = 0;
+            gameState.player.purchasedEmojis = [];
+            gameState.player.rewards = { 
+                easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            };
+            gameState.streak = 0;
+            gameState.completedWords = 0;
+            gameState.wordProgress = {};
+            updatePlayerUI();
         }
 
         function saveUsername() {
             const usernameInput = document.getElementById('username-input');
             const username = usernameInput.value.trim();
-            if (!username) return;
             
-            const isNewUser = !localStorage.getItem(`nandomodeProgress_${username}`);
-            gameState.player.name = username;
-            
-            if (isNewUser) {
-                gameState.player.points = 0;
-                gameState.player.purchasedEmojis = [];
-                gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
-                gameState.streak = 0;
-                gameState.completedWords = 0;
-                gameState.wordProgress = {};
-                gameState.currentRound = { 
-                    pairs: [], 
-                    leftColumn: [], 
-                    rightColumn: [], 
-                    selectedLeft: null, 
-                    selectedRight: null, 
-                    matchedPairs: [], 
-                    roundPoints: 0 
-                };
-            } else {
-                loadPlayerProgress();
+            if (!username) {
+                showError("Please enter a username");
+                return;
             }
             
+            // Save the username in game state
+            gameState.player.name = username;
+            
+            // Load existing data if available
+            const savedData = localStorage.getItem(`nandomodeProgress_${username}`);
+            if (savedData) {
+                try {
+                    const playerData = JSON.parse(savedData);
+                    // Merge saved data with current gameState.player
+                    gameState.player.avatar = playerData.avatar || gameState.player.avatar;
+                    gameState.player.theme = playerData.theme || gameState.player.theme;
+                    gameState.player.emoji = playerData.emoji || gameState.player.emoji;
+                    gameState.player.points = playerData.points || gameState.player.points;
+                    gameState.player.purchasedEmojis = playerData.purchasedEmojis || gameState.player.purchasedEmojis;
+                    gameState.player.rewards = playerData.rewards || gameState.player.rewards;
+                    gameState.streak = playerData.streak || gameState.streak;
+                    gameState.completedWords = playerData.completedWords || gameState.completedWords;
+                    gameState.wordProgress = playerData.wordProgress || gameState.wordProgress;
+                } catch (e) {
+                    console.error("Error parsing saved data:", e);
+                }
+            }
+            
+            // Save the current player
+            localStorage.setItem('nandomodeCurrentPlayer', username);
+            
+            // Update UI
             updatePlayerUI();
             savePlayerProgress();
+            
+            // Clear input and show confirmation
             usernameInput.value = '';
             usernameInput.placeholder = `Welcome, ${username}!`;
             
             const btn = document.getElementById('save-username');
-            btn.textContent = isNewUser ? '✓ New User Created!' : '✓ Saved!';
+            btn.textContent = savedData ? '✓ User Loaded!' : '✓ New User Created!';
             setTimeout(() => btn.textContent = 'Save & Continue', 1500);
             
+            // Update user select
             populateUserSelect();
+            document.getElementById('user-select').value = username;
         }
 
         function quickPlay() {
@@ -993,7 +1083,11 @@
             gameState.player.emoji = '';
             gameState.player.points = 0;
             gameState.player.purchasedEmojis = [];
-            gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
+            gameState.player.rewards = { 
+                easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            };
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
@@ -1016,10 +1110,12 @@
                     streak: gameState.streak,
                     lastActive: new Date().toISOString()
                 };
+                
                 localStorage.setItem(`nandomodeProgress_${gameState.player.name}`, JSON.stringify(playerData));
                 localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
+                console.log('Progress saved for:', gameState.player.name);
             } catch (e) {
-                console.warn("Error saving player progress:", e);
+                console.error("Error saving player progress:", e);
                 showError("Couldn't save progress. Try again!");
             }
         }
@@ -1027,20 +1123,26 @@
         function loadPlayerProgress() {
             try {
                 const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-                if (savedName && savedName === gameState.player.name) {
+                if (savedName) {
                     const savedData = localStorage.getItem(`nandomodeProgress_${savedName}`);
                     if (savedData) {
                         const playerData = JSON.parse(savedData);
-                        gameState.player.name = playerData.name || 'Guest';
+                        
+                        // Update game state with loaded data
+                        gameState.player.name = playerData.name || savedName;
                         gameState.player.avatar = playerData.avatar || '🐉';
                         gameState.player.theme = playerData.theme || 'green';
                         gameState.player.emoji = playerData.emoji || '';
                         gameState.player.points = playerData.points || 0;
                         gameState.player.purchasedEmojis = playerData.purchasedEmojis || [];
-                        gameState.player.rewards = playerData.rewards || { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
-                        gameState.wordProgress = playerData.wordProgress || {};
-                        gameState.completedWords = playerData.completedWords || 0;
+                        gameState.player.rewards = playerData.rewards || { 
+                            easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                            medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                            hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        };
                         gameState.streak = playerData.streak || 0;
+                        gameState.completedWords = playerData.completedWords || 0;
+                        gameState.wordProgress = playerData.wordProgress || {};
                         
                         document.getElementById('username-input').placeholder = `Welcome back, ${gameState.player.name}!`;
                         document.querySelectorAll('.avatar').forEach(avatar => {
@@ -1057,13 +1159,19 @@
                 console.warn("Error loading player progress:", e);
                 showError("Couldn't load your progress. Starting fresh!");
             }
+            
+            // Default to guest if no saved data
             gameState.player.name = 'Guest';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
             gameState.player.emoji = '';
             gameState.player.points = 0;
             gameState.player.purchasedEmojis = [];
-            gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
+            gameState.player.rewards = { 
+                easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            };
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
