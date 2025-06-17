@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NANDOmode - Learn Spanish Vocabulary</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-    <!-- PWA: Link to manifest.json -->
-    <link rel="manifest" href="manifest.json">
-    <!-- PWA: Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="icons/apple-icon-180.png">
-    <!-- PWA: Theme color for address bar -->
-    <meta name="theme-color" content="#1a1a2e">
     <style>
-        /* General styling */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -65,6 +58,7 @@
             margin: 25px 0 15px;
             letter-spacing: 4px;
             color: #f8f8f8;
+            text-transform: uppercase;
             background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -529,7 +523,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.6rem; }
@@ -617,7 +610,6 @@
             .player-avatar { font-size: 1rem; }
         }
         
-        /* Theme specific backgrounds */
         .theme-green { background: radial-gradient(circle at center, #1a3a2a, #0d2a1a); }
         .theme-blue { background: radial-gradient(circle at center, #1a2a3a, #0d1b2a); }
         .theme-red { background: radial-gradient(circle at center, #3a1a1a, #2a0d0d); }
@@ -762,23 +754,9 @@
         </div>
     </div>
 
-    <!-- The vocab.js is loaded here -->
     <script src="vocab.js"></script>
     
     <script>
-        // Register the Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered! Scope:', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('Service Worker registration failed:', err);
-                    });
-            });
-        }
-
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
         let lastTTSTime = 0;
@@ -955,7 +933,7 @@
             } else {
                 document.getElementById('username-input').style.display = 'block';
                 gameState.player.name = 'Guest';
-                gameState.player.avatar = ' ';
+                gameState.player.avatar = '🐉';
                 gameState.player.theme = 'green';
                 gameState.player.emoji = '';
                 gameState.player.points = 0;
