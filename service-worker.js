@@ -4,14 +4,14 @@ const urlsToCache = [
   'index.html',
   'vocab.js',
   'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap',
-  // Placeholder images for icons (replace with real icons in a production app)
-  'https://placehold.co/48x48/1a1a2e/ffffff?text=N',
-  'https://placehold.co/72x72/1a1a2e/ffffff?text=N',
-  'https://placehold.co/96x96/1a1a2e/ffffff?text=N',
-  'https://placehold.co/144x144/1a1a2e/ffffff?text=N',
-  'https://placehold.co/168x168/1a1a2e/ffffff?text=N',
-  'https://placehold.co/192x192/1a1a2e/ffffff?text=N',
-  'https://placehold.co/512x512/1a1a2e/ffffff?text=N'
+  // Real but vaguely related images for icons
+  'https://cdn.pixabay.com/photo/2016/11/18/19/07/abstract-1836798_960_720.png', // Example 48x48 suitable
+  'https://cdn.pixabay.com/photo/2017/08/30/01/05/abstract-2694154_960_720.png', // Example 72x72 suitable
+  'https://cdn.pixabay.com/photo/2017/06/07/19/27/fantasy-2381283_960_720.png', // Example 96x96 suitable
+  'https://cdn.pixabay.com/photo/2017/02/08/17/24/fantasy-2049567_960_720.jpg', // Example 144x144 suitable
+  'https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3083283_960_720.jpg', // Example 168x168 suitable
+  'https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_960_720.jpg', // Example 192x192 suitable
+  'https://cdn.pixabay.com/photo/2016/06/25/12/52/galaxy-1479836_960_720.jpg'  // Example 512x512 suitable
 ];
 
 // Install event: cache assets
