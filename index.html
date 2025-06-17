@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NANDOmode - Learn Spanish Vocabulary</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <!-- PWA: Link to manifest.json -->
     <link rel="manifest" href="manifest.json">
+    <!-- PWA: Apple Touch Icon -->
     <link rel="apple-touch-icon" href="icons/apple-icon-180.png">
+    <!-- PWA: Theme color for address bar -->
     <meta name="theme-color" content="#1a1a2e">
     <style>
         /* General styling */
@@ -759,6 +762,7 @@
         </div>
     </div>
 
+    <!-- The vocab.js is loaded here -->
     <script src="vocab.js"></script>
     
     <script>
@@ -858,19 +862,10 @@
             }
             
             populateUserSelect();
-            loadPlayerProgress(); // Load player data initially
+            loadPlayerProgress();
             setupEventListeners();
             updatePlayerUI();
             updateProgressBar();
-
-            // Set initial state of username input based on current user selection
-            const userSelect = document.getElementById('user-select');
-            const usernameInput = document.getElementById('username-input');
-            if (userSelect.value === "") { // "New User" selected
-                usernameInput.style.display = 'block';
-            } else {
-                usernameInput.style.display = 'none';
-            }
         }
 
         function populateUserSelect() {
@@ -886,11 +881,7 @@
                 }
             });
             const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-            if (savedName && userSelect.querySelector(`option[value="${savedName}"]`)) {
-                userSelect.value = savedName;
-            } else {
-                userSelect.value = ""; // Default to "New User"
-            }
+            if (savedName) userSelect.value = savedName;
         }
 
         function setupEventListeners() {
@@ -956,21 +947,15 @@
 
         function loadSelectedUser() {
             const userSelect = document.getElementById('user-select');
-            const usernameInput = document.getElementById('username-input');
             const username = userSelect.value;
             if (username) {
                 gameState.player.name = username;
                 loadPlayerProgress();
-                usernameInput.style.display = 'none';
+                document.getElementById('username-input').style.display = 'none';
             } else {
-                // "New User" selected
-                usernameInput.style.display = 'block';
-                usernameInput.value = ''; // Clear input for new user
-                usernameInput.placeholder = 'Type new username...';
-                
-                // Reset gameState for new user profile
-                gameState.player.name = 'Guest'; // Temporary, will be set by saveUsername
-                gameState.player.avatar = '🐉';
+                document.getElementById('username-input').style.display = 'block';
+                gameState.player.name = 'Guest';
+                gameState.player.avatar = ' ';
                 gameState.player.theme = 'green';
                 gameState.player.emoji = '';
                 gameState.player.points = 0;
@@ -980,60 +965,50 @@
                 gameState.completedWords = 0;
                 gameState.wordProgress = {};
                 updatePlayerUI();
-                
-                // Reset avatar and color selections to default for "New User"
-                document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
-                document.querySelector('.avatar[data-avatar="🐉"]').classList.add('selected');
-                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
-                document.querySelector('.color-option[data-color="green"]').classList.add('selected');
             }
         }
 
         function saveUsername() {
             const usernameInput = document.getElementById('username-input');
             const username = usernameInput.value.trim();
-            if (!username) {
-                showError("Please enter a username!");
-                return;
-            }
+            if (!username) return;
             
             const isNewUser = !localStorage.getItem(`nandomodeProgress_${username}`);
             gameState.player.name = username;
             
             if (isNewUser) {
-                // Initialize new user's progress
                 gameState.player.points = 0;
                 gameState.player.purchasedEmojis = [];
                 gameState.player.rewards = { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } };
                 gameState.streak = 0;
                 gameState.completedWords = 0;
                 gameState.wordProgress = {};
-                // No need to reset currentRound here as it will be reset on game start
-            } 
-            
-            // Set current player in localStorage immediately before loading or saving
-            localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
-            loadPlayerProgress(); // Load the newly saved or existing player data
+                gameState.currentRound = { 
+                    pairs: [], 
+                    leftColumn: [], 
+                    rightColumn: [], 
+                    selectedLeft: null, 
+                    selectedRight: null, 
+                    matchedPairs: [], 
+                    roundPoints: 0 
+                };
+            } else {
+                loadPlayerProgress();
+            }
             
             updatePlayerUI();
-            savePlayerProgress(); // Save current state of the player
-            
+            savePlayerProgress();
             usernameInput.value = '';
             usernameInput.placeholder = `Welcome, ${username}!`;
             
             const btn = document.getElementById('save-username');
             btn.textContent = isNewUser ? '✓ New User Created!' : '✓ Saved!';
-            setTimeout(() => {
-                btn.textContent = 'Save & Continue';
-                populateUserSelect(); // Repopulate to show the new user
-                document.getElementById('user-select').value = gameState.player.name; // Select the new user
-            }, 1500);
+            setTimeout(() => btn.textContent = 'Save & Continue', 1500);
             
-            usernameInput.style.display = 'none'; // Hide input after saving
+            populateUserSelect();
         }
 
         function quickPlay() {
-            // Reset to guest profile
             gameState.player.name = 'Guest';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
@@ -1044,32 +1019,12 @@
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
-            
-            // Clear current player from localStorage for quick play
-            localStorage.removeItem('nandomodeCurrentPlayer');
-
             updatePlayerUI();
-            showScreen('start'); // Stay on start screen but apply guest settings
-            
-            // Reset UI elements to guest defaults
-            document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
-            document.querySelector('.avatar[data-avatar="🐉"]').classList.add('selected');
-            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
-            document.querySelector('.color-option[data-color="green"]').classList.add('selected');
-            document.getElementById('username-input').value = '';
-            document.getElementById('username-input').placeholder = 'Type new username...';
-            document.getElementById('username-input').style.display = 'block'; // Show input for quick play as guest
-            populateUserSelect(); // Re-populate to reflect no user selected
-            document.getElementById('user-select').value = ""; // Select "New User" option
+            showScreen('start');
         }
 
         function savePlayerProgress() {
             try {
-                if (gameState.player.name === 'Guest') {
-                    // Don't save progress for 'Guest' profile if it's not a named user
-                    return; 
-                }
-
                 const playerData = {
                     name: gameState.player.name,
                     avatar: gameState.player.avatar,
@@ -1094,7 +1049,7 @@
         function loadPlayerProgress() {
             try {
                 const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-                if (savedName) {
+                if (savedName && savedName === gameState.player.name) {
                     const savedData = localStorage.getItem(`nandomodeProgress_${savedName}`);
                     if (savedData) {
                         const playerData = JSON.parse(savedData);
@@ -1124,7 +1079,6 @@
                 console.warn("Error loading player progress:", e);
                 showError("Couldn't load your progress. Starting fresh!");
             }
-            // If no saved player or error, initialize as Guest
             gameState.player.name = 'Guest';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
@@ -1136,7 +1090,6 @@
             gameState.completedWords = 0;
             gameState.wordProgress = {};
             updatePlayerUI();
-            localStorage.removeItem('nandomodeCurrentPlayer'); // Clear current player if loading failed
         }
 
         function startNewGame() {
@@ -1571,7 +1524,7 @@
                     trophyDiv.className = 'trophy-item';
                     trophyDiv.textContent = '🏆';
                     trophyDiv.title = `${rewards.trophies} ${modeName} Trophies`;
-                    container.appendChild(trorophyDiv);
+                    container.appendChild(trophyDiv);
                 }
                 if (rewards.crowns > 0) {
                     const crownDiv = document.createElement('div');
@@ -1640,14 +1593,6 @@
         function quitToMainMenu() {
             showScreen('start');
             populateUserSelect();
-            // Ensure username input is visible if "New User" is selected after returning to main menu
-            const userSelect = document.getElementById('user-select');
-            const usernameInput = document.getElementById('username-input');
-            if (userSelect.value === "") {
-                usernameInput.style.display = 'block';
-            } else {
-                usernameInput.style.display = 'none';
-            }
         }
 
         function showScreen(screenName) {
