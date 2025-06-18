@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NANDOmode - Learn Spanish Vocabulary</title>
+    <title>NANDOmode - Aprende Vocabulario Español</title>
+    <!-- Add PWA meta tags -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="Aprende vocabulario español con divertidos juegos de emparejar">
+    <link rel="manifest" href="manifest.json">
+    <!-- Existing styles and fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <style>
         * {
@@ -739,51 +744,51 @@
         <div id="error-notification" class="error-notification" style="display: none;"></div>
         <div id="success-notification" class="success-notification" style="display: none;"></div>
         
-        <button id="logout-btn" class="logout-btn" style="display: none;">Logout</button>
+        <button id="logout-btn" class="logout-btn" style="display: none;">Cerrar Sesión</button>
         
         <div id="start-screen" class="screen active">
             <h1>NANDOmode</h1>
-            <h2>Learn Spanish Vocabulary</h2>
+            <h2>Aprende Vocabulario Español</h2>
             
             <div class="username-container">
-                <h3>Select or Enter Username:</h3>
-                <select id="user-select" aria-label="Select existing user">
-                    <option value="">New User</option>
+                <h3>Selecciona o Introduce Nombre:</h3>
+                <select id="user-select" aria-label="Seleccionar usuario existente">
+                    <option value="">Nuevo Usuario</option>
                 </select>
-                <input type="text" id="username-input" placeholder="Type new username..." maxlength="20" aria-label="Enter new username">
-                <button id="save-username" aria-label="Save username and continue">Save & Continue</button>
+                <input type="text" id="username-input" placeholder="Escribe nuevo nombre..." maxlength="20" aria-label="Introducir nuevo nombre">
+                <button id="save-username" aria-label="Guardar nombre y continuar">Guardar & Continuar</button>
             </div>
             
             <div class="avatar-container">
-                <div class="avatar" data-avatar="👾" role="button" tabindex="0" aria-label="Select avatar: Alien">👾</div>
-                <div class="avatar" data-avatar="🦊" role="button" tabindex="0" aria-label="Select avatar: Fox">🦊</div>
-                <div class="avatar selected" data-avatar="🐉" role="button" tabindex="0" aria-label="Select avatar: Dragon">🐉</div>
-                <div class="avatar" data-avatar="🦄" role="button" tabindex="0" aria-label="Select avatar: Unicorn">🦄</div>
-                <div class="avatar" data-avatar="🤖" role="button" tabindex="0" aria-label="Select avatar: Robot">🤖</div>
-                <div class="avatar" data-avatar="👻" role="button" tabindex="0" aria-label="Select avatar: Ghost">👻</div>
-                <div class="avatar" data-avatar="🐧" role="button" tabindex="0" aria-label="Select avatar: Penguin">🐧</div>
-                <div class="avatar" data-avatar="🦖" role="button" tabindex="0" aria-label="Select avatar: Dinosaur">🦖</div>
+                <div class="avatar" data-avatar="👾" role="button" tabindex="0" aria-label="Seleccionar avatar: Alien">👾</div>
+                <div class="avatar" data-avatar="🦊" role="button" tabindex="0" aria-label="Seleccionar avatar: Zorro">🦊</div>
+                <div class="avatar selected" data-avatar="🐉" role="button" tabindex="0" aria-label="Seleccionar avatar: Dragón">🐉</div>
+                <div class="avatar" data-avatar="🦄" role="button" tabindex="0" aria-label="Seleccionar avatar: Unicornio">🦄</div>
+                <div class="avatar" data-avatar="🤖" role="button" tabindex="0" aria-label="Seleccionar avatar: Robot">🤖</div>
+                <div class="avatar" data-avatar="👻" role="button" tabindex="0" aria-label="Seleccionar avatar: Fantasma">👻</div>
+                <div class="avatar" data-avatar="🐧" role="button" tabindex="0" aria-label="Seleccionar avatar: Pingüino">🐧</div>
+                <div class="avatar" data-avatar="🦖" role="button" tabindex="0" aria-label="Seleccionar avatar: Dinosaurio">🦖</div>
             </div>
             
             <div class="color-picker">
-                <div class="color-option selected" style="background: #3a7;" data-color="green" role="button" tabindex="0" aria-label="Select green theme"></div>
-                <div class="color-option" style="background: #47a;" data-color="blue" role="button" tabindex="0" aria-label="Select blue theme"></div>
-                <div class="color-option" style="background: #a54;" data-color="red" role="button" tabindex="0" aria-label="Select red theme"></div>
-                <div class="color-option" style="background: #a37;" data-color="purple" role="button" tabindex="0" aria-label="Select purple theme"></div>
-                <div class="color-option" style="background: #ea6;" data-color="orange" role="button" tabindex="0" aria-label="Select orange theme"></div>
+                <div class="color-option selected" style="background: #3a7;" data-color="green" role="button" tabindex="0" aria-label="Seleccionar tema verde"></div>
+                <div class="color-option" style="background: #47a;" data-color="blue" role="button" tabindex="0" aria-label="Seleccionar tema azul"></div>
+                <div class="color-option" style="background: #a54;" data-color="red" role="button" tabindex="0" aria-label="Seleccionar tema rojo"></div>
+                <div class="color-option" style="background: #a37;" data-color="purple" role="button" tabindex="0" aria-label="Seleccionar tema morado"></div>
+                <div class="color-option" style="background: #ea6;" data-color="orange" role="button" tabindex="0" aria-label="Seleccionar tema naranja"></div>
             </div>
             
             <div class="btn-group">
-                <button id="quick-play-btn" aria-label="Quick play as guest">Quick Play</button>
-                <button id="trophy-room-btn" aria-label="View trophy room">Trophy Room</button>
-                <button id="emoji-store-btn" aria-label="Visit emoji store">Emoji Store</button>
+                <button id="quick-play-btn" aria-label="Juego rápido como invitado">Juego Rápido</button>
+                <button id="trophy-room-btn" aria-label="Ver sala de trofeos">Sala de Trofeos</button>
+                <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">Tienda de Emojis</button>
             </div>
             
-            <h3>Select Game Mode:</h3>
+            <h3>Selecciona Modo de Juego:</h3>
             <div class="btn-group">
-                <button class="mode-btn easy" data-mode="easy" aria-label="Start easy mode">Easy Mode</button>
-                <button class="mode-btn medium" data-mode="medium" aria-label="Start medium mode">Medium Mode</button>
-                <button class="mode-btn hard" data-mode="hard" aria-label="Start hard mode">Hard Mode</button>
+                <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">Modo Fácil</button>
+                <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">Modo Medio</button>
+                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">Modo Difícil</button>
             </div>
         </div>
         
@@ -798,11 +803,11 @@
             <div class="game-header">
                 <div class="player-info">
                     <span class="player-avatar" id="player-avatar">🐉</span>
-                    Player: <span id="player-name">Guest</span>
+                    Jugador: <span id="player-name">Invitado</span>
                 </div>
-                <div>Points: <span id="score">0</span></div>
-                <div>Streak: <span id="streak">0</span></div>
-                <div>Progress: <span id="progress">0</span>/50</div>
+                <div>Puntos: <span id="score">0</span></div>
+                <div>Racha: <span id="streak">0</span></div>
+                <div>Progreso: <span id="progress">0</span>/50</div>
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div class="progress-text"><span id="percent-complete">0</span>%</div>
@@ -816,81 +821,81 @@
             </div>
             
             <div class="btn-group">
-                <button id="refresh-btn" aria-label="Refresh round">Refresh</button>
-                <button id="quit-btn" aria-label="Quit to main menu">Quit</button>
+                <button id="refresh-btn" aria-label="Refrescar ronda">Refrescar</button>
+                <button id="quit-btn" aria-label="Salir al menú principal">Salir</button>
             </div>
         </div>
         
         <div id="round-complete-screen" class="screen">
             <h2>¡Bien Hecho!</h2>
             <div class="round-result" role="alert">
-                Round Points: <span id="round-score">0</span><br>
-                Total Points: <span id="total-score">0</span><br>
-                Words Mastered: <span id="progress-count">0</span>/50<br>
-                Current Streak: <span id="progress-streak">0</span>
+                Puntos de Ronda: <span id="round-score">0</span><br>
+                Puntos Totales: <span id="total-score">0</span><br>
+                Palabras Dominadas: <span id="progress-count">0</span>/50<br>
+                Racha Actual: <span id="progress-streak">0</span>
             </div>
             <div class="trophy-container">
-                <h3>Your Rewards</h3>
+                <h3>Tus Recompensas</h3>
                 <div id="trophy-display"></div>
                 <div class="reward-path" id="reward-path-display">
                     <div class="reward-step" data-step="medal">
                         🎖️
-                        <div class="reward-label">Medal</div>
+                        <div class="reward-label">Medalla</div>
                     </div>
                     <div class="reward-step" data-step="trophy">
                         🏆
-                        <div class="reward-label">Trophy</div>
+                        <div class="reward-label">Trofeo</div>
                     </div>
                     <div class="reward-step" data-step="crown">
                         👑
-                        <div class="reward-label">Crown</div>
+                        <div class="reward-label">Corona</div>
                     </div>
                 </div>
             </div>
             <div class="btn-group">
-                <button id="next-round-btn" aria-label="Continue to next round">Next Round</button>
-                <button id="quit-round-btn" aria-label="Quit to main menu">Quit</button>
-                <button id="trophy-room-btn-round" aria-label="View trophy room">Trophy Room</button>
-                <button id="emoji-store-btn-round" aria-label="Visit emoji store">Emoji Store</button>
+                <button id="next-round-btn" aria-label="Continuar a siguiente ronda">Siguiente Ronda</button>
+                <button id="quit-round-btn" aria-label="Salir al menú principal">Salir</button>
+                <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">Sala de Trofeos</button>
+                <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">Tienda de Emojis</button>
             </div>
         </div>
         
         <div id="trophy-room-screen" class="screen">
-            <h2>Trophy Room</h2>
+            <h2>Sala de Trofeos</h2>
             <div class="trophy-container">
-                <h3>Your Achievements</h3>
+                <h3>Tus Logros</h3>
                 <div id="trophy-list"></div>
             </div>
             <div class="btn-group">
-                <button id="back-to-menu-btn" aria-label="Return to main menu">Main Menu</button>
+                <button id="back-to-menu-btn" aria-label="Volver al menú principal">Menú Principal</button>
             </div>
         </div>
         
         <div id="emoji-store-screen" class="screen">
-            <h2>Emoji Store</h2>
+            <h2>Tienda de Emojis</h2>
             <div class="emoji-store-container">
-                <h3>Your Points: <span id="store-points">0</span></h3>
+                <h3>Tus Puntos: <span id="store-points">0</span></h3>
                 <div id="emoji-list"></div>
             </div>
             <div class="btn-group">
-                <button id="back-to-menu-btn-store" aria-label="Return to main menu">Main Menu</button>
+                <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">Menú Principal</button>
             </div>
         </div>
         
         <div id="game-over-screen" class="screen">
             <h2>¡Felicidades!</h2>
             <div class="round-result" role="alert">
-                Congratulations <span id="final-player">Player</span>!<br>
-                You've mastered 50 Spanish words!<br>
-                Final Points: <span id="final-score">0</span>
+                ¡Enhorabuena <span id="final-player">Jugador</span>!<br>
+                ¡Has dominado 50 palabras en español!<br>
+                Puntos Finales: <span id="final-score">0</span>
             </div>
             <div class="trophy-container">
-                <h3>Your Rewards</h3>
+                <h3>Tus Recompensas</h3>
                 <div id="final-trophy-display"></div>
             </div>
             <div class="btn-group">
-                <button id="play-again-btn" aria-label="Play again">Play Again</button>
-                <button id="main-menu-btn" aria-label="Return to main menu">Main Menu</button>
+                <button id="play-again-btn" aria-label="Jugar de nuevo">Jugar Otra Vez</button>
+                <button id="main-menu-btn" aria-label="Volver al menú principal">Menú Principal</button>
             </div>
         </div>
     </div>
@@ -898,6 +903,18 @@
     <script src="vocab.js"></script>
     
     <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
         let lastTTSTime = 0;
@@ -905,13 +922,54 @@
         const milestones = [10, 20, 30, 40, 50];
         
         const emojiStore = [
-            { emoji: '🌟', points: 50, name: 'Star' },
-            { emoji: '🏆', points: 100, name: 'Trophy' },
-            { emoji: '🚀', points: 200, name: 'Rocket' },
-            { emoji: '🦁', points: 500, name: 'Lion' },
-            { emoji: '🌈', points: 1000, name: 'Rainbow' }
+            // Basic Spanish cultural items (affordable)
+            { emoji: '🍊', points: 50, name: 'Naranja' },
+            { emoji: '🏺', points: 75, name: 'Cántaro' },
+            { emoji: '🥘', points: 100, name: 'Paella' },
+            { emoji: '🌮', points: 125, name: 'Taco' },
+            { emoji: '🍷', points: 150, name: 'Vino' },
+            { emoji: '🎸', points: 175, name: 'Guitarra' },
+            { emoji: '💃', points: 200, name: 'Bailarina' },
+            
+            // Intermediate Spanish icons
+            { emoji: '🌵', points: 300, name: 'Cactus' },
+            { emoji: '🦂', points: 400, name: 'Alacrán' },
+            { emoji: '🏰', points: 500, name: 'Castillo' },
+            { emoji: '⛪', points: 600, name: 'Catedral' },
+            { emoji: '🎭', points: 700, name: 'Teatro' },
+            { emoji: '🪕', points: 800, name: 'Charango' },
+            { emoji: '🥁', points: 900, name: 'Cajón' },
+            
+            // Premium Spanish/Latin American items
+            { emoji: '🗿', points: 1000, name: 'Moai' },
+            { emoji: '🌋', points: 1200, name: 'Volcán' },
+            { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
+            { emoji: '🎪', points: 1800, name: 'Feria' },
+            { emoji: '🛶', points: 2000, name: 'Canoa' },
+            { emoji: '🏺', points: 2200, name: 'Ánfora' },
+            { emoji: '🕌', points: 2500, name: 'Alhambra' },
+            
+            // Luxury Spanish items
+            { emoji: '👑', points: 3000, name: 'Corona Real' },
+            { emoji: '💎', points: 3500, name: 'Esmeralda' },
+            { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
+            { emoji: '🛕', points: 4500, name: 'Templo Maya' },
+            { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
+            { emoji: '🎻', points: 6000, name: 'Stradivarius' },
+            { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
+            
+            // Ultra rare Spanish treasures
+            { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
+            { emoji: '🏰', points: 9000, name: 'Alcázar' },
+            { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
+            { emoji: '📜', points: 12000, name: 'Carta de Colón' },
+            { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
+            { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
+            { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
+            { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
+            { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
         ];
-        
+
         const defaultVocab = [
             { word: 'gato', emoji: '😺', type: 'noun' },
             { word: 'perro', emoji: '🐶', type: 'noun' },
@@ -923,7 +981,7 @@
         const gameState = {
             currentScreen: 'start',
             player: {
-                name: 'Guest',
+                name: 'Invitado',
                 avatar: '🐉',
                 theme: 'green',
                 emoji: '',
@@ -979,14 +1037,14 @@
                 localStorage.removeItem('test');
             } catch (e) {
                 console.error("LocalStorage not available:", e);
-                showError("Your browser settings prevent saving progress. Please enable localStorage.");
+                showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
                 return;
             }
             
             const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
             if (!window.vocab || window.vocab.length === 0) {
                 console.warn("vocab.js not loaded, using default vocab");
-                showError("Oops! Word list didn't load. Using backup words.");
+                showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
             }
             
             try {
@@ -996,7 +1054,7 @@
                 }
             } catch (e) {
                 console.warn("Error loading leaderboard:", e);
-                showError("Couldn't load leaderboard. Starting fresh!");
+                showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
             }
             
             populateUserSelect();
@@ -1011,7 +1069,7 @@
 
         function populateUserSelect() {
             const userSelect = document.getElementById('user-select');
-            userSelect.innerHTML = '<option value="">New User</option>';
+            userSelect.innerHTML = '<option value="">Nuevo Usuario</option>';
             
             const keys = Object.keys(localStorage);
             const users = [];
@@ -1105,7 +1163,7 @@
 
         function updateLogoutButton() {
             const logoutBtn = document.getElementById('logout-btn');
-            if (gameState.player.name !== 'Guest') {
+            if (gameState.player.name !== 'Invitado') {
                 logoutBtn.style.display = 'block';
             } else {
                 logoutBtn.style.display = 'none';
@@ -1119,10 +1177,10 @@
                 yesterday.setDate(yesterday.getDate() - 1);
                 if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
                     gameState.player.dailyStreak++;
-                    showSuccess(`Streak extended to ${gameState.player.dailyStreak} days!`);
+                    showSuccess(`¡Racha extendida a ${gameState.player.dailyStreak} días!`);
                 } else if (gameState.player.lastPlayedDate !== today) {
                     gameState.player.dailyStreak = 1;
-                    showSuccess('New streak started!');
+                    showSuccess('¡Nueva racha comenzada!');
                 }
                 gameState.player.lastPlayedDate = today;
                 savePlayerProgress();
@@ -1170,7 +1228,7 @@
                         
                         // Always show the input field
                         usernameInput.style.display = 'block';
-                        usernameInput.placeholder = `Welcome back, ${username}!`;
+                        usernameInput.placeholder = `¡Bienvenido de nuevo, ${username}!`;
                         
                         // Update game state
                         gameState.player = {
@@ -1205,19 +1263,19 @@
                         
                         updatePlayerUI();
                         updateLogoutButton();
-                        showSuccess(`Welcome back, ${username}!`);
+                        showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                         return;
                     }
                 } catch (e) {
                     console.error("Error loading user data:", e);
-                    showError("Error loading user data. Starting fresh.");
+                    showError("Error al cargar datos de usuario. Empezando de nuevo.");
                 }
             }
             
             // Default to showing input field for new users
             usernameInput.style.display = 'block';
-            usernameInput.placeholder = 'Type new username...';
-            gameState.player.name = 'Guest';
+            usernameInput.placeholder = 'Escribe nuevo nombre...';
+            gameState.player.name = 'Invitado';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
             gameState.player.emoji = '';
@@ -1243,7 +1301,7 @@
             const username = usernameInput.value.trim();
             
             if (!username) {
-                showError("Please enter a username");
+                showError("Por favor introduce un nombre de usuario");
                 return;
             }
             
@@ -1284,23 +1342,23 @@
             updateLogoutButton();
             
             usernameInput.value = '';
-            usernameInput.placeholder = isNewUser ? `Welcome, ${username}!` : `Welcome back, ${username}!`;
+            usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
             
             const btn = document.getElementById('save-username');
-            btn.textContent = isNewUser ? '✓ New User Created!' : '✓ User Loaded!';
-            setTimeout(() => btn.textContent = 'Save & Continue', 1500);
+            btn.textContent = isNewUser ? '✓ ¡Nuevo Usuario Creado!' : '✓ ¡Usuario Cargado!';
+            setTimeout(() => btn.textContent = 'Guardar & Continuar', 1500);
             
             populateUserSelect();
             document.getElementById('user-select').value = username;
             
-            showSuccess(isNewUser ? `New account created for ${username}!` : `Welcome back ${username}!`);
+            showSuccess(isNewUser ? `¡Nueva cuenta creada para ${username}!` : `¡Bienvenido de nuevo ${username}!`);
         }
 
         function quickPlay() {
             // Only set guest mode if no user is currently logged in
-            if (gameState.player.name === 'Guest') {
+            if (gameState.player.name === 'Invitado') {
                 gameState.player = {
-                    name: 'Guest',
+                    name: 'Invitado',
                     avatar: '🐉',
                     theme: 'green',
                     emoji: '',
@@ -1321,14 +1379,14 @@
                 
                 updatePlayerUI();
                 updateLogoutButton();
-                showSuccess("Playing as Guest. Progress won't be saved.");
+                showSuccess("Jugando como Invitado. El progreso no se guardará.");
             }
             showScreen('start');
         }
 
         function logout() {
             gameState.player = {
-                name: 'Guest',
+                name: 'Invitado',
                 avatar: '🐉',
                 theme: 'green',
                 emoji: '',
@@ -1354,15 +1412,15 @@
             populateUserSelect();
             
             document.getElementById('username-input').style.display = 'block';
-            document.getElementById('username-input').placeholder = 'Type new username...';
+            document.getElementById('username-input').placeholder = 'Escribe nuevo nombre...';
             document.getElementById('user-select').value = '';
             
-            showSuccess("Logged out successfully");
+            showSuccess("Sesión cerrada correctamente");
             showScreen('start');
         }
 
         function savePlayerProgress() {
-            if (gameState.player.name === 'Guest') {
+            if (gameState.player.name === 'Invitado') {
                 console.log('Not saving progress for Guest user');
                 return;
             }
@@ -1390,7 +1448,7 @@
                 console.log('Progress saved for:', gameState.player.name);
             } catch (e) {
                 console.error("Error saving player progress:", e);
-                showError("Couldn't save progress. Try again!");
+                showError("No se pudo guardar el progreso. ¡Inténtalo de nuevo!");
             }
         }
 
@@ -1423,7 +1481,7 @@
                         gameState.completedWords = playerData.completedWords || 0;
                         gameState.wordProgress = playerData.wordProgress || {};
                         
-                        document.getElementById('username-input').placeholder = `Welcome back, ${gameState.player.name}!`;
+                        document.getElementById('username-input').placeholder = `¡Bienvenido de nuevo, ${gameState.player.name}!`;
                         document.querySelectorAll('.avatar').forEach(avatar => {
                             avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
                         });
@@ -1438,11 +1496,11 @@
                 }
             } catch (e) {
                 console.warn("Error loading player progress:", e);
-                showError("Couldn't load your progress. Starting fresh!");
+                showError("No se pudo cargar tu progreso. ¡Empezando de nuevo!");
             }
             
             gameState.player = {
-                name: 'Guest',
+                name: 'Invitado',
                 avatar: '🐉',
                 theme: 'green',
                 emoji: '',
@@ -1478,7 +1536,7 @@
             showScreen('game');
             if (!isMobile) {
                 const roundWords = gameState.currentRound.pairs.map(p => p.word).join(', ');
-                showNotification(`Round Words: ${roundWords}`);
+                showNotification(`Palabras de la ronda: ${roundWords}`);
             }
         }
 
@@ -1594,7 +1652,7 @@
                 card.textContent = item.value;
                 card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
                 card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Select card: ${item.value}`);
+                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
                 
                 if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
                     card.classList.add('matched');
@@ -1621,7 +1679,7 @@
                 card.textContent = item.value;
                 card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
                 card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Select card: ${item.value}`);
+                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
                 
                 if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
                     card.classList.add('matched');
@@ -1664,7 +1722,7 @@
             if (!item || item.pairId !== pairId) {
                 console.error(`Item mismatch: pairId=${pairId}, index=${index}, column=${column}, found=${!!item}`);
                 isProcessingClick = false;
-                showError("Oops! Something went wrong. Try again!");
+                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
                 return;
             }
             
@@ -1672,7 +1730,7 @@
             if (!card || card.classList.contains('matched')) {
                 console.error(`Invalid card: pairId=${pairId}, type=${item.type}, column=${column}, found=${!!card}`);
                 isProcessingClick = false;
-                showError("Oops! Something went wrong. Try again!");
+                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
                 return;
             }
             
@@ -1725,7 +1783,7 @@
             if (!leftCard || !rightCard) {
                 console.error(`Cards not found in checkMatch: leftCard=${leftCard}, rightCard=${rightCard}, leftId=${leftId}, rightId=${rightId}`);
                 resetSelections();
-                showError("Oops! Something went wrong. Try again!");
+                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
                 return;
             }
             
@@ -1753,7 +1811,7 @@
                 
                 if (gameState.streak % 10 === 0) {
                     gameState.player.points += 50;
-                    showNotification('Streak Bonus: +50 Points!');
+                    showNotification('¡Bonus de Racha: +50 Puntos!');
                 }
                 
                 checkEmojiPurchase();
@@ -1897,7 +1955,7 @@
                 
                 if (rewards.medals > 0 || rewards.trophies > 0 || rewards.crowns > 0) {
                     const modeHeader = document.createElement('h4');
-                    modeHeader.textContent = `${modeName} Mode`;
+                    modeHeader.textContent = `Modo ${modeName}`;
                     trophyList.appendChild(modeHeader);
                     
                     const modeContainer = document.createElement('div');
@@ -1909,21 +1967,21 @@
                         const medalDiv = document.createElement('div');
                         medalDiv.className = 'trophy-item';
                         medalDiv.textContent = '🎖️';
-                        medalDiv.title = `${rewards.medals} ${modeName} Medals`;
+                        medalDiv.title = `${rewards.medals} Medallas de ${modeName}`;
                         modeContainer.appendChild(medalDiv);
                     }
                     if (rewards.trophies > 0) {
                         const trophyDiv = document.createElement('div');
                         trophyDiv.className = 'trophy-item';
                         trophyDiv.textContent = '🏆';
-                        trophyDiv.title = `${rewards.trophies} ${modeName} Trophies`;
+                        trophyDiv.title = `${rewards.trophies} Trofeos de ${modeName}`;
                         modeContainer.appendChild(trophyDiv);
                     }
                     if (rewards.crowns > 0) {
                         const crownDiv = document.createElement('div');
                         crownDiv.className = 'trophy-item';
                         crownDiv.textContent = '👑';
-                        crownDiv.title = `${rewards.crowns} ${modeName} Crowns`;
+                        crownDiv.title = `${rewards.crowns} Coronas de ${modeName}`;
                         modeContainer.appendChild(crownDiv);
                     }
                     
@@ -1949,21 +2007,21 @@
                     const medalDiv = document.createElement('div');
                     medalDiv.className = 'trophy-item';
                     medalDiv.textContent = '🎖️';
-                    medalDiv.title = `${rewards.medals} ${modeName} Medals`;
+                    medalDiv.title = `${rewards.medals} Medallas de ${modeName}`;
                     container.appendChild(medalDiv);
                 }
                 if (rewards.trophies > 0) {
                     const trophyDiv = document.createElement('div');
                     trophyDiv.className = 'trophy-item';
                     trophyDiv.textContent = '🏆';
-                    trophyDiv.title = `${rewards.trophies} ${modeName} Trophies`;
+                    trophyDiv.title = `${rewards.trophies} Trofeos de ${modeName}`;
                     container.appendChild(trophyDiv);
                 }
                 if (rewards.crowns > 0) {
                     const crownDiv = document.createElement('div');
                     crownDiv.className = 'trophy-item';
                     crownDiv.textContent = '👑';
-                    crownDiv.title = `${rewards.crowns} ${modeName} Crowns`;
+                    crownDiv.title = `${rewards.crowns} Coronas de ${modeName}`;
                     container.appendChild(crownDiv);
                 }
             });
@@ -1981,9 +2039,9 @@
             emojiStore.forEach(item => {
                 const div = document.createElement('div');
                 div.className = `emoji-item ${gameState.player.purchasedEmojis.includes(item.emoji) ? 'purchased' : ''}`;
-                div.innerHTML = `${item.emoji} ${item.name} (${item.points} Points)`;
+                div.innerHTML = `${item.emoji} ${item.name} (${item.points} Puntos)`;
                 div.setAttribute('role', 'button');
-                div.setAttribute('aria-label', `Select ${item.name} emoji`);
+                div.setAttribute('aria-label', `Seleccionar emoji ${item.name}`);
                 if (!gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points) {
                     div.addEventListener('click', () => {
                         gameState.player.purchasedEmojis.push(item.emoji);
@@ -2016,7 +2074,7 @@
                 localStorage.setItem('nandomodeLeaderboard', JSON.stringify(gameState.leaderboard));
             } catch (e) {
                 console.warn("Error saving leaderboard:", e);
-                showError("Couldn't save leaderboard. Try again!");
+                showError("No se pudo guardar el marcador. ¡Inténtalo de nuevo!");
             }
             
             document.getElementById('final-score').textContent = gameState.player.points;
