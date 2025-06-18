@@ -1,16 +1,28 @@
-{
-  "name": "NANDOmode",
-  "short_name": "NANDOmode",
-  "description": "Learn Spanish vocabulary through fun matching games",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#1a1a2e",
-  "icons": [
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48c3R5bGU+dGV4dHtmb250LWZhbWlseTonUHJlc3MgU3RhcnQgMlAnLG1vbm9zcGFjZX08L3N0eWxlPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjQ4IiBmaWxsPSJ3aGl0ZSI+TjwvdGV4dD48L3N2Zz4=",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
-    }
-  ]
-}
+const CACHE_NAME = 'nandomode-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/vocab.js'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+    )
+  );
+});
