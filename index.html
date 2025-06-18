@@ -492,9 +492,105 @@
             animation: fadeInOut 3s ease forwards;
         }
         
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(100, 255, 100, 0.8);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 3px solid #4ecdc4;
+            font-size: 1.2rem;
+            z-index: 1000;
+            animation: fadeInOut 3s ease forwards;
+        }
+        
+        .progress-tracker {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #4ecdc4;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .daily-streak {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .streak-fire {
+            color: #ff6b6b;
+            animation: flamePulse 1s infinite alternate;
+        }
+        
+        .reward-path {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        .reward-step {
+            text-align: center;
+            opacity: 0.5;
+            transition: all 0.3s;
+            font-size: 1.8rem;
+        }
+        
+        .reward-step.earned {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px gold);
+        }
+        
+        .reward-step.next {
+            opacity: 0.8;
+            text-shadow: 0 0 10px #ffe66d;
+        }
+        
+        .reward-label {
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+        
+        .word-mastery-1 { border-color: #4ecdc4 !important; }
+        .word-mastery-2 { border-color: silver !important; }
+        .word-mastery-3 { border-color: gold !important; animation: pulse 1s infinite; }
+        
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 100, 100, 0.7);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #ff4757;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 100, 100, 0.9);
+            transform: translateY(-2px);
+        }
+        
         @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 rgba(100, 255, 100, 0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(100, 255, 100, 0.8); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(100, 255, 100, 0.8); }
             100% { transform: scale(1); box-shadow: 0 0 0 rgba(100, 255, 100, 0.6); }
         }
         
@@ -521,6 +617,11 @@
         @keyframes trophySpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes flamePulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
         }
         
         @media (max-width: 768px) {
@@ -563,6 +664,12 @@
             
             .avatar { font-size: 4rem; margin: 8px; }
             .player-avatar { font-size: 1.5rem; }
+            
+            .progress-tracker, .logout-btn {
+                position: static;
+                margin: 10px auto;
+                width: 90%;
+            }
         }
         
         @media (max-width: 480px) {
@@ -595,6 +702,16 @@
             .avatar { font-size: 3.5rem; }
             .color-option { width: 50px; height: 50px; margin: 5px; }
             .player-avatar { font-size: 1.2rem; }
+            
+            .reward-path {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .reward-step {
+                margin: 5px;
+                font-size: 1.5rem;
+            }
         }
         
         @media (max-width: 360px) {
@@ -620,6 +737,9 @@
 <body>
     <div id="game-container">
         <div id="error-notification" class="error-notification" style="display: none;"></div>
+        <div id="success-notification" class="success-notification" style="display: none;"></div>
+        
+        <button id="logout-btn" class="logout-btn" style="display: none;">Logout</button>
         
         <div id="start-screen" class="screen active">
             <h1>NANDOmode</h1>
@@ -668,6 +788,13 @@
         </div>
         
         <div id="game-screen" class="screen">
+            <div class="progress-tracker">
+                <div>Palabras: <span id="completed">0</span>/50</div>
+                <div class="daily-streak" id="streak-display">
+                    <span class="streak-fire">🔥</span> <span id="streak-count">0</span>
+                </div>
+            </div>
+            
             <div class="game-header">
                 <div class="player-info">
                     <span class="player-avatar" id="player-avatar">🐉</span>
@@ -675,10 +802,10 @@
                 </div>
                 <div>Points: <span id="score">0</span></div>
                 <div>Streak: <span id="streak">0</span></div>
-                <div>Progress: <span id="progress">0</span>/100</div>
+                <div>Progress: <span id="progress">0</span>/50</div>
                 <div class="progress-container">
                     <div class="progress-bar">
-                        <div class="progress-text"><span id="completed">0</span>/100 (<span id="percent-complete">0</span>%)</div>
+                        <div class="progress-text"><span id="percent-complete">0</span>%</div>
                     </div>
                 </div>
             </div>
@@ -695,16 +822,30 @@
         </div>
         
         <div id="round-complete-screen" class="screen">
-            <h2>Well Done!</h2>
+            <h2>¡Bien Hecho!</h2>
             <div class="round-result" role="alert">
                 Round Points: <span id="round-score">0</span><br>
                 Total Points: <span id="total-score">0</span><br>
-                Words Mastered: <span id="progress-count">0</span>/100<br>
+                Words Mastered: <span id="progress-count">0</span>/50<br>
                 Current Streak: <span id="progress-streak">0</span>
             </div>
             <div class="trophy-container">
                 <h3>Your Rewards</h3>
                 <div id="trophy-display"></div>
+                <div class="reward-path" id="reward-path-display">
+                    <div class="reward-step" data-step="medal">
+                        🎖️
+                        <div class="reward-label">Medal</div>
+                    </div>
+                    <div class="reward-step" data-step="trophy">
+                        🏆
+                        <div class="reward-label">Trophy</div>
+                    </div>
+                    <div class="reward-step" data-step="crown">
+                        👑
+                        <div class="reward-label">Crown</div>
+                    </div>
+                </div>
             </div>
             <div class="btn-group">
                 <button id="next-round-btn" aria-label="Continue to next round">Next Round</button>
@@ -737,10 +878,10 @@
         </div>
         
         <div id="game-over-screen" class="screen">
-            <h2>Game Complete!</h2>
+            <h2>¡Felicidades!</h2>
             <div class="round-result" role="alert">
                 Congratulations <span id="final-player">Player</span>!<br>
-                You've mastered 100 Spanish words!<br>
+                You've mastered 50 Spanish words!<br>
                 Final Points: <span id="final-score">0</span>
             </div>
             <div class="trophy-container">
@@ -761,7 +902,7 @@
         let isProcessingClick = false;
         let lastTTSTime = 0;
         const ttsDebounce = 1000;
-        const milestones = [25, 50, 75, 100];
+        const milestones = [10, 20, 30, 40, 50];
         
         const emojiStore = [
             { emoji: '🌟', points: 50, name: 'Star' },
@@ -788,7 +929,10 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
-                rewards: { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } }
+                rewards: { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } },
+                dailyStreak: 0,
+                lastPlayedDate: null,
+                weeklyProgress: 0
             },
             mode: '',
             streak: 0,
@@ -822,8 +966,14 @@
             setTimeout(() => notification.style.display = 'none', 3000);
         }
 
+        function showSuccess(message) {
+            const notification = document.getElementById('success-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
+        }
+
         function initGame() {
-            // Check if localStorage is available
             try {
                 localStorage.setItem('test', 'test');
                 localStorage.removeItem('test');
@@ -854,16 +1004,16 @@
             setupEventListeners();
             updatePlayerUI();
             updateProgressBar();
+            updateStreakDisplay();
+            updateRewardPath();
+            updateLogoutButton();
         }
 
         function populateUserSelect() {
             const userSelect = document.getElementById('user-select');
             userSelect.innerHTML = '<option value="">New User</option>';
             
-            // Get all keys from localStorage
             const keys = Object.keys(localStorage);
-            
-            // Filter and process user data
             const users = [];
             keys.forEach(key => {
                 if (key.startsWith('nandomodeProgress_')) {
@@ -872,10 +1022,8 @@
                 }
             });
             
-            // Sort users alphabetically
             users.sort();
             
-            // Add users to select
             users.forEach(username => {
                 const option = document.createElement('option');
                 option.value = username;
@@ -883,7 +1031,6 @@
                 userSelect.appendChild(option);
             });
             
-            // Set the selected user if one exists
             const savedName = localStorage.getItem('nandomodeCurrentPlayer');
             if (savedName && users.includes(savedName)) {
                 userSelect.value = savedName;
@@ -901,6 +1048,7 @@
             document.getElementById('emoji-store-btn-round').addEventListener('click', showEmojiStore);
             document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('back-to-menu-btn-store').addEventListener('click', quitToMainMenu);
+            document.getElementById('logout-btn').addEventListener('click', logout);
             
             document.querySelectorAll('.avatar').forEach(avatar => {
                 avatar.addEventListener('click', selectAvatar.bind(null, avatar));
@@ -950,11 +1098,69 @@
             document.getElementById('final-player').textContent = displayName;
             const avatarElement = document.getElementById('player-avatar');
             if (avatarElement) avatarElement.textContent = gameState.player.avatar;
+            
+            // Update the theme
+            document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
+        }
+
+        function updateLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (gameState.player.name !== 'Guest') {
+                logoutBtn.style.display = 'block';
+            } else {
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        function updateStreakDisplay() {
+            const today = new Date().toDateString();
+            if (gameState.player.lastPlayedDate !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
+                    gameState.player.dailyStreak++;
+                    showSuccess(`Streak extended to ${gameState.player.dailyStreak} days!`);
+                } else if (gameState.player.lastPlayedDate !== today) {
+                    gameState.player.dailyStreak = 1;
+                    showSuccess('New streak started!');
+                }
+                gameState.player.lastPlayedDate = today;
+                savePlayerProgress();
+            }
+            
+            document.getElementById('streak-count').textContent = gameState.player.dailyStreak;
+        }
+
+        function updateRewardPath() {
+            const modeRewards = gameState.player.rewards[gameState.mode] || { medals: 0, trophies: 0, crowns: 0 };
+            const steps = document.querySelectorAll('.reward-step');
+            
+            steps.forEach(step => {
+                step.classList.remove('earned', 'next');
+                const stepType = step.dataset.step;
+                
+                if (stepType === 'medal' && modeRewards.medals > 0) {
+                    step.classList.add('earned');
+                } else if (stepType === 'trophy' && modeRewards.trophies > 0) {
+                    step.classList.add('earned');
+                } else if (stepType === 'crown' && modeRewards.crowns > 0) {
+                    step.classList.add('earned');
+                }
+            });
+            
+            if (modeRewards.medals === 0) {
+                document.querySelector('.reward-step[data-step="medal"]').classList.add('next');
+            } else if (modeRewards.trophies === 0) {
+                document.querySelector('.reward-step[data-step="trophy"]').classList.add('next');
+            } else if (modeRewards.crowns === 0) {
+                document.querySelector('.reward-step[data-step="crown"]').classList.add('next');
+            }
         }
 
         function loadSelectedUser() {
             const userSelect = document.getElementById('user-select');
             const username = userSelect.value;
+            const usernameInput = document.getElementById('username-input');
             
             if (username) {
                 try {
@@ -962,26 +1168,33 @@
                     if (savedData) {
                         const playerData = JSON.parse(savedData);
                         
-                        // Update game state with loaded data
-                        gameState.player.name = playerData.name || username;
-                        gameState.player.avatar = playerData.avatar || '🐉';
-                        gameState.player.theme = playerData.theme || 'green';
-                        gameState.player.emoji = playerData.emoji || '';
-                        gameState.player.points = playerData.points || 0;
-                        gameState.player.purchasedEmojis = playerData.purchasedEmojis || [];
-                        gameState.player.rewards = playerData.rewards || { 
-                            easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                            medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                            hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        // Always show the input field
+                        usernameInput.style.display = 'block';
+                        usernameInput.placeholder = `Welcome back, ${username}!`;
+                        
+                        // Update game state
+                        gameState.player = {
+                            name: username,
+                            avatar: playerData.avatar || '🐉',
+                            theme: playerData.theme || 'green',
+                            emoji: playerData.emoji || '',
+                            points: playerData.points || 0,
+                            purchasedEmojis: playerData.purchasedEmojis || [],
+                            rewards: playerData.rewards || { 
+                                easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                                medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                                hard: { medals: 0, trophies: 0, crowns: 0 } 
+                            },
+                            dailyStreak: playerData.dailyStreak || 0,
+                            lastPlayedDate: playerData.lastPlayedDate || null,
+                            weeklyProgress: playerData.weeklyProgress || 0
                         };
+                        
                         gameState.streak = playerData.streak || 0;
                         gameState.completedWords = playerData.completedWords || 0;
                         gameState.wordProgress = playerData.wordProgress || {};
                         
-                        // Update UI elements
-                        updatePlayerUI();
-                        
-                        // Update avatar and color selection
+                        // Update UI
                         document.querySelectorAll('.avatar').forEach(avatar => {
                             avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
                         });
@@ -990,12 +1203,9 @@
                             color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
                         });
                         
-                        document.getElementById('username-input').placeholder = `Welcome back, ${username}!`;
-                        document.getElementById('username-input').style.display = 'none';
-                        
-                        // Save current player
-                        localStorage.setItem('nandomodeCurrentPlayer', username);
-                        
+                        updatePlayerUI();
+                        updateLogoutButton();
+                        showSuccess(`Welcome back, ${username}!`);
                         return;
                     }
                 } catch (e) {
@@ -1004,9 +1214,9 @@
                 }
             }
             
-            // If no user selected or error occurred
-            document.getElementById('username-input').style.display = 'block';
-            document.getElementById('username-input').placeholder = 'Type new username...';
+            // Default to showing input field for new users
+            usernameInput.style.display = 'block';
+            usernameInput.placeholder = 'Type new username...';
             gameState.player.name = 'Guest';
             gameState.player.avatar = '🐉';
             gameState.player.theme = 'green';
@@ -1018,10 +1228,14 @@
                 medium: { medals: 0, trophies: 0, crowns: 0 }, 
                 hard: { medals: 0, trophies: 0, crowns: 0 } 
             };
+            gameState.player.dailyStreak = 0;
+            gameState.player.lastPlayedDate = null;
+            gameState.player.weeklyProgress = 0;
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
             updatePlayerUI();
+            updateLogoutButton();
         }
 
         function saveUsername() {
@@ -1033,69 +1247,126 @@
                 return;
             }
             
-            // Save the username in game state
-            gameState.player.name = username;
+            // Always show the input field
+            usernameInput.style.display = 'block';
             
-            // Load existing data if available
-            const savedData = localStorage.getItem(`nandomodeProgress_${username}`);
-            if (savedData) {
-                try {
-                    const playerData = JSON.parse(savedData);
-                    // Merge saved data with current gameState.player
-                    gameState.player.avatar = playerData.avatar || gameState.player.avatar;
-                    gameState.player.theme = playerData.theme || gameState.player.theme;
-                    gameState.player.emoji = playerData.emoji || gameState.player.emoji;
-                    gameState.player.points = playerData.points || gameState.player.points;
-                    gameState.player.purchasedEmojis = playerData.purchasedEmojis || gameState.player.purchasedEmojis;
-                    gameState.player.rewards = playerData.rewards || gameState.player.rewards;
-                    gameState.streak = playerData.streak || gameState.streak;
-                    gameState.completedWords = playerData.completedWords || gameState.completedWords;
-                    gameState.wordProgress = playerData.wordProgress || gameState.wordProgress;
-                } catch (e) {
-                    console.error("Error parsing saved data:", e);
-                }
+            // Check if this is a new user or existing user
+            const isNewUser = !gameState.leaderboard.some(user => user.name === username);
+            
+            if (isNewUser) {
+                // Initialize new user data
+                gameState.player = {
+                    name: username,
+                    avatar: gameState.player.avatar || '🐉',
+                    theme: gameState.player.theme || 'green',
+                    emoji: '',
+                    points: 0,
+                    purchasedEmojis: [],
+                    rewards: { 
+                        easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                        medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                        hard: { medals: 0, trophies: 0, crowns: 0 } 
+                    },
+                    dailyStreak: 0,
+                    lastPlayedDate: null,
+                    weeklyProgress: 0
+                };
+                
+                gameState.streak = 0;
+                gameState.completedWords = 0;
+                gameState.wordProgress = {};
             }
             
-            // Save the current player
             localStorage.setItem('nandomodeCurrentPlayer', username);
-            
-            // Update UI
-            updatePlayerUI();
             savePlayerProgress();
             
-            // Clear input and show confirmation
+            updatePlayerUI();
+            updateLogoutButton();
+            
             usernameInput.value = '';
-            usernameInput.placeholder = `Welcome, ${username}!`;
+            usernameInput.placeholder = isNewUser ? `Welcome, ${username}!` : `Welcome back, ${username}!`;
             
             const btn = document.getElementById('save-username');
-            btn.textContent = savedData ? '✓ User Loaded!' : '✓ New User Created!';
+            btn.textContent = isNewUser ? '✓ New User Created!' : '✓ User Loaded!';
             setTimeout(() => btn.textContent = 'Save & Continue', 1500);
             
-            // Update user select
             populateUserSelect();
             document.getElementById('user-select').value = username;
+            
+            showSuccess(isNewUser ? `New account created for ${username}!` : `Welcome back ${username}!`);
         }
 
         function quickPlay() {
-            gameState.player.name = 'Guest';
-            gameState.player.avatar = '🐉';
-            gameState.player.theme = 'green';
-            gameState.player.emoji = '';
-            gameState.player.points = 0;
-            gameState.player.purchasedEmojis = [];
-            gameState.player.rewards = { 
-                easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            // Only set guest mode if no user is currently logged in
+            if (gameState.player.name === 'Guest') {
+                gameState.player = {
+                    name: 'Guest',
+                    avatar: '🐉',
+                    theme: 'green',
+                    emoji: '',
+                    points: 0,
+                    purchasedEmojis: [],
+                    rewards: { 
+                        easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                        medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                        hard: { medals: 0, trophies: 0, crowns: 0 } 
+                    },
+                    dailyStreak: 0,
+                    lastPlayedDate: null,
+                    weeklyProgress: 0
+                };
+                gameState.streak = 0;
+                gameState.completedWords = 0;
+                gameState.wordProgress = {};
+                
+                updatePlayerUI();
+                updateLogoutButton();
+                showSuccess("Playing as Guest. Progress won't be saved.");
+            }
+            showScreen('start');
+        }
+
+        function logout() {
+            gameState.player = {
+                name: 'Guest',
+                avatar: '🐉',
+                theme: 'green',
+                emoji: '',
+                points: 0,
+                purchasedEmojis: [],
+                rewards: { 
+                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                },
+                dailyStreak: 0,
+                lastPlayedDate: null,
+                weeklyProgress: 0
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
+            
+            localStorage.removeItem('nandomodeCurrentPlayer');
+            
             updatePlayerUI();
+            updateLogoutButton();
+            populateUserSelect();
+            
+            document.getElementById('username-input').style.display = 'block';
+            document.getElementById('username-input').placeholder = 'Type new username...';
+            document.getElementById('user-select').value = '';
+            
+            showSuccess("Logged out successfully");
             showScreen('start');
         }
 
         function savePlayerProgress() {
+            if (gameState.player.name === 'Guest') {
+                console.log('Not saving progress for Guest user');
+                return;
+            }
+            
             try {
                 const playerData = {
                     name: gameState.player.name,
@@ -1105,6 +1376,9 @@
                     points: gameState.player.points,
                     purchasedEmojis: gameState.player.purchasedEmojis,
                     rewards: gameState.player.rewards,
+                    dailyStreak: gameState.player.dailyStreak,
+                    lastPlayedDate: gameState.player.lastPlayedDate,
+                    weeklyProgress: gameState.player.weeklyProgress,
                     wordProgress: gameState.wordProgress,
                     completedWords: gameState.completedWords,
                     streak: gameState.streak,
@@ -1128,18 +1402,23 @@
                     if (savedData) {
                         const playerData = JSON.parse(savedData);
                         
-                        // Update game state with loaded data
-                        gameState.player.name = playerData.name || savedName;
-                        gameState.player.avatar = playerData.avatar || '🐉';
-                        gameState.player.theme = playerData.theme || 'green';
-                        gameState.player.emoji = playerData.emoji || '';
-                        gameState.player.points = playerData.points || 0;
-                        gameState.player.purchasedEmojis = playerData.purchasedEmojis || [];
-                        gameState.player.rewards = playerData.rewards || { 
-                            easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                            medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                            hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        gameState.player = {
+                            name: savedName,
+                            avatar: playerData.avatar || '🐉',
+                            theme: playerData.theme || 'green',
+                            emoji: playerData.emoji || '',
+                            points: playerData.points || 0,
+                            purchasedEmojis: playerData.purchasedEmojis || [],
+                            rewards: playerData.rewards || { 
+                                easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                                medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                                hard: { medals: 0, trophies: 0, crowns: 0 } 
+                            },
+                            dailyStreak: playerData.dailyStreak || 0,
+                            lastPlayedDate: playerData.lastPlayedDate || null,
+                            weeklyProgress: playerData.weeklyProgress || 0
                         };
+                        
                         gameState.streak = playerData.streak || 0;
                         gameState.completedWords = playerData.completedWords || 0;
                         gameState.wordProgress = playerData.wordProgress || {};
@@ -1151,7 +1430,9 @@
                         document.querySelectorAll('.color-option').forEach(color => {
                             color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
                         });
+                        
                         updatePlayerUI();
+                        updateLogoutButton();
                         return;
                     }
                 }
@@ -1160,28 +1441,35 @@
                 showError("Couldn't load your progress. Starting fresh!");
             }
             
-            // Default to guest if no saved data
-            gameState.player.name = 'Guest';
-            gameState.player.avatar = '🐉';
-            gameState.player.theme = 'green';
-            gameState.player.emoji = '';
-            gameState.player.points = 0;
-            gameState.player.purchasedEmojis = [];
-            gameState.player.rewards = { 
-                easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            gameState.player = {
+                name: 'Guest',
+                avatar: '🐉',
+                theme: 'green',
+                emoji: '',
+                points: 0,
+                purchasedEmojis: [],
+                rewards: { 
+                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                },
+                dailyStreak: 0,
+                lastPlayedDate: null,
+                weeklyProgress: 0
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
+            
             updatePlayerUI();
+            updateLogoutButton();
         }
 
         function startNewGame() {
             document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
             startNewRound();
             savePlayerProgress();
+            updateStreakDisplay();
         }
 
         function startNewRound() {
@@ -1289,8 +1577,9 @@
             document.getElementById('streak').textContent = gameState.streak;
             document.getElementById('progress').textContent = gameState.completedWords;
             document.getElementById('completed').textContent = gameState.completedWords;
-            document.getElementById('percent-complete').textContent = Math.round((gameState.completedWords / 100) * 100);
+            document.getElementById('percent-complete').textContent = Math.round((gameState.completedWords / 50) * 100);
             updateProgressBar();
+            updateRewardPath();
             
             const leftColumn = document.getElementById('column-left');
             const rightColumn = document.getElementById('column-right');
@@ -1306,8 +1595,14 @@
                 card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
                 card.setAttribute('role', 'button');
                 card.setAttribute('aria-label', `Select card: ${item.value}`);
+                
                 if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
                     card.classList.add('matched');
+                }
+                
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                if (pair && gameState.wordProgress[pair.word]) {
+                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
                 }
                 
                 card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
@@ -1316,7 +1611,6 @@
                 });
                 
                 leftColumn.appendChild(card);
-                console.log(`Rendered left card: pairId=${item.pairId}, type=${item.type}, value=${item.value}, index=${index}`);
             });
             
             gameState.currentRound.rightColumn.forEach((item, index) => {
@@ -1328,8 +1622,14 @@
                 card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
                 card.setAttribute('role', 'button');
                 card.setAttribute('aria-label', `Select card: ${item.value}`);
+                
                 if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
                     card.classList.add('matched');
+                }
+                
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                if (pair && gameState.wordProgress[pair.word]) {
+                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
                 }
                 
                 card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
@@ -1338,7 +1638,6 @@
                 });
                 
                 rightColumn.appendChild(card);
-                console.log(`Rendered right card: pairId=${item.pairId}, type=${item.type}, value=${item.value}, index=${index}`);
             });
             
             if (gameState.currentRound.matchedPairs.length === 5) {
@@ -1349,7 +1648,7 @@
 
         function updateProgressBar() {
             const progressBar = document.querySelector('.progress-bar');
-            const percent = Math.min(100, (gameState.completedWords / 100) * 100);
+            const percent = Math.min(100, (gameState.completedWords / 50) * 100);
             progressBar.style.width = `${percent}%`;
         }
 
@@ -1509,29 +1808,29 @@
             const previousWords = gameState.completedWords - 1;
             const currentWords = gameState.completedWords;
             if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
-                showNotification(`Milestone: ${currentWords}/100 Words Mastered!`);
+                showNotification(`¡Logro! ${currentWords}/50 palabras dominadas`);
                 createConfetti(document.getElementById('game-screen'), 20);
             }
         }
 
         function checkModeCompletion() {
-            if (gameState.completedWords >= 100) {
+            if (gameState.completedWords >= 50) {
                 const modeRewards = gameState.player.rewards[gameState.mode];
                 modeRewards.medals++;
-                showNotification(`🎖️ ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Medal Earned!`);
+                showNotification(`🎖️ ¡Medalla de ${gameState.mode} ganada!`);
                 createConfetti(document.getElementById('game-screen'), 20);
                 
                 if (modeRewards.medals >= 10) {
                     modeRewards.medals = 0;
                     modeRewards.trophies++;
-                    showNotification(`🏆 ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Trophy Earned!`);
+                    showNotification(`🏆 ¡Trofeo de ${gameState.mode} ganado!`);
                     createConfetti(document.getElementById('game-screen'), 20);
                 }
                 
                 if (modeRewards.trophies >= 10) {
                     modeRewards.trophies = 0;
                     modeRewards.crowns++;
-                    showNotification(`👑 ${gameState.mode.charAt(0).toUpperCase() + gameState.mode.slice(1)} Crown Earned!`);
+                    showNotification(`👑 ¡Corona de ${gameState.mode} ganada!`);
                     createConfetti(document.getElementById('game-screen'), 20);
                 }
                 
@@ -1546,7 +1845,7 @@
                 gameState.player.purchasedEmojis.push(emoji.emoji);
                 gameState.player.emoji = emoji.emoji;
                 gameState.player.points -= emoji.points;
-                showNotification(`Purchased ${emoji.name} Emoji ${emoji.emoji}!`);
+                showNotification(`¡Comprado emoji ${emoji.name} ${emoji.emoji}!`);
                 updatePlayerUI();
                 savePlayerProgress();
             }
@@ -1563,7 +1862,7 @@
         function endRound() {
             if (gameState.currentRound.roundPoints === 50) {
                 gameState.player.points += 50;
-                showNotification('Perfect Round: +50 Points!');
+                showNotification('¡Ronda perfecta! +50 puntos');
             }
             
             document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
@@ -1572,6 +1871,7 @@
             document.getElementById('progress-streak').textContent = gameState.streak;
             
             updateTrophyDisplay(document.getElementById('trophy-display'));
+            updateRewardPath();
             
             savePlayerProgress();
             checkEmojiPurchase();
@@ -1581,14 +1881,60 @@
                 showScreen('roundComplete');
             }, 1000);
             
-            if (gameState.completedWords >= 100) {
+            if (gameState.completedWords >= 50) {
                 endGame();
             }
         }
 
         function showTrophyRoom() {
             const trophyList = document.getElementById('trophy-list');
-            updateTrophyDisplay(trophyList);
+            trophyList.innerHTML = '';
+            
+            const modes = ['easy', 'medium', 'hard'];
+            modes.forEach(mode => {
+                const rewards = gameState.player.rewards[mode];
+                const modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
+                
+                if (rewards.medals > 0 || rewards.trophies > 0 || rewards.crowns > 0) {
+                    const modeHeader = document.createElement('h4');
+                    modeHeader.textContent = `${modeName} Mode`;
+                    trophyList.appendChild(modeHeader);
+                    
+                    const modeContainer = document.createElement('div');
+                    modeContainer.style.display = 'flex';
+                    modeContainer.style.flexWrap = 'wrap';
+                    modeContainer.style.justifyContent = 'center';
+                    
+                    if (rewards.medals > 0) {
+                        const medalDiv = document.createElement('div');
+                        medalDiv.className = 'trophy-item';
+                        medalDiv.textContent = '🎖️';
+                        medalDiv.title = `${rewards.medals} ${modeName} Medals`;
+                        modeContainer.appendChild(medalDiv);
+                    }
+                    if (rewards.trophies > 0) {
+                        const trophyDiv = document.createElement('div');
+                        trophyDiv.className = 'trophy-item';
+                        trophyDiv.textContent = '🏆';
+                        trophyDiv.title = `${rewards.trophies} ${modeName} Trophies`;
+                        modeContainer.appendChild(trophyDiv);
+                    }
+                    if (rewards.crowns > 0) {
+                        const crownDiv = document.createElement('div');
+                        crownDiv.className = 'trophy-item';
+                        crownDiv.textContent = '👑';
+                        crownDiv.title = `${rewards.crowns} ${modeName} Crowns`;
+                        modeContainer.appendChild(crownDiv);
+                    }
+                    
+                    trophyList.appendChild(modeContainer);
+                }
+            });
+            
+            if (trophyList.innerHTML === '') {
+                trophyList.textContent = '¡No hay recompensas todavía! ¡Sigue jugando!';
+            }
+            
             showScreen('trophyRoom');
         }
 
@@ -1598,10 +1944,11 @@
             modes.forEach(mode => {
                 const rewards = gameState.player.rewards[mode];
                 const modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
+                
                 if (rewards.medals > 0) {
                     const medalDiv = document.createElement('div');
                     medalDiv.className = 'trophy-item';
-                    medalDiv.textContent = mode === 'easy' ? '🥉' : mode === 'medium' ? '🥈' : '🥇';
+                    medalDiv.textContent = '🎖️';
                     medalDiv.title = `${rewards.medals} ${modeName} Medals`;
                     container.appendChild(medalDiv);
                 }
@@ -1620,8 +1967,9 @@
                     container.appendChild(crownDiv);
                 }
             });
+            
             if (container.innerHTML === '') {
-                container.textContent = 'No rewards yet! Keep playing!';
+                container.textContent = '¡Gana recompensas dominando palabras!';
             }
         }
 
@@ -1644,7 +1992,7 @@
                         savePlayerProgress();
                         showEmojiStore();
                         updatePlayerUI();
-                        showNotification(`Purchased ${item.name} Emoji ${item.emoji}!`);
+                        showNotification(`¡Comprado emoji ${item.name} ${item.emoji}!`);
                     });
                 }
                 emojiList.appendChild(div);
