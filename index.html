@@ -10,6 +10,7 @@
     <link rel="manifest" href="manifest.json">
     <!-- Existing styles and fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap">
     <style>
         * {
             box-sizing: border-box;
@@ -18,7 +19,7 @@
         }
         
         body {
-            font-family: 'Press Start 2P', cursive, 'Courier New', monospace;
+            font-family: 'Comic Neue', cursive, 'Press Start 2P', cursive;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: #fff;
             line-height: 1.6;
@@ -86,10 +87,10 @@
             background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 15px 30px;
-            font-size: 1.3rem;
-            font-family: inherit;
+            border-radius: 15px;
+            padding: 18px 30px;
+            font-size: 1.5rem;
+            font-family: 'Comic Neue', cursive;
             cursor: pointer;
             margin: 15px;
             transition: all 0.2s;
@@ -98,10 +99,14 @@
             position: relative;
             overflow: hidden;
             border: 3px solid #ff4757;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         button:hover {
-            transform: translateY(-4px);
+            transform: translateY(-4px) scale(1.05);
             background: linear-gradient(145deg, #ff8e8e, #ff6b6b);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
         }
@@ -119,11 +124,11 @@
         }
         
         .mode-btn {
-            min-width: 200px;
+            min-width: 220px;
             margin: 12px;
-            padding: 18px;
-            font-size: 1.2rem;
-            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.4rem;
+            border-radius: 20px;
         }
         
         .mode-btn.easy { 
@@ -226,8 +231,8 @@
         }
         
         .color-option {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             margin: 0 12px;
             cursor: pointer;
@@ -342,7 +347,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 120px;
+            height: 140px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
             border: 3px solid rgba(100, 100, 200, 0.3);
         }
@@ -379,11 +384,11 @@
         }
         
         .emoji-card {
-            font-size: 3.5rem;
+            font-size: 4rem;
         }
         
         .word-card {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             word-wrap: break-word;
             overflow-wrap: break-word;
             padding: 15px;
@@ -452,10 +457,16 @@
             display: inline-flex;
             align-items: center;
             margin: 10px;
-            padding: 10px;
+            padding: 15px;
             background: rgba(30, 40, 70, 0.8);
             border-radius: 10px;
             cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .emoji-item:hover {
+            transform: scale(1.1);
         }
         
         .emoji-item.purchased {
@@ -548,7 +559,7 @@
             text-align: center;
             opacity: 0.5;
             transition: all 0.3s;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
         
         .reward-step.earned {
@@ -563,7 +574,7 @@
         }
         
         .reward-label {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             margin-top: 5px;
         }
         
@@ -579,18 +590,83 @@
             color: white;
             border: none;
             border-radius: 10px;
-            padding: 8px 15px;
-            font-size: 0.9rem;
+            padding: 10px 15px;
+            font-size: 1rem;
             font-family: inherit;
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
             border: 2px solid #ff4757;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .logout-btn:hover {
             background: rgba(255, 100, 100, 0.9);
             transform: translateY(-2px);
+        }
+        
+        /* New kid-friendly elements */
+        .character {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 5rem;
+            z-index: 100;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sticker-collection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .sticker {
+            font-size: 2.5rem;
+            margin: 10px;
+            animation: wiggle 3s infinite;
+        }
+        
+        .sticker.unlocked {
+            filter: drop-shadow(0 0 5px gold);
+        }
+        
+        .sticker.locked {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
         }
         
         @keyframes pulse {
@@ -675,6 +751,20 @@
                 margin: 10px auto;
                 width: 90%;
             }
+            
+            .character {
+                font-size: 3rem;
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .music-control {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 10px;
+                left: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -717,6 +807,10 @@
                 margin: 5px;
                 font-size: 1.5rem;
             }
+            
+            .character {
+                font-size: 2.5rem;
+            }
         }
         
         @media (max-width: 360px) {
@@ -744,7 +838,11 @@
         <div id="error-notification" class="error-notification" style="display: none;"></div>
         <div id="success-notification" class="success-notification" style="display: none;"></div>
         
-        <button id="logout-btn" class="logout-btn" style="display: none;">Cerrar Sesión</button>
+        <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
+        
+        <!-- New kid-friendly elements -->
+        <button id="music-control" class="music-control">🎵</button>
+        <div id="character" class="character">🐉</div>
         
         <div id="start-screen" class="screen active">
             <h1>NANDOmode</h1>
@@ -756,7 +854,7 @@
                     <option value="">Nuevo Usuario</option>
                 </select>
                 <input type="text" id="username-input" placeholder="Escribe nuevo nombre..." maxlength="20" aria-label="Introducir nuevo nombre">
-                <button id="save-username" aria-label="Guardar nombre y continuar">Guardar & Continuar</button>
+                <button id="save-username" aria-label="Guardar nombre y continuar">💾 Guardar & Continuar</button>
             </div>
             
             <div class="avatar-container">
@@ -779,16 +877,25 @@
             </div>
             
             <div class="btn-group">
-                <button id="quick-play-btn" aria-label="Juego rápido como invitado">Juego Rápido</button>
-                <button id="trophy-room-btn" aria-label="Ver sala de trofeos">Sala de Trofeos</button>
-                <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">Tienda de Emojis</button>
+                <button id="quick-play-btn" aria-label="Juego rápido como invitado">🎮 Juego Rápido</button>
+                <button id="trophy-room-btn" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
+                <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
             </div>
             
             <h3>Selecciona Modo de Juego:</h3>
             <div class="btn-group">
-                <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">Modo Fácil</button>
-                <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">Modo Medio</button>
-                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">Modo Difícil</button>
+                <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">😊 Modo Fácil</button>
+                <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">😃 Modo Medio</button>
+                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">🤓 Modo Difícil</button>
+            </div>
+            
+            <!-- New sticker collection preview -->
+            <div class="sticker-collection">
+                <div class="sticker unlocked">⭐</div>
+                <div class="sticker unlocked">🎯</div>
+                <div class="sticker locked">🏅</div>
+                <div class="sticker locked">🏆</div>
+                <div class="sticker locked">👑</div>
             </div>
         </div>
         
@@ -821,8 +928,8 @@
             </div>
             
             <div class="btn-group">
-                <button id="refresh-btn" aria-label="Refrescar ronda">Refrescar</button>
-                <button id="quit-btn" aria-label="Salir al menú principal">Salir</button>
+                <button id="refresh-btn" aria-label="Refrescar ronda">🔄 Refrescar</button>
+                <button id="quit-btn" aria-label="Salir al menú principal">🏠 Salir</button>
             </div>
         </div>
         
@@ -853,10 +960,10 @@
                 </div>
             </div>
             <div class="btn-group">
-                <button id="next-round-btn" aria-label="Continuar a siguiente ronda">Siguiente Ronda</button>
-                <button id="quit-round-btn" aria-label="Salir al menú principal">Salir</button>
-                <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">Sala de Trofeos</button>
-                <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">Tienda de Emojis</button>
+                <button id="next-round-btn" aria-label="Continuar a siguiente ronda">⏭️ Siguiente Ronda</button>
+                <button id="quit-round-btn" aria-label="Salir al menú principal">🏠 Salir</button>
+                <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
+                <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
             </div>
         </div>
         
@@ -865,9 +972,13 @@
             <div class="trophy-container">
                 <h3>Tus Logros</h3>
                 <div id="trophy-list"></div>
+                <h3>Tus Pegatinas</h3>
+                <div class="sticker-collection" id="sticker-collection">
+                    <!-- Stickers will be added here dynamically -->
+                </div>
             </div>
             <div class="btn-group">
-                <button id="back-to-menu-btn" aria-label="Volver al menú principal">Menú Principal</button>
+                <button id="back-to-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
         
@@ -878,7 +989,7 @@
                 <div id="emoji-list"></div>
             </div>
             <div class="btn-group">
-                <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">Menú Principal</button>
+                <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
         
@@ -892,10 +1003,12 @@
             <div class="trophy-container">
                 <h3>Tus Recompensas</h3>
                 <div id="final-trophy-display"></div>
+                <h3>¡Nueva Pegatina Desbloqueada!</h3>
+                <div class="sticker unlocked" style="font-size: 4rem;">🎉</div>
             </div>
             <div class="btn-group">
-                <button id="play-again-btn" aria-label="Jugar de nuevo">Jugar Otra Vez</button>
-                <button id="main-menu-btn" aria-label="Volver al menú principal">Menú Principal</button>
+                <button id="play-again-btn" aria-label="Jugar de nuevo">🔄 Jugar Otra Vez</button>
+                <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
     </div>
@@ -915,11 +1028,14 @@
                     });
             });
         }
+        
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
         let lastTTSTime = 0;
         const ttsDebounce = 1000;
-        const milestones = [10, 20, 30, 40, 50];
+        const milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+        let backgroundMusic = null;
+        let isMusicPlaying = false;
         
         const emojiStore = [
             // Basic Spanish cultural items (affordable)
@@ -970,6 +1086,19 @@
             { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
         ];
 
+        const stickers = [
+            { emoji: '⭐', unlocked: true, points: 0 },
+            { emoji: '🎯', unlocked: true, points: 0 },
+            { emoji: '🏅', unlocked: false, points: 100 },
+            { emoji: '🏆', unlocked: false, points: 500 },
+            { emoji: '👑', unlocked: false, points: 1000 },
+            { emoji: '🎖️', unlocked: false, points: 1500 },
+            { emoji: '🎉', unlocked: false, points: 2000 },
+            { emoji: '🏅', unlocked: false, points: 2500 },
+            { emoji: '🏆', unlocked: false, points: 3000 },
+            { emoji: '👑', unlocked: false, points: 5000 }
+        ];
+
         const defaultVocab = [
             { word: 'gato', emoji: '😺', type: 'noun' },
             { word: 'perro', emoji: '🐶', type: 'noun' },
@@ -990,7 +1119,8 @@
                 rewards: { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } },
                 dailyStreak: 0,
                 lastPlayedDate: null,
-                weeklyProgress: 0
+                weeklyProgress: 0,
+                unlockedStickers: ['⭐', '🎯']
             },
             mode: '',
             streak: 0,
@@ -1057,6 +1187,12 @@
                 showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
             }
             
+            // Initialize background music
+            initBackgroundMusic();
+            
+            // Setup character interaction
+            setupCharacter();
+            
             populateUserSelect();
             loadPlayerProgress();
             setupEventListeners();
@@ -1065,6 +1201,72 @@
             updateStreakDisplay();
             updateRewardPath();
             updateLogoutButton();
+            updateStickerCollection();
+        }
+
+        function initBackgroundMusic() {
+            try {
+                // Create audio context
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioContext = new AudioContext();
+                
+                // Create background music (simple loop)
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 440;
+                gainNode.gain.value = 0.1;
+                
+                backgroundMusic = {
+                    oscillator: oscillator,
+                    gainNode: gainNode,
+                    context: audioContext
+                };
+                
+                // Setup music control button
+                document.getElementById('music-control').addEventListener('click', toggleMusic);
+                
+            } catch (e) {
+                console.warn("Could not initialize audio:", e);
+                document.getElementById('music-control').style.display = 'none';
+            }
+        }
+
+        function toggleMusic() {
+            if (!backgroundMusic) return;
+            
+            if (isMusicPlaying) {
+                backgroundMusic.oscillator.stop();
+                document.getElementById('music-control').textContent = '🔇';
+                isMusicPlaying = false;
+            } else {
+                backgroundMusic.oscillator = backgroundMusic.context.createOscillator();
+                backgroundMusic.oscillator.connect(backgroundMusic.gainNode);
+                backgroundMusic.oscillator.type = 'sine';
+                backgroundMusic.oscillator.frequency.value = 440;
+                backgroundMusic.oscillator.start();
+                document.getElementById('music-control').textContent = '🎵';
+                isMusicPlaying = true;
+            }
+        }
+
+        function setupCharacter() {
+            const character = document.getElementById('character');
+            character.addEventListener('click', () => {
+                const messages = [
+                    "¡Vamos a aprender!",
+                    "¡Tú puedes!",
+                    "¡Sigue así!",
+                    "¡Eres increíble!",
+                    "¡Qué bien lo haces!"
+                ];
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                showNotification(randomMessage);
+                playSound('character');
+            });
         }
 
         function populateUserSelect() {
@@ -1142,6 +1344,7 @@
             avatar.classList.add('selected');
             gameState.player.avatar = avatar.dataset.avatar;
             updatePlayerUI();
+            document.getElementById('character').textContent = avatar.dataset.avatar;
         }
 
         function selectColor(color) {
@@ -1215,6 +1418,23 @@
             }
         }
 
+        function updateStickerCollection() {
+            const collection = document.getElementById('sticker-collection');
+            if (!collection) return;
+            
+            collection.innerHTML = '';
+            
+            stickers.forEach(sticker => {
+                const div = document.createElement('div');
+                div.className = `sticker ${gameState.player.unlockedStickers.includes(sticker.emoji) ? 'unlocked' : 'locked'}`;
+                div.textContent = sticker.emoji;
+                div.title = gameState.player.unlockedStickers.includes(sticker.emoji) ? 
+                    `Pegatina desbloqueada` : 
+                    `Desbloquea con ${sticker.points} puntos`;
+                collection.appendChild(div);
+            });
+        }
+
         function loadSelectedUser() {
             const userSelect = document.getElementById('user-select');
             const username = userSelect.value;
@@ -1245,7 +1465,8 @@
                             },
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
-                            weeklyProgress: playerData.weeklyProgress || 0
+                            weeklyProgress: playerData.weeklyProgress || 0,
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1263,6 +1484,8 @@
                         
                         updatePlayerUI();
                         updateLogoutButton();
+                        updateStickerCollection();
+                        document.getElementById('character').textContent = gameState.player.avatar;
                         showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                         return;
                     }
@@ -1275,25 +1498,30 @@
             // Default to showing input field for new users
             usernameInput.style.display = 'block';
             usernameInput.placeholder = 'Escribe nuevo nombre...';
-            gameState.player.name = 'Invitado';
-            gameState.player.avatar = '🐉';
-            gameState.player.theme = 'green';
-            gameState.player.emoji = '';
-            gameState.player.points = 0;
-            gameState.player.purchasedEmojis = [];
-            gameState.player.rewards = { 
-                easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                hard: { medals: 0, trophies: 0, crowns: 0 } 
+            gameState.player = {
+                name: 'Invitado',
+                avatar: '🐉',
+                theme: 'green',
+                emoji: '',
+                points: 0,
+                purchasedEmojis: [],
+                rewards: { 
+                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
+                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
+                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                },
+                dailyStreak: 0,
+                lastPlayedDate: null,
+                weeklyProgress: 0,
+                unlockedStickers: ['⭐', '🎯']
             };
-            gameState.player.dailyStreak = 0;
-            gameState.player.lastPlayedDate = null;
-            gameState.player.weeklyProgress = 0;
             gameState.streak = 0;
             gameState.completedWords = 0;
             gameState.wordProgress = {};
             updatePlayerUI();
             updateLogoutButton();
+            updateStickerCollection();
+            document.getElementById('character').textContent = '🐉';
         }
 
         function saveUsername() {
@@ -1327,7 +1555,8 @@
                     },
                     dailyStreak: 0,
                     lastPlayedDate: null,
-                    weeklyProgress: 0
+                    weeklyProgress: 0,
+                    unlockedStickers: ['⭐', '🎯']
                 };
                 
                 gameState.streak = 0;
@@ -1340,13 +1569,14 @@
             
             updatePlayerUI();
             updateLogoutButton();
+            updateStickerCollection();
             
             usernameInput.value = '';
             usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
             
             const btn = document.getElementById('save-username');
             btn.textContent = isNewUser ? '✓ ¡Nuevo Usuario Creado!' : '✓ ¡Usuario Cargado!';
-            setTimeout(() => btn.textContent = 'Guardar & Continuar', 1500);
+            setTimeout(() => btn.textContent = '💾 Guardar & Continuar', 1500);
             
             populateUserSelect();
             document.getElementById('user-select').value = username;
@@ -1371,7 +1601,8 @@
                     },
                     dailyStreak: 0,
                     lastPlayedDate: null,
-                    weeklyProgress: 0
+                    weeklyProgress: 0,
+                    unlockedStickers: ['⭐', '🎯']
                 };
                 gameState.streak = 0;
                 gameState.completedWords = 0;
@@ -1379,6 +1610,7 @@
                 
                 updatePlayerUI();
                 updateLogoutButton();
+                updateStickerCollection();
                 showSuccess("Jugando como Invitado. El progreso no se guardará.");
             }
             showScreen('start');
@@ -1399,7 +1631,8 @@
                 },
                 dailyStreak: 0,
                 lastPlayedDate: null,
-                weeklyProgress: 0
+                weeklyProgress: 0,
+                unlockedStickers: ['⭐', '🎯']
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1409,11 +1642,13 @@
             
             updatePlayerUI();
             updateLogoutButton();
+            updateStickerCollection();
             populateUserSelect();
             
             document.getElementById('username-input').style.display = 'block';
             document.getElementById('username-input').placeholder = 'Escribe nuevo nombre...';
             document.getElementById('user-select').value = '';
+            document.getElementById('character').textContent = '🐉';
             
             showSuccess("Sesión cerrada correctamente");
             showScreen('start');
@@ -1440,6 +1675,7 @@
                     wordProgress: gameState.wordProgress,
                     completedWords: gameState.completedWords,
                     streak: gameState.streak,
+                    unlockedStickers: gameState.player.unlockedStickers,
                     lastActive: new Date().toISOString()
                 };
                 
@@ -1474,7 +1710,8 @@
                             },
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
-                            weeklyProgress: playerData.weeklyProgress || 0
+                            weeklyProgress: playerData.weeklyProgress || 0,
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1491,6 +1728,8 @@
                         
                         updatePlayerUI();
                         updateLogoutButton();
+                        updateStickerCollection();
+                        document.getElementById('character').textContent = gameState.player.avatar;
                         return;
                     }
                 }
@@ -1513,7 +1752,8 @@
                 },
                 dailyStreak: 0,
                 lastPlayedDate: null,
-                weeklyProgress: 0
+                weeklyProgress: 0,
+                unlockedStickers: ['⭐', '🎯']
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1521,6 +1761,8 @@
             
             updatePlayerUI();
             updateLogoutButton();
+            updateStickerCollection();
+            document.getElementById('character').textContent = '🐉';
         }
 
         function startNewGame() {
@@ -1803,15 +2045,17 @@
                         gameState.completedWords++;
                         checkMilestone();
                         checkModeCompletion();
+                        checkStickerUnlock();
                     }
                 }
                 
                 gameState.currentRound.matchedPairs.push(leftId);
                 console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
                 
-                if (gameState.streak % 10 === 0) {
-                    gameState.player.points += 50;
-                    showNotification('¡Bonus de Racha: +50 Puntos!');
+                if (gameState.streak % 5 === 0) {
+                    const bonus = gameState.streak * 2;
+                    gameState.player.points += bonus;
+                    showNotification(`¡Bonus de Racha: +${bonus} Puntos!`);
                 }
                 
                 checkEmojiPurchase();
@@ -1854,6 +2098,20 @@
             savePlayerProgress();
         }
 
+        function checkStickerUnlock() {
+            const stickerToUnlock = stickers.find(sticker => 
+                !gameState.player.unlockedStickers.includes(sticker.emoji) && 
+                gameState.player.points >= sticker.points
+            );
+            
+            if (stickerToUnlock) {
+                gameState.player.unlockedStickers.push(stickerToUnlock.emoji);
+                showNotification(`¡Nueva pegatina desbloqueada: ${stickerToUnlock.emoji}!`);
+                updateStickerCollection();
+                savePlayerProgress();
+            }
+        }
+
         function resetSelections() {
             gameState.currentRound.selectedLeft = null;
             gameState.currentRound.selectedRight = null;
@@ -1868,6 +2126,10 @@
             if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
                 showNotification(`¡Logro! ${currentWords}/50 palabras dominadas`);
                 createConfetti(document.getElementById('game-screen'), 20);
+                document.getElementById('character').style.animation = 'bounce 0.5s 3';
+                setTimeout(() => {
+                    document.getElementById('character').style.animation = 'bounce 2s infinite';
+                }, 1500);
             }
         }
 
@@ -1878,14 +2140,14 @@
                 showNotification(`🎖️ ¡Medalla de ${gameState.mode} ganada!`);
                 createConfetti(document.getElementById('game-screen'), 20);
                 
-                if (modeRewards.medals >= 10) {
+                if (modeRewards.medals >= 5) {
                     modeRewards.medals = 0;
                     modeRewards.trophies++;
                     showNotification(`🏆 ¡Trofeo de ${gameState.mode} ganado!`);
                     createConfetti(document.getElementById('game-screen'), 20);
                 }
                 
-                if (modeRewards.trophies >= 10) {
+                if (modeRewards.trophies >= 5) {
                     modeRewards.trophies = 0;
                     modeRewards.crowns++;
                     showNotification(`👑 ¡Corona de ${gameState.mode} ganada!`);
@@ -1993,6 +2255,7 @@
                 trophyList.textContent = '¡No hay recompensas todavía! ¡Sigue jugando!';
             }
             
+            updateStickerCollection();
             showScreen('trophyRoom');
         }
 
@@ -2079,6 +2342,14 @@
             
             document.getElementById('final-score').textContent = gameState.player.points;
             updateTrophyDisplay(document.getElementById('final-trophy-display'));
+            
+            // Unlock special sticker for completing the game
+            if (!gameState.player.unlockedStickers.includes('🎉')) {
+                gameState.player.unlockedStickers.push('🎉');
+                showNotification('¡Pegatina especial desbloqueada: 🎉!');
+                savePlayerProgress();
+            }
+            
             showScreen('gameOver');
         }
 
@@ -2131,7 +2402,7 @@
             gainNode.connect(context.destination);
             
             if (type === 'correct') {
-                oscillator.type = 'sine';
+                oscillator.type = 'triangle';
                 oscillator.frequency.setValueAtTime(523.25, context.currentTime);
                 gainNode.gain.setValueAtTime(0.3, context.currentTime);
                 oscillator.frequency.exponentialRampToValueAtTime(1046.50, context.currentTime + 0.2);
@@ -2141,6 +2412,12 @@
                 oscillator.frequency.setValueAtTime(220, context.currentTime);
                 gainNode.gain.setValueAtTime(0.3, context.currentTime);
                 oscillator.frequency.exponentialRampToValueAtTime(110, context.currentTime + 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
+            } else if (type === 'character') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, context.currentTime);
+                gainNode.gain.setValueAtTime(0.2, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1760, context.currentTime + 0.1);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
             }
             
