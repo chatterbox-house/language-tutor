@@ -220,6 +220,58 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+@keyframes pinataHit {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(15deg); }
+    50% { transform: translateX(-50%) rotate(-15deg); }
+    75% { transform: translateX(-50%) rotate(10deg); }
+    100% { transform: translateX(-50%) rotate(0deg); }
+}
+
+@keyframes bullRun {
+    0% { left: -100px; }
+    100% { left: calc(100% + 100px); }
+}
+
+@keyframes flamencoDance {
+    0% { transform: translateX(-50%) rotate(-5deg); }
+    100% { transform: translateX(-50%) rotate(5deg); }
+}
+
+@keyframes castanetFall {
+    0% { top: -50px; opacity: 1; }
+    100% { top: 300px; opacity: 0; }
+}
+
+@keyframes soccerKick {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(100px, -100px); }
+}
+
+@keyframes tapasFall {
+    0% { top: -50px; opacity: 1; }
+    100% { top: 300px; opacity: 0; }
+}
+
+@keyframes fiestaFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes churroFloat {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+@keyframes maracaShake {
+    0% { transform: rotate(-15deg); }
+    100% { transform: rotate(15deg); }
+}
+
+@keyframes windmillSpin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
         
         .color-picker {
             display: flex;
@@ -1044,6 +1096,25 @@
             .pinata {
                 font-size: 6rem;
             }
+
+@media (max-width: 768px) {
+    /* Make game elements larger */
+    .pinata, .flamenco-dancer, .bull, .matador {
+        font-size: 4rem !important;
+    }
+    
+    /* Increase tap targets */
+    .card, .emoji-item, .trophy-item {
+        min-width: 80px;
+        min-height: 80px;
+    }
+    
+    /* Tutorial adjustments */
+    .tutorial-content {
+        max-width: 90%;
+        padding: 15px;
+    }
+}
         }
         
         @media (max-width: 480px) {
@@ -1118,6 +1189,43 @@
         .theme-red { background: radial-gradient(circle at center, #3a1a1a, #2a0d0d); }
         .theme-purple { background: radial-gradient(circle at center, #3a1a3a, #2a0d2a); }
         .theme-orange { background: radial-gradient(circle at center, #3a2a1a, #2a1a0d); }
+/* Tutorial Popup Styles */
+.tutorial-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.tutorial-content {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    padding: 25px;
+    border-radius: 15px;
+    border: 3px solid #ff6b6b;
+    max-width: 80%;
+    text-align: center;
+}
+
+.tutorial-content h3 {
+    color: #ffe66d;
+    margin-bottom: 15px;
+}
+
+.tutorial-content button {
+    background: linear-gradient(145deg, #3a7, #4bc);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -1333,6 +1441,7 @@ try {
 } catch (e) {
     console.warn("Web Audio API not supported:", e);
 }
+
 function playSound(frequency, type, duration, vibrato) {
     if (!audioContext) return;
     
@@ -1552,58 +1661,68 @@ function playErrorSound() {
 }
         
         // Bonus games
-        const BONUS_GAMES = [
-            { 
-                name: "Piñata Party", 
-                instructions: "¡Golpea la piñata para ganar dulces y puntos!", 
-                setup: setupPinataGame 
-            },
-            { 
-                name: "Corrida de Toros", 
-                instructions: "¡Esquiva al toro para ganar puntos!", 
-                setup: setupBullRunGame 
-            },
-            { 
-                name: "Flamenco Fiesta", 
-                instructions: "¡Toca al bailarín para atrapar las castañuelas!", 
-                setup: setupFlamencoGame 
-            },
-            { 
-                name: "Fútbol Español", 
-                instructions: "¡Patea el balón para marcar goles!", 
-                setup: setupSoccerGame 
-            },
-            { 
-                name: "Tapas Time", 
-                instructions: "¡Atrapa las tapas que caen para ganar puntos!", 
-                setup: setupTapasGame 
-            },
-            { 
-                name: "Fiesta Española", 
-                instructions: "¡Toca los objetos de la fiesta para ganar puntos!", 
-                setup: setupFiestaGame 
-            },
-            { 
-                name: "Gaudi Mosaico", 
-                instructions: "¡Toca los mosaicos de colores para ganar puntos!", 
-                setup: setupGaudiGame 
-            },
-            { 
-                name: "Churros Challenge", 
-                instructions: "¡Atrapa los churros que caen para ganar puntos!", 
-                setup: setupChurroGame 
-            },
-            { 
-                name: "Maracas Madness", 
-                instructions: "¡Agita las maracas para ganar puntos!", 
-                setup: setupMaracaGame 
-            },
-            { 
-                name: "Don Quixote", 
-                instructions: "¡Toca a Don Quijote para detener los molinos!", 
-                setup: setupDonQuixoteGame 
-            }
-        ];
+const BONUS_GAMES = [
+    { 
+        name: "Piñata Party", 
+        instructions: "¡Toca la piñata para liberar dulces!", 
+        setup: setupPinataGame 
+    },
+    { 
+        name: "Fútbol Penal", 
+        instructions: "¡Desliza para patear el balón a la portería!", 
+        setup: setupSoccerGame 
+    },
+    { 
+        name: "Flamenco Rápido", 
+        instructions: "¡Toca las castañuelas al ritmo!", 
+        setup: setupFlamencoGame 
+    },
+    { 
+        name: "Carrera de Toros", 
+        instructions: "¡Toca para saltar y esquivar los toros!", 
+        setup: setupBullRunGame 
+    },
+    { 
+        name: "Recoge Tapas", 
+        instructions: "¡Mueve el plato para atrapar las tapas!", 
+        setup: setupTapasGame 
+    },
+    { 
+        name: "Fiesta de Globos", 
+        instructions: "¡Revienta los globos antes de que escapen!", 
+        setup: setupBalloonGame 
+    },
+    { 
+        name: "Mosaico Gaudi", 
+        instructions: "¡Toca los mosaicos para completar el diseño!", 
+        setup: setupMosaicGame 
+    },
+    { 
+        name: "Churros Voladores", 
+        instructions: "¡Atrapa los churros en tu boca!", 
+        setup: setupChurroGame 
+    },
+    { 
+        name: "Maracas Locas", 
+        instructions: "¡Agita las maracas al ritmo!", 
+        setup: setupMaracaGame 
+    },
+{ 
+    name: "Molinos de Viento", 
+    instructions: "¡Toca para que Don Quijote ataque los molinos!", 
+    setup: setupWindmillGame 
+},
+{ 
+    name: "Tapas Catch", 
+    instructions: "Move the plate to catch falling tapas!", 
+    setup: setupTapasGame 
+},
+    { 
+        name: "Spanish Flag", 
+        instructions: "Tap only the yellow tiles!", 
+        setup: setupFlagGame 
+    }
+];
 
         // Default vocabulary - will be replaced if vocab.js loads
         const defaultVocab = [
@@ -1678,6 +1797,33 @@ function playErrorSound() {
                 notification.style.display = 'none';
             }, 3000);
         }
+
+function showTutorial(gameName) {
+    const tutorials = {
+        'pinata': 'Click the piñata to break it open and collect candy!',
+        'soccer': 'Drag the ball toward the goal and release to kick!',
+        'flamenco': 'Tap the falling castanets to the rhythm!',
+        'bullrun': 'Click to jump and avoid the bulls!',
+        'tapas': 'Move the plate left/right to catch falling tapas!'
+    };
+    
+    if (!tutorials[gameName]) return;
+    
+    const tutorial = document.createElement('div');
+    tutorial.className = 'tutorial-popup';
+    tutorial.innerHTML = `
+        <div class="tutorial-content">
+            <h3>How to Play</h3>
+            <p>${tutorials[gameName]}</p>
+            <button class="tutorial-ok">Got it!</button>
+        </div>
+    `;
+    document.getElementById('game-container').appendChild(tutorial);
+    
+    tutorial.querySelector('.tutorial-ok').addEventListener('click', () => {
+        tutorial.remove();
+    });
+}
 
         function showNotification(message) {
             const notification = document.createElement('div');
@@ -2401,482 +2547,864 @@ function loadVocab() {
             showScreen('bonus');
         }
 
-        function setupPinataGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
+function setupPinataGame() {
+ showTutorial('pinata');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create piñata
+    const pinata = document.createElement('div');
+    pinata.className = 'pinata';
+    pinata.textContent = '🪅';
+    pinata.style.position = 'absolute';
+    pinata.style.left = '50%';
+    pinata.style.top = '100px';
+    pinata.style.transform = 'translateX(-50%)';
+    pinata.style.cursor = 'pointer';
+    
+    let pinataHealth = 10;
+    let swingDirection = 1;
+    
+    // Swing animation
+    const swingPinata = () => {
+        if (!gameActive) return;
+        const rotation = Math.sin(Date.now() / 300) * 15;
+        pinata.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        requestAnimationFrame(swingPinata);
+    };
+    swingPinata();
+    
+    pinata.addEventListener('click', () => {
+        if (!gameActive) return;
+        
+        pinataHealth--;
+        swingDirection *= -1;
+        pinata.style.animation = 'none';
+        void pinata.offsetWidth;
+        pinata.style.animation = 'pinataHit 0.3s';
+        
+        // Release candies
+        if (pinataHealth <= 0) {
+            score += 50;
+            document.getElementById('bonus-score').textContent = score;
+            pinata.textContent = '🎉';
+            gameActive = false;
+            setTimeout(() => endBonusGame(score), 1000);
+        } else {
+            score += 5;
+            document.getElementById('bonus-score').textContent = score;
             
-            // Create piñata
-            const pinata = document.createElement('div');
-            pinata.className = 'pinata';
-            pinata.textContent = '🪅';
-            pinata.addEventListener('click', () => {
+            // Create falling candies
+            for (let i = 0; i < 3; i++) {
+                const candy = document.createElement('div');
+                candy.className = 'candy';
+                candy.textContent = '🍬';
+                candy.style.left = `${Math.random() * 80 + 10}%`;
+                candy.style.top = '100px';
+                candy.style.position = 'absolute';
+                gameArea.appendChild(candy);
+                
+                const fallTime = Math.random() * 2 + 1;
+                candy.style.transition = `top ${fallTime}s linear`;
+                setTimeout(() => {
+                    candy.style.top = '300px';
+                }, 10);
+                
+                setTimeout(() => {
+                    candy.remove();
+                }, fallTime * 1000);
+            }
+        }
+    });
+    
+    gameArea.appendChild(pinata);
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupSoccerGame() {
+ showTutorial('soccer');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create goal
+    const goal = document.createElement('div');
+    goal.className = 'soccer-goal';
+    goal.textContent = '🥅';
+    goal.style.position = 'absolute';
+    goal.style.right = '20px';
+    goal.style.bottom = '20px';
+    gameArea.appendChild(goal);
+    
+    // Create ball
+    const ball = document.createElement('div');
+    ball.className = 'soccer-ball';
+    ball.textContent = '⚽';
+    ball.style.position = 'absolute';
+    ball.style.left = '20%';
+    ball.style.bottom = '20px';
+    gameArea.appendChild(ball);
+    
+    let isDragging = false;
+    let startX, startY;
+    
+    // Touch/mouse events
+    ball.addEventListener('mousedown', startDrag);
+    ball.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startDrag({
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY
+        });
+    });
+    
+    function startDrag(e) {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        document.addEventListener('mousemove', dragBall);
+        document.addEventListener('touchmove', touchDrag);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+    }
+    
+    function dragBall(e) {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        // Only allow dragging up and to the right (toward goal)
+        if (dy < 0 && dx > 0) {
+            ball.style.transform = `translate(${dx}px, ${dy}px)`;
+        }
+    }
+    
+    function touchDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const dx = e.touches[0].clientX - startX;
+        const dy = e.touches[0].clientY - startY;
+        
+        if (dy < 0 && dx > 0) {
+            ball.style.transform = `translate(${dx}px, ${dy}px)`;
+        }
+    }
+    
+    function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        // Calculate power
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        const power = Math.sqrt(dx * dx + dy * dy) / 5;
+        
+        // Kick animation
+        ball.style.transition = 'all 0.5s ease-out';
+        ball.style.transform = `translate(${dx * 2}px, ${dy * 2 - power * 10}px)`;
+        
+        // Check if goal
+        setTimeout(() => {
+            const ballRect = ball.getBoundingClientRect();
+            const goalRect = goal.getBoundingClientRect();
+            
+            if (ballRect.right > goalRect.left && 
+                ballRect.bottom > goalRect.top &&
+                ballRect.left < goalRect.right) {
+                score += 10;
+                showNotification('¡Gol! +10 puntos');
+            } else {
+                score += 2;
+            }
+            
+            document.getElementById('bonus-score').textContent = score;
+            
+            // Reset ball
+            ball.style.transition = 'none';
+            ball.style.transform = 'none';
+            void ball.offsetWidth;
+            ball.style.transition = 'all 0.5s ease-out';
+        }, 500);
+        
+        document.removeEventListener('mousemove', dragBall);
+        document.removeEventListener('touchmove', touchDrag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchend', endDrag);
+    }
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupFlamencoGame() {
+ showTutorial('flamenco');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create dancer
+    const dancer = document.createElement('div');
+    dancer.className = 'flamenco-dancer';
+    dancer.textContent = '💃';
+    dancer.style.position = 'absolute';
+    dancer.style.left = '50%';
+    dancer.style.bottom = '20px';
+    dancer.style.transform = 'translateX(-50%)';
+    gameArea.appendChild(dancer);
+    
+    // Create castanet targets
+    const createCastanet = () => {
+        if (!gameActive) return;
+        
+        const castanet = document.createElement('div');
+        castanet.className = 'castanet';
+        castanet.textContent = '🎵';
+        castanet.style.position = 'absolute';
+        castanet.style.left = `${Math.random() * 80 + 10}%`;
+        castanet.style.top = '0';
+        gameArea.appendChild(castanet);
+        
+        // Fall animation
+        const fallTime = Math.random() * 2 + 1;
+        castanet.style.transition = `top ${fallTime}s linear`;
+        setTimeout(() => {
+            castanet.style.top = '300px';
+        }, 10);
+        
+        // Click handler
+        castanet.addEventListener('click', () => {
+            if (!gameActive) return;
+            score += 5;
+            document.getElementById('bonus-score').textContent = score;
+            castanet.style.transition = 'none';
+            castanet.style.transform = 'scale(1.5)';
+            castanet.style.opacity = '0';
+            setTimeout(() => castanet.remove(), 300);
+        });
+        
+        setTimeout(() => {
+            if (castanet.parentNode) castanet.remove();
+        }, fallTime * 1000);
+        
+        if (gameActive) {
+            setTimeout(createCastanet, 500);
+        }
+    };
+    
+    createCastanet();
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupBullRunGame() {
+ showTutorial('bullrun');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create player
+    const player = document.createElement('div');
+    player.className = 'matador';
+    player.textContent = '🕴️';
+    player.style.position = 'absolute';
+    player.style.right = '50px';
+    player.style.bottom = '20px';
+    player.style.transition = 'transform 0.2s';
+    gameArea.appendChild(player);
+    
+    // Jump on click/tap
+    gameArea.addEventListener('click', () => {
+        if (!gameActive) return;
+        player.style.transform = 'translateY(-40px)';
+        setTimeout(() => {
+            player.style.transform = 'translateY(0)';
+        }, 300);
+    });
+    
+    // Create bulls
+    const createBull = () => {
+        if (!gameActive) return;
+        
+        const bull = document.createElement('div');
+        bull.className = 'bull';
+        bull.textContent = '🐂';
+        bull.style.position = 'absolute';
+        bull.style.left = '-100px';
+        bull.style.bottom = '20px';
+        gameArea.appendChild(bull);
+        
+        // Run animation
+        const runTime = Math.random() * 2 + 1;
+        bull.style.transition = `left ${runTime}s linear`;
+        setTimeout(() => {
+            bull.style.left = '100%';
+        }, 10);
+        
+        // Check collision
+        const checkCollision = setInterval(() => {
+            const bullRect = bull.getBoundingClientRect();
+            const playerRect = player.getBoundingClientRect();
+            
+            if (bullRect.right > playerRect.left && 
+                bullRect.left < playerRect.right &&
+                bullRect.bottom > playerRect.top) {
+                
+                if (player.style.transform === 'translateY(-40px)') {
+                    // Jumped over bull
+                    score += 10;
+                    document.getElementById('bonus-score').textContent = score;
+                } else {
+                    // Hit by bull
+                    score = Math.max(0, score - 5);
+                    document.getElementById('bonus-score').textContent = score;
+                    player.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        player.style.animation = '';
+                    }, 500);
+                }
+                
+                clearInterval(checkCollision);
+                bull.remove();
+            }
+        }, 16);
+        
+        setTimeout(() => {
+            if (bull.parentNode) bull.remove();
+            clearInterval(checkCollision);
+        }, runTime * 1000);
+        
+        if (gameActive) {
+            setTimeout(createBull, 1500);
+        }
+    };
+    
+    createBull();
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupTapasGame() {
+ showTutorial('tapas');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create plate
+    const plate = document.createElement('div');
+    plate.className = 'tapas-plate';
+    plate.textContent = '🍽️';
+    plate.style.position = 'absolute';
+    plate.style.bottom = '20px';
+    plate.style.left = '50%';
+    plate.style.transform = 'translateX(-50%)';
+    gameArea.appendChild(plate);
+    
+    // Move plate with mouse/touch
+    gameArea.addEventListener('mousemove', (e) => {
+        const rect = gameArea.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        plate.style.left = `${Math.max(20, Math.min(80, x / rect.width * 100))}%`;
+    });
+    
+    gameArea.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const rect = gameArea.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        plate.style.left = `${Math.max(20, Math.min(80, x / rect.width * 100))}%`;
+    });
+    
+    // Create falling tapas
+    const tapasItems = ['🍤', '🍖', '🧀', '🥖', '🍅'];
+    const createTapa = () => {
+        if (!gameActive) return;
+        
+        const tapa = document.createElement('div');
+        tapa.className = 'tapas-item';
+        tapa.textContent = tapasItems[Math.floor(Math.random() * tapasItems.length)];
+        tapa.style.position = 'absolute';
+        tapa.style.left = `${Math.random() * 80 + 10}%`;
+        tapa.style.top = '0';
+        gameArea.appendChild(tapa);
+        
+        // Fall animation
+        const fallTime = Math.random() * 2 + 1;
+        tapa.style.transition = `top ${fallTime}s linear`;
+        setTimeout(() => {
+            tapa.style.top = '300px';
+        }, 10);
+        
+        // Check catch
+        const checkCatch = setInterval(() => {
+            const tapaRect = tapa.getBoundingClientRect();
+            const plateRect = plate.getBoundingClientRect();
+            
+            if (tapaRect.bottom > plateRect.top && 
+                tapaRect.right > plateRect.left && 
+                tapaRect.left < plateRect.right) {
+                
+                score += 5;
+                document.getElementById('bonus-score').textContent = score;
+                clearInterval(checkCatch);
+                tapa.remove();
+            }
+        }, 16);
+        
+        setTimeout(() => {
+            if (tapa.parentNode) tapa.remove();
+            clearInterval(checkCatch);
+        }, fallTime * 1000);
+        
+        if (gameActive) {
+            setTimeout(createTapa, 800);
+        }
+    };
+    
+    createTapa();
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupBalloonGame() {
+ showTutorial('balloon');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create balloons
+    const colors = ['🔴', '🟠', '🟡', '🟢', '🔵', '🟣'];
+    const createBalloon = () => {
+        if (!gameActive) return;
+        
+        const balloon = document.createElement('div');
+        balloon.className = 'fiesta-item';
+        balloon.textContent = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.position = 'absolute';
+        balloon.style.left = `${Math.random() * 80 + 10}%`;
+        balloon.style.bottom = '20px';
+        gameArea.appendChild(balloon);
+        
+        // Float up
+        const floatTime = Math.random() * 3 + 2;
+        balloon.style.transition = `bottom ${floatTime}s linear`;
+        setTimeout(() => {
+            balloon.style.bottom = '300px';
+        }, 10);
+        
+        // Pop on click
+        balloon.addEventListener('click', () => {
+            if (!gameActive) return;
+            score += 5;
+            document.getElementById('bonus-score').textContent = score;
+            balloon.textContent = '💥';
+            balloon.style.transition = 'none';
+            setTimeout(() => balloon.remove(), 300);
+        });
+        
+        setTimeout(() => {
+            if (balloon.parentNode) balloon.remove();
+        }, floatTime * 1000);
+        
+        if (gameActive) {
+            setTimeout(createBalloon, 800);
+        }
+    };
+    
+    createBalloon();
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
+
+function setupMosaicGame() {
+ showTutorial('mosaic');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create mosaic grid
+    const gridSize = 4;
+    const tileSize = gameArea.offsetWidth / gridSize;
+    
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            const tile = document.createElement('div');
+            tile.className = 'gaudi-tile';
+            tile.style.position = 'absolute';
+            tile.style.left = `${i * tileSize}px`;
+            tile.style.top = `${j * tileSize}px`;
+            tile.style.width = `${tileSize}px`;
+            tile.style.height = `${tileSize}px`;
+            tile.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            tile.style.cursor = 'pointer';
+            
+            tile.addEventListener('click', () => {
                 if (!gameActive) return;
-                
-                // Add hit animation
-                pinata.classList.add('pinata-hit');
-                setTimeout(() => pinata.classList.remove('pinata-hit'), 300);
-                
-                // Add score
                 score += 5;
                 document.getElementById('bonus-score').textContent = score;
                 
-                // Create falling candies
-                for (let i = 0; i < 5; i++) {
-                    const candy = document.createElement('div');
-                    candy.className = 'candy';
-                    candy.textContent = '🍬';
-                    candy.style.left = `${Math.random() * 80 + 10}%`;
-                    candy.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
-                    gameArea.appendChild(candy);
-                    
-                    setTimeout(() => {
-                        candy.remove();
-                    }, 1000);
-                }
-            });
-            
-            gameArea.appendChild(pinata);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
+                // Change color
+                tile.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
                 
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
-        }
-
-        function setupBullRunGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create matador (player)
-            const matador = document.createElement('div');
-            matador.className = 'matador';
-            matador.textContent = '🕴️';
-            matador.addEventListener('click', () => {
-                if (!gameActive) return;
-                
-                // Jump animation
-                matador.style.transform = 'translateY(-20px)';
+                // Pulse effect
+                tile.style.transform = 'scale(1.1)';
                 setTimeout(() => {
-                    matador.style.transform = 'translateY(0)';
-                }, 300);
+                    tile.style.transform = 'scale(1)';
+                }, 200);
             });
             
-            gameArea.appendChild(matador);
-            
-            // Bull spawning
-            const bullSpawn = setInterval(() => {
-                if (!gameActive) {
-                    clearInterval(bullSpawn);
-                    return;
-                }
-                
-                const bull = document.createElement('div');
-                bull.className = 'bull';
-                bull.textContent = '🐂';
-                
-                bull.addEventListener('animationend', () => {
-                    if (gameActive) {
-                        score += 10;
-                        document.getElementById('bonus-score').textContent = score;
-                    }
-                    bull.remove();
-                });
-                
-                gameArea.appendChild(bull);
-            }, 2000);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    clearInterval(bullSpawn);
-                    endBonusGame(score);
-                }
-            }, 1000);
+            gameArea.appendChild(tile);
         }
-
-        function setupFlamencoGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create flamenco dancer
-            const dancer = document.createElement('div');
-            dancer.className = 'flamenco-dancer';
-            dancer.textContent = '💃';
-            dancer.addEventListener('click', () => {
-                if (!gameActive) return;
-                
-                // Create castanets
-                for (let i = 0; i < 3; i++) {
-                    const castanet = document.createElement('div');
-                    castanet.className = 'castanet';
-                    castanet.textContent = '🎵';
-                    castanet.style.left = `${Math.random() * 80 + 10}%`;
-                    castanet.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
-                    
-                    castanet.addEventListener('click', (e) => {
-                        if (!gameActive) return;
-                        e.stopPropagation();
-                        score += 5;
-                        document.getElementById('bonus-score').textContent = score;
-                        castanet.remove();
-                    });
-                    
-                    gameArea.appendChild(castanet);
-                    
-                    setTimeout(() => {
-                        castanet.remove();
-                    }, 1000);
-                }
-            });
-            
-            gameArea.appendChild(dancer);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
+    }
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
         }
+    }, 1000);
+}
 
-        function setupSoccerGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
+function setupChurroGame() {
+ showTutorial('churro');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create mouth
+    const mouth = document.createElement('div');
+    mouth.className = 'matador';
+    mouth.textContent = '👄';
+    mouth.style.position = 'absolute';
+    mouth.style.left = '50%';
+    mouth.style.bottom = '20px';
+    mouth.style.transform = 'translateX(-50%)';
+    gameArea.appendChild(mouth);
+    
+    // Create churros
+    const createChurro = () => {
+        if (!gameActive) return;
+        
+        const churro = document.createElement('div');
+        churro.className = 'churro';
+        churro.textContent = '🥨';
+        churro.style.position = 'absolute';
+        churro.style.left = `${Math.random() * 80 + 10}%`;
+        churro.style.top = '0';
+        gameArea.appendChild(churro);
+        
+        // Fall animation
+        const fallTime = Math.random() * 2 + 1;
+        churro.style.transition = `top ${fallTime}s ease-in`;
+        setTimeout(() => {
+            churro.style.top = '300px';
+        }, 10);
+        
+        // Check catch
+        const checkCatch = setInterval(() => {
+            const churroRect = churro.getBoundingClientRect();
+            const mouthRect = mouth.getBoundingClientRect();
             
-            // Create goal
-            const goal = document.createElement('div');
-            goal.className = 'soccer-goal';
-            goal.textContent = '🥅';
-            gameArea.appendChild(goal);
-            
-            // Create ball
-            const ball = document.createElement('div');
-            ball.className = 'soccer-ball';
-            ball.textContent = '⚽';
-            ball.addEventListener('click', () => {
-                if (!gameActive) return;
+            if (churroRect.bottom > mouthRect.top && 
+                churroRect.right > mouthRect.left && 
+                churroRect.left < mouthRect.right) {
                 
-                // Kick animation
-                ball.style.animation = 'none';
-                void ball.offsetWidth; // Trigger reflow
-                ball.style.animation = 'soccerKick 0.5s forwards';
-                
-                setTimeout(() => {
-                    score += 10;
-                    document.getElementById('bonus-score').textContent = score;
-                    ball.style.animation = 'soccerKick 1s infinite alternate';
-                }, 500);
-            });
-            
-            gameArea.appendChild(ball);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
+                score += 5;
+                document.getElementById('bonus-score').textContent = score;
+                clearInterval(checkCatch);
+                churro.remove();
+            }
+        }, 16);
+        
+        setTimeout(() => {
+            if (churro.parentNode) churro.remove();
+            clearInterval(checkCatch);
+        }, fallTime * 1000);
+        
+        if (gameActive) {
+            setTimeout(createChurro, 800);
         }
-
-        function setupTapasGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create plate
-            const plate = document.createElement('div');
-            plate.className = 'tapas-plate';
-            plate.textContent = '🍽️';
-            gameArea.appendChild(plate);
-            
-            // Tapas falling
-            const tapasSpawn = setInterval(() => {
-                if (!gameActive) {
-                    clearInterval(tapasSpawn);
-                    return;
-                }
-                
-                const tapas = document.createElement('div');
-                tapas.className = 'tapas-item';
-                tapas.textContent = ['🍤', '🍖', '🧀', '🥖', '🍅'][Math.floor(Math.random() * 5)];
-                tapas.style.left = `${Math.random() * 80 + 10}%`;
-                tapas.style.animationDuration = `${Math.random() * 1 + 1}s`;
-                
-                tapas.addEventListener('click', () => {
-                    if (!gameActive) return;
-                    score += 5;
-                    document.getElementById('bonus-score').textContent = score;
-                    tapas.remove();
-                });
-                
-                gameArea.appendChild(tapas);
-                
-                setTimeout(() => {
-                    tapas.remove();
-                }, 2000);
-            }, 1000);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    clearInterval(tapasSpawn);
-                    endBonusGame(score);
-                }
-            }, 1000);
+    };
+    
+    createChurro();
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
         }
+    }, 1000);
+}
 
-        function setupFiestaGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create fiesta items
-            const fiestaItems = ['🎉', '🎊', '🎈', '🪅', '🥁', '🎪'];
-            
-            fiestaItems.forEach((item, index) => {
-                const fiestaItem = document.createElement('div');
-                fiestaItem.className = 'fiesta-item';
-                fiestaItem.textContent = item;
-                fiestaItem.style.left = `${Math.random() * 80 + 10}%`;
-                fiestaItem.style.top = `${Math.random() * 70 + 10}%`;
-                fiestaItem.style.animationDelay = `${index * 0.5}s`;
-                
-                fiestaItem.addEventListener('click', () => {
-                    if (!gameActive) return;
-                    score += 5;
-                    document.getElementById('bonus-score').textContent = score;
-                    
-                    // Replace with new position
-                    fiestaItem.style.left = `${Math.random() * 80 + 10}%`;
-                    fiestaItem.style.top = `${Math.random() * 70 + 10}%`;
-                });
-                
-                gameArea.appendChild(fiestaItem);
-            });
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
+function setupMaracaGame() {
+ showTutorial('maraca');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create maracas
+    const maraca1 = document.createElement('div');
+    maraca1.className = 'maraca';
+    maraca1.textContent = '🥁';
+    maraca1.style.position = 'absolute';
+    maraca1.style.left = '30%';
+    maraca1.style.bottom = '20px';
+    gameArea.appendChild(maraca1);
+    
+    const maraca2 = document.createElement('div');
+    maraca2.className = 'maraca';
+    maraca2.textContent = '🥁';
+    maraca2.style.position = 'absolute';
+    maraca2.style.left = '70%';
+    maraca2.style.bottom = '20px';
+    gameArea.appendChild(maraca2);
+    
+    // Shake effect
+    let shakeCount = 0;
+    const shake = (maraca) => {
+        if (!gameActive) return;
+        
+        maraca.style.animation = 'none';
+        void maraca.offsetWidth;
+        maraca.style.animation = 'maracaShake 0.2s';
+        
+        score += 2;
+        document.getElementById('bonus-score').textContent = score;
+        
+        shakeCount++;
+        if (shakeCount % 5 === 0) {
+            playSound(440 + shakeCount * 20, 'sine', 0.2);
         }
+    };
+    
+    maraca1.addEventListener('click', () => shake(maraca1));
+    maraca2.addEventListener('click', () => shake(maraca2));
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
 
-        function setupGaudiGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
+function setupFlagGame() {
+    showTutorial('flag');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create Spanish flag pattern (red-yellow-red)
+    const colors = ['red', 'yellow', 'red'];
+    const tileSize = 60;
+    
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 5; j++) {
+            const tile = document.createElement('div');
+            tile.className = 'gaudi-tile';
+            tile.style.position = 'absolute';
+            tile.style.left = `${j * tileSize + 10}px`;
+            tile.style.top = `${i * tileSize + 50}px`;
+            tile.style.width = `${tileSize}px`;
+            tile.style.height = `${tileSize}px`;
+            tile.style.backgroundColor = colors[i];
+            tile.style.cursor = 'pointer';
             
-            // Create mosaic tiles
-            for (let i = 0; i < 20; i++) {
-                const tile = document.createElement('div');
-                tile.className = 'gaudi-tile';
-                tile.style.left = `${Math.random() * 80 + 10}%`;
-                tile.style.top = `${Math.random() * 70 + 10}%`;
-                
+            // Only yellow tiles are clickable
+            if (i === 1) {
                 tile.addEventListener('click', () => {
                     if (!gameActive) return;
-                    score += 5;
+                    score += 10;
                     document.getElementById('bonus-score').textContent = score;
-                    
-                    // Change color
-                    tile.style.background = `linear-gradient(45deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})`;
+                    tile.style.backgroundColor = 'green';
+                    playSound(880, 'square', 0.2);
                 });
-                
-                gameArea.appendChild(tile);
-            }
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
-        }
-
-        function setupChurroGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create churros
-            const churroSpawn = setInterval(() => {
-                if (!gameActive) {
-                    clearInterval(churroSpawn);
-                    return;
-                }
-                
-                const churro = document.createElement('div');
-                churro.className = 'churro';
-                churro.textContent = '🥨';
-                churro.style.left = `${Math.random() * 80 + 10}%`;
-                churro.style.top = `${Math.random() * 70 + 10}%`;
-                churro.style.animationDelay = `${Math.random() * 2}s`;
-                
-                churro.addEventListener('click', () => {
+            } else {
+                tile.addEventListener('click', () => {
                     if (!gameActive) return;
-                    score += 5;
+                    score = Math.max(0, score - 5);
                     document.getElementById('bonus-score').textContent = score;
-                    churro.remove();
+                    tile.style.backgroundColor = 'black';
+                    playSound(220, 'sine', 0.2);
                 });
-                
-                gameArea.appendChild(churro);
-                
-                setTimeout(() => {
-                    churro.remove();
-                }, 3000);
-            }, 1000);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    clearInterval(churroSpawn);
-                    endBonusGame(score);
-                }
-            }, 1000);
-        }
-
-        function setupMaracaGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
-            
-            // Create maracas
-            const maraca1 = document.createElement('div');
-            maraca1.className = 'maraca';
-            maraca1.textContent = '🥁';
-            maraca1.style.left = '30%';
-            maraca1.style.top = '50%';
-            gameArea.appendChild(maraca1);
-            
-            const maraca2 = document.createElement('div');
-            maraca2.className = 'maraca';
-            maraca2.textContent = '🥁';
-            maraca2.style.left = '70%';
-            maraca2.style.top = '50%';
-            gameArea.appendChild(maraca2);
-            
-            // Click handler
-            function handleMaracaClick() {
-                if (!gameActive) return;
-                score += 2;
-                document.getElementById('bonus-score').textContent = score;
             }
             
-            maraca1.addEventListener('click', handleMaracaClick);
-            maraca2.addEventListener('click', handleMaracaClick);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
+            gameArea.appendChild(tile);
         }
+    }
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
+        }
+    }, 1000);
+}
 
-        function setupDonQuixoteGame() {
-            const gameArea = document.getElementById('bonus-game-area');
-            let score = 0;
-            let timeLeft = 30;
-            let gameActive = true;
+function setupWindmillGame() {
+    showTutorial('windmill');
+    const gameArea = document.getElementById('bonus-game-area');
+    gameArea.innerHTML = '';
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = true;
+    
+    // Create windmill
+    const windmill = document.createElement('div');
+    windmill.className = 'windmill';
+    windmill.textContent = '🎡';
+    windmill.style.position = 'absolute';
+    windmill.style.left = '50%';
+    windmill.style.top = '50%';
+    windmill.style.transform = 'translate(-50%, -50%)';
+    gameArea.appendChild(windmill);
+    
+    // Create Don Quixote
+    const donQuixote = document.createElement('div');
+    donQuixote.className = 'don-quixote';
+    donQuixote.textContent = '🤺';
+    donQuixote.style.position = 'absolute';
+    donQuixote.style.left = '50%';
+    donQuixote.style.bottom = '20px';
+    donQuixote.style.transform = 'translateX(-50%)';
+    gameArea.appendChild(donQuixote);
+    
+    // Attack on click
+    donQuixote.addEventListener('click', () => {
+        if (!gameActive) return;
+        
+        // Attack animation
+        donQuixote.style.transition = 'transform 0.3s';
+        donQuixote.style.transform = 'translateX(-50%) translateY(-100px)';
+        
+        setTimeout(() => {
+            donQuixote.style.transform = 'translateX(-50%)';
             
-            // Create windmill
-            const windmill = document.createElement('div');
-            windmill.className = 'windmill';
-            windmill.textContent = '🎡';
-            gameArea.appendChild(windmill);
+            // Check hit
+            const windmillRect = windmill.getBoundingClientRect();
+            const donRect = donQuixote.getBoundingClientRect();
             
-            // Create Don Quixote
-            const donQuixote = document.createElement('div');
-            donQuixote.className = 'don-quixote';
-            donQuixote.textContent = '🤺';
-            donQuixote.addEventListener('click', () => {
-                if (!gameActive) return;
-                
-                // Attack animation
-                donQuixote.style.transform = 'translateX(-50%) translateY(-20px)';
-                setTimeout(() => {
-                    donQuixote.style.transform = 'translateX(-50%)';
-                }, 300);
-                
+            if (donRect.top < windmillRect.bottom) {
                 score += 10;
                 document.getElementById('bonus-score').textContent = score;
-            });
-            
-            gameArea.appendChild(donQuixote);
-            
-            // Game timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('bonus-timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    gameActive = false;
-                    clearInterval(timer);
-                    endBonusGame(score);
-                }
-            }, 1000);
+                windmill.style.animation = 'none';
+                void windmill.offsetWidth;
+                windmill.style.animation = 'windmillSpin 5s linear infinite';
+            }
+        }, 300);
+    });
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('bonus-timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            gameActive = false;
+            clearInterval(timer);
+            endBonusGame(score);
         }
+    }, 1000);
+}
 
         function endBonusGame(score) {
             gameState.player.points += score;
@@ -3146,7 +3674,7 @@ function loadVocab() {
                 return;
             }
             
-  if (leftId === rightId) {
+if (leftId === rightId) {
     leftCard.classList.add('correct');
     rightCard.classList.add('correct');
     
@@ -3154,7 +3682,7 @@ function loadVocab() {
     gameState.streak++;
     gameState.currentRound.roundPoints += 10;
     
-    playCorrectSound(); // Add this line
+    playCorrectSound(); 
     
     const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
     if (pair) {
@@ -3201,7 +3729,7 @@ function loadVocab() {
     rightCard.classList.add('incorrect');
     
     gameState.streak = 0;
-    playErrorSound(); // Add this line
+    playErrorSound();
                 
                 setTimeout(() => {
                     leftCard.classList.remove('selected', 'incorrect');
@@ -3343,33 +3871,33 @@ function loadVocab() {
         }
 
 function endRound() {
-    playSpanishFanfare(); // Add this line
+    playSpanishFanfare();
     
     if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
         gameState.player.points += 50;
         showNotification('¡Ronda perfecta! +50 puntos');
     }
-            
-            document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
-            document.getElementById('total-score').textContent = gameState.player.points;
-            document.getElementById('progress-count').textContent = gameState.completedWords;
-            document.getElementById('progress-streak').textContent = gameState.streak;
-            
-            updateTrophyDisplay(document.getElementById('trophy-display'));
-            updateRewardPath();
-            
-            savePlayerProgress();
-            checkEmojiPurchase();
-            
-            setTimeout(() => {
-                createConfetti(document.getElementById('round-complete-screen'), 20);
-                showScreen('roundComplete');
-            }, 1000);
-            
-            if (gameState.completedWords >= 50) {
-                endGame();
-            }
-        }
+    
+    document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
+    document.getElementById('total-score').textContent = gameState.player.points;
+    document.getElementById('progress-count').textContent = gameState.completedWords;
+    document.getElementById('progress-streak').textContent = gameState.streak;
+    
+    updateTrophyDisplay(document.getElementById('trophy-display'));
+    updateRewardPath();
+    
+    savePlayerProgress();
+    checkEmojiPurchase();
+    
+    setTimeout(() => {
+        createConfetti(document.getElementById('round-complete-screen'), 20);
+        showScreen('roundComplete');
+    }, 1000);
+    
+    if (gameState.completedWords >= 50) {
+        endGame();
+    }
+}
 
         function showTrophyRoom() {
             const trophyList = document.getElementById('trophy-list');
