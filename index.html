@@ -1313,6 +1313,103 @@
         let isMusicPlaying = false;
         let roundsPlayed = 0;
         let isKidMode = false;
+
+// Sound effects using Web Audio API
+let audioContext;
+try {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+} catch (e) {
+    console.warn("Web Audio API not supported:", e);
+}
+
+function playSound(frequency, type, duration, vibrato) {
+    if (!audioContext) return;
+    
+    try {
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.type = type || 'sine';
+        oscillator.frequency.value = frequency || 440;
+        gainNode.gain.value = 0.1;
+        
+        if (vibrato) {
+            const vibratoGain = audioContext.createGain();
+            const vibratoOsc = audioContext.createOscillator();
+            vibratoOsc.frequency.value = 5;
+            vibratoGain.gain.value = frequency * 0.1;
+            vibratoOsc.connect(vibratoGain);
+            vibratoGain.connect(oscillator.frequency);
+            vibratoOsc.start();
+            vibratoOsc.stop(now + (duration || 0.5));
+        }
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start();
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + (duration || 0.5));
+        oscillator.stop(now + (duration || 0.5));
+    } catch (e) {
+        console.warn("Sound error:", e);
+    }
+}
+
+function playSpanishFanfare() {
+    if (!audioContext) return;
+    
+    // Ole fanfare sequence
+    const notes = [
+        { freq: 784, dur: 0.3, type: 'square' },  // G5
+        { freq: 880, dur: 0.3, type: 'square' },  // A5
+        { freq: 1046, dur: 0.6, type: 'square' }, // C6
+        { freq: 880, dur: 0.3, type: 'square' },  // A5
+        { freq: 1046, dur: 0.6, type: 'square' }  // C6
+    ];
+    
+    let timeOffset = 0;
+    notes.forEach((note, i) => {
+        setTimeout(() => {
+            playSound(note.freq, note.type, note.dur, i === notes.length - 1);
+        }, timeOffset * 1000);
+        timeOffset += note.dur;
+    });
+}
+
+function playCorrectSound() {
+    // Flamenco-style "Olé" sound pattern
+    const notes = [
+        { freq: 587, dur: 0.1 }, // D5
+        { freq: 659, dur: 0.1 }, // E5
+        { freq: 784, dur: 0.2 }  // G5
+    ];
+    
+    let timeOffset = 0;
+    notes.forEach(note => {
+        setTimeout(() => {
+            playSound(note.freq, 'square', note.dur);
+        }, timeOffset * 1000);
+        timeOffset += note.dur;
+    });
+}
+
+function playErrorSound() {
+    // Quick descending "ay ay ay" sound
+    const notes = [
+        { freq: 440, dur: 0.1 }, // A4
+        { freq: 392, dur: 0.1 }, // G4
+        { freq: 349, dur: 0.2 }  // F4
+    ];
+    
+    let timeOffset = 0;
+    notes.forEach(note => {
+        setTimeout(() => {
+            playSound(note.freq, 'sine', note.dur);
+        }, timeOffset * 1000);
+        timeOffset += note.dur;
+    });
+}
         
         // Bonus games
         const BONUS_GAMES = [
@@ -2904,24 +3001,26 @@
                 return;
             }
             
-            if (leftId === rightId) {
-                leftCard.classList.add('correct');
-                rightCard.classList.add('correct');
-                
-                gameState.player.points += 10;
-                gameState.streak++;
-                gameState.currentRound.roundPoints += 10;
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
-                if (pair) {
-                    gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
-                    if (gameState.wordProgress[pair.word] === 3) {
-                        gameState.completedWords++;
-                        checkMilestone();
-                        checkModeCompletion();
-                        checkStickerUnlock();
-                    }
-                }
+  if (leftId === rightId) {
+    leftCard.classList.add('correct');
+    rightCard.classList.add('correct');
+    
+    gameState.player.points += 10;
+    gameState.streak++;
+    gameState.currentRound.roundPoints += 10;
+    
+    playCorrectSound(); // Add this line
+    
+    const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
+    if (pair) {
+        gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
+        if (gameState.wordProgress[pair.word] === 3) {
+            gameState.completedWords++;
+            checkMilestone();
+            checkModeCompletion();
+            checkStickerUnlock();
+        }
+    }
                 
                 gameState.currentRound.matchedPairs.push(leftId);
                 console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
@@ -2952,11 +3051,12 @@
                         updateGameUI();
                     }
                 }, 500);
-            } else {
-                leftCard.classList.add('incorrect');
-                rightCard.classList.add('incorrect');
-                
-                gameState.streak = 0;
+} else {
+    leftCard.classList.add('incorrect');
+    rightCard.classList.add('incorrect');
+    
+    gameState.streak = 0;
+    playErrorSound(); // Add this line
                 
                 setTimeout(() => {
                     leftCard.classList.remove('selected', 'incorrect');
@@ -3097,11 +3197,13 @@
             }
         }
 
-        function endRound() {
-            if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
-                gameState.player.points += 50;
-                showNotification('¡Ronda perfecta! +50 puntos');
-            }
+function endRound() {
+    playSpanishFanfare(); // Add this line
+    
+    if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
+        gameState.player.points += 50;
+        showNotification('¡Ronda perfecta! +50 puntos');
+    }
             
             document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
             document.getElementById('total-score').textContent = gameState.player.points;
