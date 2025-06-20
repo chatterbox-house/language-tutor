@@ -634,6 +634,14 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
+.music-control {
+    transition: all 0.3s;
+}
+
+.music-control:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
         
         .sticker-collection {
             display: flex;
@@ -1313,15 +1321,18 @@
         let isMusicPlaying = false;
         let roundsPlayed = 0;
         let isKidMode = false;
+// Audio variables
+let audioContext;
+let mainThemeAudioBuffer;
+let currentAudioSource = null;
+let isMusicEnabled = true;
 
 // Sound effects using Web Audio API
-let audioContext;
 try {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
 } catch (e) {
     console.warn("Web Audio API not supported:", e);
 }
-
 function playSound(frequency, type, duration, vibrato) {
     if (!audioContext) return;
     
@@ -1375,6 +1386,135 @@ function playSpanishFanfare() {
         }, timeOffset * 1000);
         timeOffset += note.dur;
     });
+}
+async function initAudio() {
+    try {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // Load main theme
+        mainThemeAudioBuffer = await loadAudioBuffer('mainTheme');
+        
+        // Setup music control button
+        document.getElementById('music-control').addEventListener('click', toggleMusic);
+    } catch (e) {
+        console.warn("Audio initialization failed:", e);
+        document.getElementById('music-control').style.display = 'none';
+        isMusicEnabled = false;
+    }
+}
+
+function playMainTheme() {
+    if (!isMusicEnabled) return;
+    stopCurrentAudio();
+    currentAudioSource = playAudioBuffer(mainThemeAudioBuffer, true);
+}
+
+function playScreenTransitionSound(screenName) {
+    if (!isMusicEnabled) return;
+    
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Different sounds for different screens
+    switch(screenName) {
+        case 'game':
+            // Flamenco-style guitar riff
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(587.33, now); // D5
+            oscillator.frequency.setValueAtTime(659.25, now + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, now + 0.2); // G5
+            oscillator.frequency.setValueAtTime(659.25, now + 0.3); // E5
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            oscillator.start(now);
+            oscillator.stop(now + 0.5);
+            break;
+            
+        case 'bonus':
+            // Castanet sound
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(1000, now);
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            oscillator.start(now);
+            oscillator.stop(now + 0.1);
+            break;
+            
+        case 'roundComplete':
+            // Spanish fanfare
+            playSpanishFanfare();
+            break;
+            
+        case 'trophyRoom':
+            // Bullfight fanfare
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(880, now); // A5
+            oscillator.frequency.setValueAtTime(1046.5, now + 0.2); // C6
+            oscillator.frequency.setValueAtTime(1174.66, now + 0.4); // D6
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+            oscillator.start(now);
+            oscillator.stop(now + 0.6);
+            break;
+    }
+}
+
+function stopCurrentAudio() {
+    if (currentAudioSource) {
+        currentAudioSource.stop();
+        currentAudioSource = null;
+    }
+}
+
+function toggleMusic() {
+    if (!isMusicEnabled) return;
+    
+    if (currentAudioSource) {
+        stopCurrentAudio();
+        document.getElementById('music-control').textContent = '🔇';
+    } else {
+        playMainTheme();
+        document.getElementById('music-control').textContent = '🎵';
+    }
+}
+
+async function loadAudioBuffer(name) {
+    const sampleRate = audioContext.sampleRate;
+    const duration = 2; // seconds
+    const numFrames = duration * sampleRate;
+    const buffer = audioContext.createBuffer(1, numFrames, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // Generate a simple melody (Spanish-style)
+    for (let i = 0; i < numFrames; i++) {
+        const time = i / sampleRate;
+        let freq = 440;
+        
+        // Simple melody: A minor flamenco progression
+        if (time < 0.5) freq = 440; // A4
+        else if (time < 1.0) freq = 523.25; // C5
+        else if (time < 1.5) freq = 659.25; // E5
+        else freq = 587.33; // D5
+        
+        data[i] = Math.sin(2 * Math.PI * freq * time) * 0.2 * Math.exp(-time * 0.5);
+    }
+    
+    return buffer;
+}
+
+function playAudioBuffer(buffer, loop = false) {
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.loop = loop;
+    source.connect(audioContext.destination);
+    source.start();
+    return source;
 }
 
 function playCorrectSound() {
@@ -1559,54 +1699,59 @@ function playErrorSound() {
         };
 
         // Initialize the game
-        window.addEventListener('DOMContentLoaded', initGame);
+        window.addEventListener('DOMContentLoaded', () => {
+    initGame();
+});
 
-        function initGame() {
-            try {
-                localStorage.setItem('test', 'test');
-                localStorage.removeItem('test');
-            } catch (e) {
-                console.error("LocalStorage not available:", e);
-                showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
-                return;
+function initGame() {
+    try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+    } catch (e) {
+        console.error("LocalStorage not available:", e);
+        showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
+        return;
+    }
+    
+    // Initialize audio first
+    initAudio().then(() => {
+        // Then load vocab and everything else
+        loadVocab().then(vocab => {
+            if (!vocab || vocab.length === 0) {
+                console.warn("vocab.js not loaded, using default vocab");
+                showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
             }
             
-            // Try to load vocab.js
-            loadVocab().then(vocab => {
-                if (!vocab || vocab.length === 0) {
-                    console.warn("vocab.js not loaded, using default vocab");
-                    showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
+            try {
+                const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
+                if (savedLeaderboard) {
+                    gameState.leaderboard = JSON.parse(savedLeaderboard);
                 }
-                
-                try {
-                    const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
-                    if (savedLeaderboard) {
-                        gameState.leaderboard = JSON.parse(savedLeaderboard);
-                    }
-                } catch (e) {
-                    console.warn("Error loading leaderboard:", e);
-                    showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
-                }
-                
-                // Initialize background music
-                initBackgroundMusic();
-                
-                // Setup character interaction
-                setupCharacter();
-                
-                populateUserSelect();
-                loadPlayerProgress();
-                setupEventListeners();
-                updatePlayerUI();
-                updateProgressBar();
-                updateStreakDisplay();
-                updateRewardPath();
-                updateLogoutButton();
-                updateStickerCollection();
-            });
-        }
+            } catch (e) {
+                console.warn("Error loading leaderboard:", e);
+                showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
+            }
+            
+            // Initialize background music
+            initBackgroundMusic();
+            
+            // Setup character interaction
+            setupCharacter();
+            
+            populateUserSelect();
+            loadPlayerProgress();
+            setupEventListeners();
+            updatePlayerUI();
+            updateProgressBar();
+            updateStreakDisplay();
+            updateRewardPath();
+            updateLogoutButton();
+            updateStickerCollection();
+        });
+    });
+}
 
-        function loadVocab() {
+function loadVocab() {
             return new Promise((resolve) => {
                 // Check if vocab.js is loaded
                 if (window.vocab && Array.isArray(window.vocab)) {
@@ -3413,16 +3558,24 @@ function endRound() {
             showScreen('gameOver');
         }
 
-        function quitToMainMenu() {
-            showScreen('start');
-            populateUserSelect();
-        }
+function quitToMainMenu() {
+    showScreen('start');
+    populateUserSelect();
+    playMainTheme(); // Ensure theme plays when returning to main menu
+}
 
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.remove('active'));
-            screens[screenName].classList.add('active');
-            gameState.currentScreen = screenName;
-        }
+function showScreen(screenName) {
+    Object.values(screens).forEach(screen => screen.classList.remove('active'));
+    screens[screenName].classList.add('active');
+    gameState.currentScreen = screenName;
+    
+    // Play appropriate sounds
+    if (screenName === 'start') {
+        playMainTheme();
+    } else {
+        playScreenTransitionSound(screenName);
+    }
+}
 
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -3464,6 +3617,4 @@ function endRound() {
         function sanitizePairId(word) {
             return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         }
-    </script>
-</body>
-</html>
+</script>
