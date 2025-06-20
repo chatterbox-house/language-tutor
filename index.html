@@ -1262,6 +1262,84 @@
             WORD_CATCH: 'word_catch'
         };
         
+        // Sound Manager
+        const soundManager = {
+            activeSounds: [],
+            context: null,
+            init() {
+                try {
+                    this.context = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.warn("AudioContext not supported:", e);
+                }
+            },
+            playSound(type) {
+                if (!this.context) return;
+                
+                // Stop any existing sounds of the same type
+                this.stopSounds(type);
+                
+                const sound = this.createSound(type);
+                if (sound) {
+                    this.activeSounds.push(sound);
+                    sound.oscillator.start();
+                    sound.oscillator.stop(this.context.currentTime + 0.3);
+                    
+                    // Automatically remove when finished
+                    setTimeout(() => {
+                        const index = this.activeSounds.indexOf(sound);
+                        if (index > -1) this.activeSounds.splice(index, 1);
+                    }, 300);
+                }
+            },
+            createSound(type) {
+                if (!this.context) return null;
+                
+                const oscillator = this.context.createOscillator();
+                const gainNode = this.context.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.context.destination);
+                
+                if (type === 'correct') {
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(523.25, this.context.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, this.context.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1046.50, this.context.currentTime + 0.2);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.3);
+                } else if (type === 'incorrect') {
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(220, this.context.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, this.context.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(110, this.context.currentTime + 0.1);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.2);
+                } else if (type === 'character') {
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(880, this.context.currentTime);
+                    gainNode.gain.setValueAtTime(0.2, this.context.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1760, this.context.currentTime + 0.1);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.2);
+                }
+                
+                return { oscillator, gainNode, type };
+            },
+            stopSounds(type = null) {
+                if (type) {
+                    // Stop specific type sounds
+                    this.activeSounds.forEach(sound => {
+                        if (sound.type === type) {
+                            sound.oscillator.stop();
+                        }
+                    });
+                    this.activeSounds = this.activeSounds.filter(sound => sound.type !== type);
+                } else {
+                    // Stop all sounds
+                    this.activeSounds.forEach(sound => sound.oscillator.stop());
+                    this.activeSounds = [];
+                }
+            }
+        };
+        
         // Game state variables
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
@@ -1383,6 +1461,9 @@
                 return;
             }
             
+            // Initialize sound manager
+            soundManager.init();
+            
             // Try to load vocab.js
             loadVocab().then(vocab => {
                 if (!vocab || vocab.length === 0) {
@@ -1501,7 +1582,7 @@
                 ];
                 const randomMessage = messages[Math.floor(Math.random() * messages.length)];
                 showNotification(randomMessage);
-                playSound('character');
+                soundManager.playSound('character');
             });
         }
 
@@ -2169,6 +2250,7 @@
             let score = 0;
             let activeCard = null;
             let gameInterval = null;
+            let lastSoundTime = 0;
             
             // Create game elements
             const timerDisplay = document.createElement('div');
@@ -2202,7 +2284,12 @@
                 card.addEventListener('click', () => {
                     if (activeCard && card.dataset.word === activeCard.word) {
                         // Correct match
-                        playSound('correct');
+                        const now = Date.now();
+                        if (now - lastSoundTime > 100) { // 100ms cooldown
+                            soundManager.playSound('correct');
+                            lastSoundTime = now;
+                        }
+                        
                         score += 10;
                         gameState.player.points += 5;
                         scoreDisplay.textContent = `Puntos: ${score}`;
@@ -2222,7 +2309,11 @@
                         setupNewWord();
                     } else {
                         // Incorrect
-                        playSound('incorrect');
+                        const now = Date.now();
+                        if (now - lastSoundTime > 100) { // 100ms cooldown
+                            soundManager.playSound('incorrect');
+                            lastSoundTime = now;
+                        }
                         card.classList.add('incorrect-tap');
                         setTimeout(() => card.classList.remove('incorrect-tap'), 300);
                     }
@@ -2274,6 +2365,7 @@
             }
             
             function endFastTapGame() {
+                soundManager.stopSounds(); // Stop all sounds
                 clearInterval(gameInterval);
                 gameState.player.points += Math.floor(score / 2);
                 showNotification(`¡Obtuviste ${score} puntos en Fast Tap!`);
@@ -2281,178 +2373,189 @@
             }
         }
 
-function setupWordCatchMode() {
-    generateRoundData();
-    const gameBoard = document.getElementById('game-board');
-    gameBoard.className = 'game-board word-catch';
-    gameBoard.innerHTML = '';
+        function setupWordCatchMode() {
+            generateRoundData();
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.className = 'game-board word-catch';
+            gameBoard.innerHTML = '';
 
-    // Game variables
-    let score = 0;
-    let timeLeft = 45;
-    let fallingSpeed = 1500; // ms per word
-    let gameActive = true;
-    let catcherPosition = 50; // Percentage from left
-    
-    // Create game elements
-    const scoreDisplay = document.createElement('div');
-    scoreDisplay.className = 'catch-score';
-    scoreDisplay.textContent = `Puntos: ${score}`;
-    
-    const timerDisplay = document.createElement('div');
-    timerDisplay.className = 'catch-timer';
-    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-    
-    const catcher = document.createElement('div');
-    catcher.className = 'word-catcher';
-    catcher.textContent = '🕴️';
-    catcher.style.left = `${catcherPosition}%`;
-    
-    const gameArea = document.createElement('div');
-    gameArea.className = 'word-catch-area';
-    
-    // Instructions
-    const instructions = document.createElement('div');
-    instructions.className = 'catch-instructions';
-    instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
-    
-    // Target emoji display
-    const targetDisplay = document.createElement('div');
-    targetDisplay.className = 'target-display';
-    targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
-    
-    // Assemble UI
-    gameBoard.appendChild(scoreDisplay);
-    gameBoard.appendChild(timerDisplay);
-    gameBoard.appendChild(instructions);
-    gameBoard.appendChild(targetDisplay);
-    gameBoard.appendChild(gameArea);
-    gameBoard.appendChild(catcher);
-    
-    // Timer
-    const timer = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-        
-        if (timeLeft <= 0) {
-            endWordCatchGame();
-        }
-    }, 1000);
-    
-    // Catcher movement - Keyboard
-    const handleKeyDown = (e) => {
-        if (!gameActive) return;
-        
-        if (e.key === 'ArrowLeft') {
-            catcherPosition = Math.max(0, catcherPosition - 5);
-        } else if (e.key === 'ArrowRight') {
-            catcherPosition = Math.min(95, catcherPosition + 5);
-        }
-        catcher.style.left = `${catcherPosition}%`;
-    };
-    
-    document.addEventListener('keydown', handleKeyDown);
-    
-    // Touch support for mobile
-    gameArea.addEventListener('touchmove', (e) => {
-        if (!gameActive) return;
-        e.preventDefault();
-        
-        const touchX = e.touches[0].clientX;
-        const gameAreaRect = gameArea.getBoundingClientRect();
-        const relativeX = touchX - gameAreaRect.left;
-        catcherPosition = (relativeX / gameAreaRect.width) * 100;
-        catcher.style.left = `${Math.max(0, Math.min(95, catcherPosition))}%`;
-    }, { passive: false });
-    
-    // Word falling logic
-    function dropWord() {
-        if (!gameActive) return;
-        
-        const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
-        const wordElement = document.createElement('div');
-        wordElement.className = 'falling-word';
-        wordElement.textContent = wordPair.word;
-        wordElement.dataset.emoji = wordPair.emoji;
-        wordElement.style.left = `${Math.random() * 80 + 10}%`;
-        wordElement.style.top = '0px';
-        
-        gameArea.appendChild(wordElement);
-        
-        const fallInterval = setInterval(() => {
-            if (!gameActive) {
-                clearInterval(fallInterval);
-                wordElement.remove();
-                return;
-            }
+            // Game variables
+            let score = 0;
+            let timeLeft = 45;
+            let fallingSpeed = 1500; // ms per word
+            let gameActive = true;
+            let catcherPosition = 50; // Percentage from left
+            let lastSoundTime = 0;
             
-            const currentTop = parseInt(wordElement.style.top) || 0;
-            wordElement.style.top = `${currentTop + 5}px`;
+            // Create game elements
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'catch-score';
+            scoreDisplay.textContent = `Puntos: ${score}`;
             
-            // Check if caught
-            const wordRect = wordElement.getBoundingClientRect();
-            const catcherRect = catcher.getBoundingClientRect();
+            const timerDisplay = document.createElement('div');
+            timerDisplay.className = 'catch-timer';
+            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
             
-            if (wordRect.bottom >= catcherRect.top && 
-                wordRect.right >= catcherRect.left && 
-                wordRect.left <= catcherRect.right) {
+            const catcher = document.createElement('div');
+            catcher.className = 'word-catcher';
+            catcher.textContent = '🕴️';
+            catcher.style.left = `${catcherPosition}%`;
+            
+            const gameArea = document.createElement('div');
+            gameArea.className = 'word-catch-area';
+            
+            // Instructions
+            const instructions = document.createElement('div');
+            instructions.className = 'catch-instructions';
+            instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
+            
+            // Target emoji display
+            const targetDisplay = document.createElement('div');
+            targetDisplay.className = 'target-display';
+            targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
+            
+            // Assemble UI
+            gameBoard.appendChild(scoreDisplay);
+            gameBoard.appendChild(timerDisplay);
+            gameBoard.appendChild(instructions);
+            gameBoard.appendChild(targetDisplay);
+            gameBoard.appendChild(gameArea);
+            gameBoard.appendChild(catcher);
+            
+            // Timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
                 
-                clearInterval(fallInterval);
-                wordElement.remove();
+                if (timeLeft <= 0) {
+                    endWordCatchGame();
+                }
+            }, 1000);
+            
+            // Catcher movement - Keyboard
+            const handleKeyDown = (e) => {
+                if (!gameActive) return;
                 
-                if (wordPair.emoji === targetDisplay.textContent) {
-                    // Correct catch
-                    playSound('correct');
-                    score += 10;
-                    gameState.player.points += 5;
-                    scoreDisplay.textContent = `Puntos: ${score}`;
-                    
-                    // Update word progress
-                    gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
-                    if (gameState.wordProgress[wordPair.word] === 3) {
-                        gameState.completedWords++;
-                        checkMilestone();
+                if (e.key === 'ArrowLeft') {
+                    catcherPosition = Math.max(0, catcherPosition - 5);
+                } else if (e.key === 'ArrowRight') {
+                    catcherPosition = Math.min(95, catcherPosition + 5);
+                }
+                catcher.style.left = `${catcherPosition}%`;
+            };
+            
+            document.addEventListener('keydown', handleKeyDown);
+            
+            // Touch support for mobile
+            gameArea.addEventListener('touchmove', (e) => {
+                if (!gameActive) return;
+                e.preventDefault();
+                
+                const touchX = e.touches[0].clientX;
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const relativeX = touchX - gameAreaRect.left;
+                catcherPosition = (relativeX / gameAreaRect.width) * 100;
+                catcher.style.left = `${Math.max(0, Math.min(95, catcherPosition))}%`;
+            }, { passive: false });
+            
+            // Word falling logic
+            function dropWord() {
+                if (!gameActive) return;
+                
+                const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
+                const wordElement = document.createElement('div');
+                wordElement.className = 'falling-word';
+                wordElement.textContent = wordPair.word;
+                wordElement.dataset.emoji = wordPair.emoji;
+                wordElement.style.left = `${Math.random() * 80 + 10}%`;
+                wordElement.style.top = '0px';
+                
+                gameArea.appendChild(wordElement);
+                
+                const fallInterval = setInterval(() => {
+                    if (!gameActive) {
+                        clearInterval(fallInterval);
+                        wordElement.remove();
+                        return;
                     }
                     
-                    // Change target emoji
-                    const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
-                    targetDisplay.textContent = newTarget.emoji;
-                } else {
-                    // Wrong catch
-                    playSound('incorrect');
-                    score = Math.max(0, score - 5);
-                    scoreDisplay.textContent = `Puntos: ${score}`;
-                }
+                    const currentTop = parseInt(wordElement.style.top) || 0;
+                    wordElement.style.top = `${currentTop + 5}px`;
+                    
+                    // Check if caught
+                    const wordRect = wordElement.getBoundingClientRect();
+                    const catcherRect = catcher.getBoundingClientRect();
+                    
+                    if (wordRect.bottom >= catcherRect.top && 
+                        wordRect.right >= catcherRect.left && 
+                        wordRect.left <= catcherRect.right) {
+                        
+                        clearInterval(fallInterval);
+                        wordElement.remove();
+                        
+                        if (wordPair.emoji === targetDisplay.textContent) {
+                            // Correct catch
+                            const now = Date.now();
+                            if (now - lastSoundTime > 100) { // 100ms cooldown
+                                soundManager.playSound('correct');
+                                lastSoundTime = now;
+                            }
+                            
+                            score += 10;
+                            gameState.player.points += 5;
+                            scoreDisplay.textContent = `Puntos: ${score}`;
+                            
+                            // Update word progress
+                            gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
+                            if (gameState.wordProgress[wordPair.word] === 3) {
+                                gameState.completedWords++;
+                                checkMilestone();
+                            }
+                            
+                            // Change target emoji
+                            const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
+                            targetDisplay.textContent = newTarget.emoji;
+                        } else {
+                            // Wrong catch
+                            const now = Date.now();
+                            if (now - lastSoundTime > 100) { // 100ms cooldown
+                                soundManager.playSound('incorrect');
+                                lastSoundTime = now;
+                            }
+                            score = Math.max(0, score - 5);
+                            scoreDisplay.textContent = `Puntos: ${score}`;
+                        }
+                    }
+                    
+                    // Check if missed (fell to bottom)
+                    if (parseInt(wordElement.style.top) > gameArea.offsetHeight) {
+                        clearInterval(fallInterval);
+                        wordElement.remove();
+                    }
+                }, 50);
             }
             
-            // Check if missed (fell to bottom)
-            if (parseInt(wordElement.style.top) > gameArea.offsetHeight) {
-                clearInterval(fallInterval);
-                wordElement.remove();
+            // Start dropping words
+            const wordDropInterval = setInterval(dropWord, fallingSpeed);
+            
+            // Gradually increase difficulty
+            const difficultyInterval = setInterval(() => {
+                fallingSpeed = Math.max(500, fallingSpeed - 100);
+            }, 5000);
+            
+            function endWordCatchGame() {
+                soundManager.stopSounds(); // Stop all sounds
+                gameActive = false;
+                clearInterval(timer);
+                clearInterval(wordDropInterval);
+                clearInterval(difficultyInterval);
+                document.removeEventListener('keydown', handleKeyDown);
+                
+                gameState.player.points += Math.floor(score / 2);
+                showNotification(`¡Atrapaste ${score} palabras correctas!`);
+                endRound();
             }
-        }, 50);
-    }
-    
-    // Start dropping words
-    const wordDropInterval = setInterval(dropWord, fallingSpeed);
-    
-    // Gradually increase difficulty
-    const difficultyInterval = setInterval(() => {
-        fallingSpeed = Math.max(500, fallingSpeed - 100);
-    }, 5000);
-    
-    function endWordCatchGame() {
-        gameActive = false;
-        clearInterval(timer);
-        clearInterval(wordDropInterval);
-        clearInterval(difficultyInterval);
-        document.removeEventListener('keydown', handleKeyDown);
-        
-        gameState.player.points += Math.floor(score / 2);
-        showNotification(`¡Atrapaste ${score} palabras correctas!`);
-        endRound();
-    }
-}
+        }
 
         function showPinataBreak() {
             const pinataContainer = document.createElement('div');
@@ -2472,7 +2575,7 @@ function setupWordCatchMode() {
             
             pinata.addEventListener('click', () => {
                 taps++;
-                playSound('correct');
+                soundManager.playSound('correct');
                 pinata.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
                 
                 if (taps >= maxTaps) {
@@ -2746,7 +2849,7 @@ function setupWordCatchMode() {
             if (leftId === rightId) {
                 leftCard.classList.add('correct');
                 rightCard.classList.add('correct');
-                playSound('correct');
+                soundManager.playSound('correct');
                 
                 gameState.player.points += 10;
                 gameState.streak++;
@@ -2795,7 +2898,7 @@ function setupWordCatchMode() {
             } else {
                 leftCard.classList.add('incorrect');
                 rightCard.classList.add('incorrect');
-                playSound('incorrect');
+                soundManager.playSound('incorrect');
                 
                 gameState.streak = 0;
                 
@@ -3153,6 +3256,7 @@ function setupWordCatchMode() {
         }
 
         function quitToMainMenu() {
+            soundManager.stopSounds(); // Stop all sounds when returning to main menu
             showScreen('start');
             populateUserSelect();
         }
@@ -3170,58 +3274,6 @@ function setupWordCatchMode() {
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
             return shuffled;
-        }
-
-        function playSound(type) {
-            if (!window.AudioContext && !window.webkitAudioContext) {
-                console.warn("Web Audio API not supported.");
-                return;
-            }
-            
-            try {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                if (context.state === 'suspended') {
-                    context.resume().then(() => {
-                        createSound(context, type);
-                    });
-                } else {
-                    createSound(context, type);
-                }
-                console.log(`Playing sound: ${type}`);
-            } catch (e) {
-                console.warn("Error playing sound:", e);
-            }
-        }
-
-        function createSound(context, type) {
-            const oscillator = context.createOscillator();
-            const gainNode = context.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(context.destination);
-            
-            if (type === 'correct') {
-                oscillator.type = 'triangle';
-                oscillator.frequency.setValueAtTime(523.25, context.currentTime);
-                gainNode.gain.setValueAtTime(0.3, context.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(1046.50, context.currentTime + 0.2);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
-            } else if (type === 'incorrect') {
-                oscillator.type = 'square';
-                oscillator.frequency.setValueAtTime(220, context.currentTime);
-                gainNode.gain.setValueAtTime(0.3, context.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(110, context.currentTime + 0.1);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
-            } else if (type === 'character') {
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(880, context.currentTime);
-                gainNode.gain.setValueAtTime(0.2, context.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(1760, context.currentTime + 0.1);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
-            }
-            
-            oscillator.start();
-            oscillator.stop(context.currentTime + 0.3);
         }
 
         function createConfetti(container, count) {
