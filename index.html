@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NANDOmode - Aprende Vocabulario Español</title>
     <meta name="theme-color" content="#1a1a2e">
@@ -557,6 +558,7 @@
             z-index: 1000;
             animation: fadeInOut 3s ease forwards;
         }
+
         
         .success-notification {
             position: fixed;
@@ -572,6 +574,39 @@
             z-index: 1000;
             animation: fadeInOut 3s ease forwards;
         }
+.translation-display {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    text-align: center;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    animation: fadeInOut 3s ease forwards;
+    pointer-events: none;
+    border: 2px solid #4ecdc4;
+}
+
+.translation-display span {
+    display: block;
+}
+
+.translation-display .word {
+    font-weight: bold;
+    color: #ffe66d;
+}
+
+.translation-display .translation {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
         
         .progress-tracker {
             position: absolute;
@@ -1232,11 +1267,12 @@
     <div id="game-container">
         <div id="error-notification" class="error-notification" style="display: none;"></div>
         <div id="success-notification" class="success-notification" style="display: none;"></div>
+<div id="translation-display" class="translation-display" style="display: none;"></div>
         
         <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
         
         <!-- New kid-friendly elements -->
-        <button id="music-control" class="music-control">🎵</button>
+       
         <div id="character" class="character">🐉</div>
         
         <div id="start-screen" class="screen active">
@@ -1418,6 +1454,8 @@
         </div>
     </div>
 
+    <button id="music-control" class="music-control">🎵</button>
+    
     <script>
         // Game state variables
         const isMobile = window.innerWidth <= 768;
@@ -1498,15 +1536,21 @@ function playSpanishFanfare() {
 }
 async function initAudio() {
     try {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        // Initialize Web Audio API
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Load main theme
+        // Load main theme audio buffer
         mainThemeAudioBuffer = await loadAudioBuffer('mainTheme');
         
-        // Setup music control button
-        document.getElementById('music-control').addEventListener('click', toggleMusic);
+        // Set up music control button
+        const musicControl = document.getElementById('music-control');
+        musicControl.addEventListener('click', toggleMusic);
+        musicControl.style.display = 'block';
+        
+        // Start playing music if enabled
+        if (isMusicEnabled) {
+            playMainTheme();
+        }
     } catch (e) {
         console.warn("Audio initialization failed:", e);
         document.getElementById('music-control').style.display = 'none';
@@ -1515,7 +1559,7 @@ async function initAudio() {
 }
 
 function playMainTheme() {
-    if (!isMusicEnabled) return;
+    if (!isMusicEnabled || !audioContext) return;
     stopCurrentAudio();
     currentAudioSource = playAudioBuffer(mainThemeAudioBuffer, true);
 }
@@ -1588,12 +1632,18 @@ function toggleMusic() {
         stopCurrentAudio();
         document.getElementById('music-control').textContent = '🔇';
     } else {
-        playMainTheme();
-        document.getElementById('music-control').textContent = '🎵';
+        // Only play music if we're not in the game screen
+        if (gameState.currentScreen !== 'game') {
+            playMainTheme();
+            document.getElementById('music-control').textContent = '🎵';
+        }
     }
 }
 
 async function loadAudioBuffer(name) {
+    if (!audioContext) return null;
+    
+    // For demo purposes, we'll generate a simple tone
     const sampleRate = audioContext.sampleRate;
     const duration = 2; // seconds
     const numFrames = duration * sampleRate;
@@ -1618,6 +1668,8 @@ async function loadAudioBuffer(name) {
 }
 
 function playAudioBuffer(buffer, loop = false) {
+    if (!audioContext) return null;
+    
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.loop = loop;
@@ -1859,41 +1911,38 @@ function initGame() {
         return;
     }
     
-    // Initialize audio first
-    initAudio().then(() => {
-        // Then load vocab and everything else
-        loadVocab().then(vocab => {
-            if (!vocab || vocab.length === 0) {
-                console.warn("vocab.js not loaded, using default vocab");
-                showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
+    // Initialize audio
+    initAudio();
+    
+    // Then load vocab and everything else
+    loadVocab().then(vocab => {
+        if (!vocab || vocab.length === 0) {
+            console.warn("vocab.js not loaded, using default vocab");
+            showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
+        }
+        
+        try {
+            const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
+            if (savedLeaderboard) {
+                gameState.leaderboard = JSON.parse(savedLeaderboard);
             }
-            
-            try {
-                const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
-                if (savedLeaderboard) {
-                    gameState.leaderboard = JSON.parse(savedLeaderboard);
-                }
-            } catch (e) {
-                console.warn("Error loading leaderboard:", e);
-                showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
-            }
-            
-            // Initialize background music
-            initBackgroundMusic();
-            
-            // Setup character interaction
-            setupCharacter();
-            
-            populateUserSelect();
-            loadPlayerProgress();
-            setupEventListeners();
-            updatePlayerUI();
-            updateProgressBar();
-            updateStreakDisplay();
-            updateRewardPath();
-            updateLogoutButton();
-            updateStickerCollection();
-        });
+        } catch (e) {
+            console.warn("Error loading leaderboard:", e);
+            showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
+        }
+        
+        // Setup character interaction
+        setupCharacter();
+        
+        populateUserSelect();
+        loadPlayerProgress();
+        setupEventListeners();
+        updatePlayerUI();
+        updateProgressBar();
+        updateStreakDisplay();
+        updateRewardPath();
+        updateLogoutButton();
+        updateStickerCollection();
     });
 }
 
@@ -2517,18 +2566,22 @@ function loadVocab() {
             updateStreakDisplay();
         }
 
-        function startNewRound() {
-            roundsPlayed++;
-            
-            // Check if we should show a bonus game (every 3 rounds)
-            if (roundsPlayed > 0 && roundsPlayed % 3 === 0) {
-                showBonusGame();
-                return;
-            }
-            
-            setupClassicMode();
-            showScreen('game');
-        }
+function startNewRound() {
+    roundsPlayed++;
+    
+    // Stop any playing music
+    stopCurrentAudio();
+    document.getElementById('music-control').textContent = '🔇';
+    
+    // Check if we should show a bonus game (every 3 rounds)
+    if (roundsPlayed > 0 && roundsPlayed % 3 === 0) {
+        showBonusGame();
+        return;
+    }
+    
+    setupClassicMode();
+    showScreen('game');
+}
 
         function showBonusGame() {
             const randomGame = BONUS_GAMES[Math.floor(Math.random() * BONUS_GAMES.length)];
@@ -3678,13 +3731,27 @@ if (leftId === rightId) {
     leftCard.classList.add('correct');
     rightCard.classList.add('correct');
     
+    // Show translations
+    const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
+    if (pair && (pair.en || pair.jp)) {
+        const translationDisplay = document.getElementById('translation-display');
+        translationDisplay.innerHTML = `
+            <span class="word">${pair.word}</span>
+            ${pair.en ? `<span class="translation">EN: ${pair.en}</span>` : ''}
+            ${pair.jp ? `<span class="translation">JP: ${pair.jp}</span>` : ''}
+        `;
+        translationDisplay.style.display = 'block';
+        setTimeout(() => {
+            translationDisplay.style.display = 'none';
+        }, 3000);
+    }
+    
     gameState.player.points += 10;
     gameState.streak++;
     gameState.currentRound.roundPoints += 10;
     
     playCorrectSound(); 
     
-    const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
     if (pair) {
         gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
         if (gameState.wordProgress[pair.word] === 3) {
@@ -4097,14 +4164,18 @@ function showScreen(screenName) {
     screens[screenName].classList.add('active');
     gameState.currentScreen = screenName;
     
-    // Play appropriate sounds
-    if (screenName === 'start') {
+    // Stop music when entering the game screen
+    if (screenName === 'game') {
+        stopCurrentAudio();
+        document.getElementById('music-control').textContent = '🔇';
+    } 
+    // Play appropriate sounds for other screens
+    else if (screenName === 'start') {
         playMainTheme();
     } else {
         playScreenTransitionSound(screenName);
     }
 }
-
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
