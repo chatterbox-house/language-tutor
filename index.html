@@ -657,20 +657,22 @@
             filter: grayscale(100%);
         }
         
-        /* New Game Mode Styles */
+        /* Fast Tap Mode Styles */
         .game-board.fast-tap {
             flex-direction: column;
             align-items: center;
+            padding: 20px;
         }
-        
+
         .fast-tap-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             width: 100%;
             max-width: 500px;
+            margin: 20px 0;
         }
-        
+
         .fast-tap-card {
             background: rgba(30, 40, 70, 0.8);
             border-radius: 15px;
@@ -681,60 +683,110 @@
             cursor: pointer;
             transition: all 0.3s;
             font-size: 3rem;
-            animation: fadeInOut 2s infinite alternate;
+            border: 3px solid rgba(100, 100, 200, 0.3);
         }
-        
+
+        .fast-tap-card:hover {
+            transform: scale(1.05);
+            background: rgba(40, 50, 90, 0.9);
+        }
+
         .fast-tap-card.correct-tap {
             animation: pulse 0.5s;
             background: rgba(100, 255, 100, 0.5);
             box-shadow: 0 0 15px rgba(100, 255, 100, 0.8);
         }
-        
-        .exit-tap-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 10px;
+
+        .fast-tap-card.incorrect-tap {
+            animation: shake 0.5s;
+            background: rgba(255, 100, 100, 0.5);
+        }
+
+        .word-display {
+            font-size: 2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 2px solid #4ecdc4;
+        }
+
+        .game-timer, .game-score, .game-instructions {
+            font-size: 1.3rem;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .start-button, .exit-button {
             margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
             border-radius: 10px;
             cursor: pointer;
         }
-        
-        .word-storm-container {
+
+        .start-button {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .exit-button {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        /* Word Catch Mode Styles */
+        .game-board.word-catch {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .word-catch-area {
             position: relative;
             width: 100%;
             height: 400px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
             overflow: hidden;
-            border: 3px solid #4a4a8a;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.3);
         }
-        
-        .falling-word {
-            position: absolute;
-            font-size: 1.5rem;
-            white-space: nowrap;
-            cursor: pointer;
-            animation: fall linear;
-            will-change: transform;
-        }
-        
-        .storm-target {
+
+        .word-catcher {
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 4rem;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(100, 200, 255, 0.3);
-            border-radius: 50%;
-            border: 3px solid rgba(100, 200, 255, 0.7);
+            font-size: 2rem;
+            z-index: 10;
+            transition: left 0.1s ease;
         }
-        
+
+        .falling-word {
+            position: absolute;
+            top: 0;
+            font-size: 1.5rem;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: top 0.05s linear;
+        }
+
+        .target-display {
+            font-size: 3rem;
+            text-align: center;
+            margin: 10px 0;
+            animation: pulse 1s infinite;
+        }
+
+        .catch-score, .catch-timer, .catch-instructions {
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 5px 0;
+        }
+
         /* Word Passport */
         .passport-container {
             max-width: 600px;
@@ -931,7 +983,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .word-storm-container {
+            .word-catch-area {
                 height: 300px;
             }
         }
@@ -1207,7 +1259,7 @@
         const GAME_MODES = {
             CLASSIC: 'classic',
             FAST_TAP: 'fast_tap',
-            WORD_STORM: 'word_storm'
+            WORD_CATCH: 'word_catch'
         };
         
         // Game state variables
@@ -1370,7 +1422,7 @@
         function loadVocab() {
             return new Promise((resolve) => {
                 // Check if vocab.js is loaded
-if (window.vocab && Array.isArray(window.vocab)) {
+                if (window.vocab && Array.isArray(window.vocab)) {
                     resolve(window.vocab);
                 } else {
                     // Try to load vocab.js
@@ -2012,7 +2064,6 @@ if (window.vocab && Array.isArray(window.vocab)) {
                         updateLogoutButton();
                         updateStickerCollection();
                         updatePassportDisplay();
-                        document.getElementById('character').textContent = gameState.player.avatar;
                         return;
                     }
                 }
@@ -2069,8 +2120,8 @@ if (window.vocab && Array.isArray(window.vocab)) {
                 case GAME_MODES.FAST_TAP:
                     setupFastTapMode();
                     break;
-                case GAME_MODES.WORD_STORM:
-                    setupWordStormMode();
+                case GAME_MODES.WORD_CATCH:
+                    setupWordCatchMode();
                     break;
                 default:
                     setupClassicMode();
@@ -2113,111 +2164,299 @@ if (window.vocab && Array.isArray(window.vocab)) {
             gameBoard.className = 'game-board fast-tap';
             gameBoard.innerHTML = '';
 
-            const container = document.createElement('div');
-            container.className = 'fast-tap-container';
-
-            // Track progress
-            let correctTaps = 0;
-            const tapsRequired = 5;
-            const pointsPerTap = 10;
-
-            // Display instructions
+            // Game variables
+            let timeLeft = 30;
+            let score = 0;
+            let activeCard = null;
+            let gameInterval = null;
+            
+            // Create game elements
+            const timerDisplay = document.createElement('div');
+            timerDisplay.className = 'game-timer';
+            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+            
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'game-score';
+            scoreDisplay.textContent = `Puntos: ${score}`;
+            
             const instructions = document.createElement('div');
-            instructions.className = 'round-instructions';
-            instructions.textContent = `🔊 Tap emojis to hear the word! (${correctTaps}/${tapsRequired})`;
-            gameBoard.appendChild(instructions);
-
-            // Add exit button
-            const exitBtn = document.createElement('button');
-            exitBtn.textContent = "🚪 Exit Round";
-            exitBtn.className = 'exit-tap-btn';
-            exitBtn.addEventListener('click', endRound);
-            gameBoard.appendChild(exitBtn);
-
-            // Create emoji cards
-            gameState.currentRound.pairs.forEach(pair => {
+            instructions.className = 'game-instructions';
+            instructions.textContent = '¡Toca el emoji que coincida con la palabra!';
+            
+            const wordDisplay = document.createElement('div');
+            wordDisplay.className = 'word-display';
+            
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'fast-tap-container';
+            
+            // Create emoji cards (4 options)
+            const shuffledPairs = shuffleArray([...gameState.currentRound.pairs]);
+            const gamePairs = shuffledPairs.slice(0, 4);
+            
+            gamePairs.forEach(pair => {
                 const card = document.createElement('div');
                 card.className = 'fast-tap-card emoji-card';
                 card.textContent = pair.emoji;
                 card.dataset.word = pair.word;
-
+                
                 card.addEventListener('click', () => {
-                    speakWord(pair.word);
-                    playSound('correct');
-                    
-                    correctTaps++;
-                    gameState.player.points += pointsPerTap;
-                    gameState.streak++;
-                    instructions.textContent = `🔊 Tap emojis to hear the word! (${correctTaps}/${tapsRequired})`;
-                    
-                    card.classList.add('correct-tap');
-                    setTimeout(() => card.classList.remove('correct-tap'), 500);
-
-                    gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
-                    if (gameState.wordProgress[pair.word] === 3) {
-                        gameState.completedWords++;
-                        checkMilestone();
+                    if (activeCard && card.dataset.word === activeCard.word) {
+                        // Correct match
+                        playSound('correct');
+                        score += 10;
+                        gameState.player.points += 5;
+                        scoreDisplay.textContent = `Puntos: ${score}`;
+                        
+                        // Visual feedback
+                        card.classList.add('correct-tap');
+                        setTimeout(() => card.classList.remove('correct-tap'), 300);
+                        
+                        // Update word progress
+                        gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
+                        if (gameState.wordProgress[pair.word] === 3) {
+                            gameState.completedWords++;
+                            checkMilestone();
+                        }
+                        
+                        // New word
+                        setupNewWord();
+                    } else {
+                        // Incorrect
+                        playSound('incorrect');
+                        card.classList.add('incorrect-tap');
+                        setTimeout(() => card.classList.remove('incorrect-tap'), 300);
                     }
-
-                    if (correctTaps >= tapsRequired) {
-                        endRound();
-                    }
-
-                    if (Math.random() < 0.1) showPinataBreak();
                 });
-
-                container.appendChild(card);
+                
+                cardContainer.appendChild(card);
             });
-
-            gameBoard.appendChild(container);
+            
+            // Start button
+            const startButton = document.createElement('button');
+            startButton.className = 'start-button';
+            startButton.textContent = 'Comenzar';
+            startButton.addEventListener('click', () => {
+                startButton.remove();
+                setupNewWord();
+                startTimer();
+            });
+            
+            // Exit button
+            const exitButton = document.createElement('button');
+            exitButton.className = 'exit-button';
+            exitButton.textContent = 'Salir';
+            exitButton.addEventListener('click', endFastTapGame);
+            
+            // Assemble game UI
+            gameBoard.appendChild(timerDisplay);
+            gameBoard.appendChild(scoreDisplay);
+            gameBoard.appendChild(instructions);
+            gameBoard.appendChild(wordDisplay);
+            gameBoard.appendChild(cardContainer);
+            gameBoard.appendChild(startButton);
+            gameBoard.appendChild(exitButton);
+            
+            function setupNewWord() {
+                activeCard = shuffleArray([...gamePairs])[0];
+                wordDisplay.textContent = activeCard.word;
+                speakWord(activeCard.word);
+            }
+            
+            function startTimer() {
+                gameInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+                    
+                    if (timeLeft <= 0) {
+                        endFastTapGame();
+                    }
+                }, 1000);
+            }
+            
+            function endFastTapGame() {
+                clearInterval(gameInterval);
+                gameState.player.points += Math.floor(score / 2);
+                showNotification(`¡Obtuviste ${score} puntos en Fast Tap!`);
+                endRound();
+            }
         }
 
-        function setupWordStormMode() {
+        function setupWordCatchMode() {
             generateRoundData();
             const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board';
+            gameBoard.className = 'game-board word-catch';
+            gameBoard.innerHTML = '';
+
+            // Game variables
+            let score = 0;
+            let timeLeft = 45;
+            let fallingSpeed = 1500; // ms per word
+            let gameActive = true;
             
-            const stormContainer = document.createElement('div');
-            stormContainer.className = 'word-storm-container';
+            // Create game elements
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'catch-score';
+            scoreDisplay.textContent = `Puntos: ${score}`;
             
-            const target = document.createElement('div');
-            target.className = 'storm-target';
-            target.textContent = gameState.currentRound.pairs[0].emoji;
-            stormContainer.appendChild(target);
+            const timerDisplay = document.createElement('div');
+            timerDisplay.className = 'catch-timer';
+            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
             
-            // Create falling words
-            gameState.currentRound.pairs.forEach(pair => {
-                if (pair.word === gameState.currentRound.pairs[0].word) return;
+            const catcher = document.createElement('div');
+            catcher.className = 'word-catcher';
+            catcher.textContent = '🕴️';
+            
+            const gameArea = document.createElement('div');
+            gameArea.className = 'word-catch-area';
+            
+            // Instructions
+            const instructions = document.createElement('div');
+            instructions.className = 'catch-instructions';
+            instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
+            
+            // Target emoji display
+            const targetDisplay = document.createElement('div');
+            targetDisplay.className = 'target-display';
+            targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
+            
+            // Assemble UI
+            gameBoard.appendChild(scoreDisplay);
+            gameBoard.appendChild(timerDisplay);
+            gameBoard.appendChild(instructions);
+            gameBoard.appendChild(targetDisplay);
+            gameBoard.appendChild(gameArea);
+            gameBoard.appendChild(catcher);
+            
+            // Timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
                 
-                const word = document.createElement('div');
-                word.className = 'falling-word';
-                word.textContent = pair.word;
-                word.dataset.emoji = pair.emoji;
-                word.style.left = `${Math.random() * 80 + 10}%`;
-                word.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                if (timeLeft <= 0) {
+                    endWordCatchGame();
+                }
+            }, 1000);
+            
+            // Catcher movement
+            document.addEventListener('keydown', (e) => {
+                if (!gameActive) return;
                 
-                word.addEventListener('click', () => {
-                    if (word.textContent === target.textContent) {
-                        // Correct match
-                        word.remove();
-                        playSound('correct');
-                        gameState.player.points += 10;
-                        
-                        // Random chance to show piñata break
-                        if (Math.random() < 0.15) {
-                            showPinataBreak();
-                        }
-                    } else {
-                        // Incorrect match
-                        playSound('incorrect');
-                    }
-                });
+                const catcherRect = catcher.getBoundingClientRect();
+                const gameAreaRect = gameArea.getBoundingClientRect();
                 
-                stormContainer.appendChild(word);
+                if (e.key === 'ArrowLeft' && catcherRect.left > gameAreaRect.left) {
+                    catcher.style.left = `${catcher.offsetLeft - 20}px`;
+                } else if (e.key === 'ArrowRight' && catcherRect.right < gameAreaRect.right) {
+                    catcher.style.left = `${catcher.offsetLeft + 20}px`;
+                }
             });
             
-            gameBoard.appendChild(stormContainer);
-            showNotification("¡Modo Tormenta de Palabras! Toca las palabras que coincidan con el emoji");
+            // Touch support for mobile
+            let touchStartX = 0;
+            gameArea.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+            
+            gameArea.addEventListener('touchmove', (e) => {
+                if (!gameActive) return;
+                
+                const touchX = e.touches[0].clientX;
+                const diff = touchX - touchStartX;
+                const newLeft = catcher.offsetLeft + diff;
+                
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const catcherWidth = catcher.offsetWidth;
+                
+                if (newLeft > 0 && newLeft < (gameAreaRect.width - catcherWidth)) {
+                    catcher.style.left = `${newLeft}px`;
+                }
+                
+                touchStartX = touchX;
+            });
+            
+            // Word falling logic
+            function dropWord() {
+                if (!gameActive) return;
+                
+                const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
+                const wordElement = document.createElement('div');
+                wordElement.className = 'falling-word';
+                wordElement.textContent = wordPair.word;
+                wordElement.dataset.emoji = wordPair.emoji;
+                wordElement.style.left = `${Math.random() * 80}%`;
+                
+                gameArea.appendChild(wordElement);
+                
+                const fallInterval = setInterval(() => {
+                    if (!gameActive) {
+                        clearInterval(fallInterval);
+                        return;
+                    }
+                    
+                    const wordRect = wordElement.getBoundingClientRect();
+                    const catcherRect = catcher.getBoundingClientRect();
+                    
+                    wordElement.style.top = `${wordElement.offsetTop + 5}px`;
+                    
+                    // Check if caught
+                    if (wordRect.bottom >= catcherRect.top && 
+                        wordRect.left >= catcherRect.left && 
+                        wordRect.right <= catcherRect.right) {
+                        
+                        clearInterval(fallInterval);
+                        wordElement.remove();
+                        
+                        if (wordPair.emoji === targetDisplay.textContent) {
+                            // Correct catch
+                            playSound('correct');
+                            score += 10;
+                            gameState.player.points += 5;
+                            scoreDisplay.textContent = `Puntos: ${score}`;
+                            
+                            // Update word progress
+                            gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
+                            if (gameState.wordProgress[wordPair.word] === 3) {
+                                gameState.completedWords++;
+                                checkMilestone();
+                            }
+                            
+                            // Change target emoji
+                            const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
+                            targetDisplay.textContent = newTarget.emoji;
+                        } else {
+                            // Wrong catch
+                            playSound('incorrect');
+                            score = Math.max(0, score - 5);
+                            scoreDisplay.textContent = `Puntos: ${score}`;
+                        }
+                    }
+                    
+                    // Check if missed (fell to bottom)
+                    if (wordRect.bottom >= gameArea.getBoundingClientRect().bottom) {
+                        clearInterval(fallInterval);
+                        wordElement.remove();
+                    }
+                }, 50);
+            }
+            
+            // Start dropping words
+            const wordDropInterval = setInterval(dropWord, fallingSpeed);
+            
+            // Gradually increase difficulty
+            const difficultyInterval = setInterval(() => {
+                fallingSpeed = Math.max(500, fallingSpeed - 100);
+            }, 5000);
+            
+            function endWordCatchGame() {
+                gameActive = false;
+                clearInterval(timer);
+                clearInterval(wordDropInterval);
+                clearInterval(difficultyInterval);
+                
+                gameState.player.points += Math.floor(score / 2);
+                showNotification(`¡Atrapaste ${score} palabras correctas!`);
+                endRound();
+            }
         }
 
         function showPinataBreak() {
