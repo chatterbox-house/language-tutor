@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NANDOmode - Aprende Vocabulario Español</title>
-    <!-- Add PWA meta tags -->
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="Aprende vocabulario español con divertidos juegos de emparejar">
-    <link rel="manifest" href="manifest.json">
-    <!-- Existing styles and fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap">
     <style>
@@ -28,6 +25,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            touch-action: manipulation;
         }
         
         #game-container {
@@ -659,6 +657,181 @@
             filter: grayscale(100%);
         }
         
+        /* New Game Mode Styles */
+        .game-board.fast-tap {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .fast-tap-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .fast-tap-card {
+            background: rgba(30, 40, 70, 0.8);
+            border-radius: 15px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 3rem;
+            animation: fadeInOut 2s infinite alternate;
+        }
+        
+        .fast-tap-card.correct-tap {
+            animation: pulse 0.5s;
+            background: rgba(100, 255, 100, 0.5);
+            box-shadow: 0 0 15px rgba(100, 255, 100, 0.8);
+        }
+        
+        .exit-tap-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .word-storm-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border: 3px solid #4a4a8a;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .falling-word {
+            position: absolute;
+            font-size: 1.5rem;
+            white-space: nowrap;
+            cursor: pointer;
+            animation: fall linear;
+            will-change: transform;
+        }
+        
+        .storm-target {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(100, 200, 255, 0.3);
+            border-radius: 50%;
+            border: 3px solid rgba(100, 200, 255, 0.7);
+        }
+        
+        /* Word Passport */
+        .passport-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #4ecdc4;
+        }
+        
+        .passport-stamps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .passport-stamp {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        
+        .passport-stamp.unlocked {
+            background: rgba(255, 215, 0, 0.3);
+            border: 2px solid gold;
+        }
+        
+        .passport-progress {
+            width: 100%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .passport-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* Piñata Break */
+        .pinata-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .pinata {
+            font-size: 8rem;
+            cursor: pointer;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        .pinata-message {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #ffe66d;
+        }
+        
+        /* New Animations */
+        @keyframes fadeInOut {
+            0% { opacity: 0.3; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(400px); }
+        }
+        
+        /* Mobile Scaling */
+        .kid-mode .card {
+            transform: scale(1.2);
+            margin: 15px auto;
+        }
+        
+        .kid-mode .game-board {
+            flex-direction: column;
+        }
+        
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
@@ -681,18 +854,6 @@
             50% { transform: translateX(15px); }
             75% { transform: translateX(-15px); }
             100% { transform: translateX(0); }
-        }
-        
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(800px) rotate(360deg); opacity: 0; }
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -20px); }
-            10% { opacity: 1; transform: translate(-50%, 0); }
-            90% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -20px); }
         }
         
         @keyframes trophySpin {
@@ -764,6 +925,14 @@
                 font-size: 1.2rem;
                 bottom: 10px;
                 left: 10px;
+            }
+            
+            .fast-tap-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .word-storm-container {
+                height: 300px;
             }
         }
         
@@ -880,6 +1049,7 @@
                 <button id="quick-play-btn" aria-label="Juego rápido como invitado">🎮 Juego Rápido</button>
                 <button id="trophy-room-btn" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
                 <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
+                <button id="passport-btn" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
             
             <h3>Selecciona Modo de Juego:</h3>
@@ -922,14 +1092,14 @@
                 </div>
             </div>
             
-            <div class="game-board">
-                <div class="column" id="column-left"></div>
-                <div class="column" id="column-right"></div>
+            <div class="game-board" id="game-board">
+                <!-- Dynamic content based on game mode -->
             </div>
             
             <div class="btn-group">
-                <button id="refresh-btn" aria-label="Refrescar ronda">🔄 Refrescar</button>
+                <button id="mode-toggle" aria-label="Cambiar modo de juego">🔄 Cambiar Modo</button>
                 <button id="quit-btn" aria-label="Salir al menú principal">🏠 Salir</button>
+                <button id="kid-mode-btn" aria-label="Modo niño">👶 Modo Niño</button>
             </div>
         </div>
         
@@ -964,6 +1134,7 @@
                 <button id="quit-round-btn" aria-label="Salir al menú principal">🏠 Salir</button>
                 <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
                 <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
+                <button id="passport-btn-round" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
         
@@ -979,6 +1150,7 @@
             </div>
             <div class="btn-group">
                 <button id="back-to-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
+                <button id="passport-btn-trophy" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
         
@@ -990,6 +1162,22 @@
             </div>
             <div class="btn-group">
                 <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">🏠 Menú Principal</button>
+                <button id="passport-btn-store" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
+            </div>
+        </div>
+        
+        <div id="passport-screen" class="screen">
+            <h2>Mi Pasaporte de Palabras</h2>
+            <div class="passport-container">
+                <h3>Palabras Dominadas: <span id="passport-count">0</span>/50</h3>
+                <div class="passport-progress">
+                    <div class="passport-progress-bar" id="passport-bar"></div>
+                </div>
+                <div class="passport-stamps" id="passport-stamps"></div>
+                <h3>Próxima Recompensa: <span id="next-reward">Accesorio para tu avatar</span></h3>
+            </div>
+            <div class="btn-group">
+                <button id="back-to-menu-passport" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
         
@@ -1009,26 +1197,20 @@
             <div class="btn-group">
                 <button id="play-again-btn" aria-label="Jugar de nuevo">🔄 Jugar Otra Vez</button>
                 <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
+                <button id="passport-btn-final" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
     </div>
 
-    <script src="vocab.js"></script>
-    
     <script>
-        // Register service worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
+        // Game mode constants
+        const GAME_MODES = {
+            CLASSIC: 'classic',
+            FAST_TAP: 'fast_tap',
+            WORD_STORM: 'word_storm'
+        };
         
+        // Game state variables
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
         let lastTTSTime = 0;
@@ -1036,77 +1218,37 @@
         const milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         let backgroundMusic = null;
         let isMusicPlaying = false;
+        let currentGameMode = GAME_MODES.CLASSIC;
+        let roundsPlayed = 0;
+        let isKidMode = false;
+        let passportAccessories = ['🎩', '👓', '🎀', '🎮', '🧦', '🧤', '🎪', '🎯'];
+        let unlockedAccessories = [];
         
-        const emojiStore = [
-            // Basic Spanish cultural items (affordable)
-            { emoji: '🍊', points: 50, name: 'Naranja' },
-            { emoji: '🏺', points: 75, name: 'Cántaro' },
-            { emoji: '🥘', points: 100, name: 'Paella' },
-            { emoji: '🌮', points: 125, name: 'Taco' },
-            { emoji: '🍷', points: 150, name: 'Vino' },
-            { emoji: '🎸', points: 175, name: 'Guitarra' },
-            { emoji: '💃', points: 200, name: 'Bailarina' },
-            
-            // Intermediate Spanish icons
-            { emoji: '🌵', points: 300, name: 'Cactus' },
-            { emoji: '🦂', points: 400, name: 'Alacrán' },
-            { emoji: '🏰', points: 500, name: 'Castillo' },
-            { emoji: '⛪', points: 600, name: 'Catedral' },
-            { emoji: '🎭', points: 700, name: 'Teatro' },
-            { emoji: '🪕', points: 800, name: 'Charango' },
-            { emoji: '🥁', points: 900, name: 'Cajón' },
-            
-            // Premium Spanish/Latin American items
-            { emoji: '🗿', points: 1000, name: 'Moai' },
-            { emoji: '🌋', points: 1200, name: 'Volcán' },
-            { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
-            { emoji: '🎪', points: 1800, name: 'Feria' },
-            { emoji: '🛶', points: 2000, name: 'Canoa' },
-            { emoji: '🏺', points: 2200, name: 'Ánfora' },
-            { emoji: '🕌', points: 2500, name: 'Alhambra' },
-            
-            // Luxury Spanish items
-            { emoji: '👑', points: 3000, name: 'Corona Real' },
-            { emoji: '💎', points: 3500, name: 'Esmeralda' },
-            { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
-            { emoji: '🛕', points: 4500, name: 'Templo Maya' },
-            { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
-            { emoji: '🎻', points: 6000, name: 'Stradivarius' },
-            { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
-            
-            // Ultra rare Spanish treasures
-            { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
-            { emoji: '🏰', points: 9000, name: 'Alcázar' },
-            { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
-            { emoji: '📜', points: 12000, name: 'Carta de Colón' },
-            { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
-            { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
-            { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
-            { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
-            { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
-        ];
-
-        const stickers = [
-            { emoji: '⭐', unlocked: true, points: 0 },
-            { emoji: '🎯', unlocked: true, points: 0 },
-            { emoji: '🏅', unlocked: false, points: 100 },
-            { emoji: '🏆', unlocked: false, points: 500 },
-            { emoji: '👑', unlocked: false, points: 1000 },
-            { emoji: '🎖️', unlocked: false, points: 1500 },
-            { emoji: '🎉', unlocked: false, points: 2000 },
-            { emoji: '🏅', unlocked: false, points: 2500 },
-            { emoji: '🏆', unlocked: false, points: 3000 },
-            { emoji: '👑', unlocked: false, points: 5000 }
-        ];
-
+        // Default vocabulary - will be replaced if vocab.js loads
         const defaultVocab = [
             { word: 'gato', emoji: '😺', type: 'noun' },
             { word: 'perro', emoji: '🐶', type: 'noun' },
             { word: 'sol', emoji: '☀️', type: 'noun' },
             { word: 'luna', emoji: '🌙', type: 'noun' },
-            { word: 'casa', emoji: '🏠', type: 'noun' }
+            { word: 'casa', emoji: '🏠', type: 'noun' },
+            { word: 'árbol', emoji: '🌳', type: 'noun' },
+            { word: 'agua', emoji: '💧', type: 'noun' },
+            { word: 'fuego', emoji: '🔥', type: 'noun' },
+            { word: 'libro', emoji: '📖', type: 'noun' },
+            { word: 'manzana', emoji: '🍎', type: 'noun' },
+            { word: 'correr', emoji: '🏃', type: 'verb' },
+            { word: 'saltar', emoji: '🦘', type: 'verb' },
+            { word: 'comer', emoji: '🍽️', type: 'verb' },
+            { word: 'beber', emoji: '🥛', type: 'verb' },
+            { word: 'dormir', emoji: '😴', type: 'verb' },
+            { word: 'grande', emoji: '🐘', type: 'adjective' },
+            { word: 'pequeño', emoji: '🐜', type: 'adjective' },
+            { word: 'feliz', emoji: '😊', type: 'adjective' },
+            { word: 'triste', emoji: '😢', type: 'adjective' },
+            { word: 'rápido', emoji: '⚡', type: 'adjective' }
         ];
 
+        // Main game state
         const gameState = {
             currentScreen: 'start',
             player: {
@@ -1120,7 +1262,8 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                passportWords: []
             },
             mode: '',
             streak: 0,
@@ -1138,28 +1281,45 @@
             leaderboard: []
         };
 
+        function showSuccess(message) {
+            const notification = document.getElementById('success-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const notification = document.getElementById('error-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'milestone-notification';
+            notification.textContent = message;
+            document.getElementById('game-container').appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Screen elements
         const screens = {
             start: document.getElementById('start-screen'),
             game: document.getElementById('game-screen'),
             roundComplete: document.getElementById('round-complete-screen'),
             trophyRoom: document.getElementById('trophy-room-screen'),
             emojiStore: document.getElementById('emoji-store-screen'),
+            passport: document.getElementById('passport-screen'),
             gameOver: document.getElementById('game-over-screen')
         };
 
-        function showError(message) {
-            const notification = document.getElementById('error-notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 3000);
-        }
-
-        function showSuccess(message) {
-            const notification = document.getElementById('success-notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 3000);
-        }
+        // Initialize the game
+        window.addEventListener('DOMContentLoaded', initGame);
 
         function initGame() {
             try {
@@ -1171,37 +1331,61 @@
                 return;
             }
             
-            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
-            if (!window.vocab || window.vocab.length === 0) {
-                console.warn("vocab.js not loaded, using default vocab");
-                showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
-            }
-            
-            try {
-                const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
-                if (savedLeaderboard) {
-                    gameState.leaderboard = JSON.parse(savedLeaderboard);
+            // Try to load vocab.js
+            loadVocab().then(vocab => {
+                if (!vocab || vocab.length === 0) {
+                    console.warn("vocab.js not loaded, using default vocab");
+                    showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
                 }
-            } catch (e) {
-                console.warn("Error loading leaderboard:", e);
-                showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
-            }
-            
-            // Initialize background music
-            initBackgroundMusic();
-            
-            // Setup character interaction
-            setupCharacter();
-            
-            populateUserSelect();
-            loadPlayerProgress();
-            setupEventListeners();
-            updatePlayerUI();
-            updateProgressBar();
-            updateStreakDisplay();
-            updateRewardPath();
-            updateLogoutButton();
-            updateStickerCollection();
+                
+                try {
+                    const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
+                    if (savedLeaderboard) {
+                        gameState.leaderboard = JSON.parse(savedLeaderboard);
+                    }
+                } catch (e) {
+                    console.warn("Error loading leaderboard:", e);
+                    showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
+                }
+                
+                // Initialize background music
+                initBackgroundMusic();
+                
+                // Setup character interaction
+                setupCharacter();
+                
+                populateUserSelect();
+                loadPlayerProgress();
+                setupEventListeners();
+                updatePlayerUI();
+                updateProgressBar();
+                updateStreakDisplay();
+                updateRewardPath();
+                updateLogoutButton();
+                updateStickerCollection();
+                updatePassportDisplay();
+            });
+        }
+
+        function loadVocab() {
+            return new Promise((resolve) => {
+                // Check if vocab.js is loaded
+if (window.vocab && Array.isArray(window.vocab)) {
+                    resolve(window.vocab);
+                } else {
+                    // Try to load vocab.js
+                    const script = document.createElement('script');
+                    script.src = 'vocab.js';
+                    script.onload = () => {
+                        resolve(window.vocab || defaultVocab);
+                    };
+                    script.onerror = () => {
+                        console.warn("Failed to load vocab.js");
+                        resolve(defaultVocab);
+                    };
+                    document.head.appendChild(script);
+                }
+            });
         }
 
         function initBackgroundMusic() {
@@ -1304,10 +1488,16 @@
             document.getElementById('quick-play-btn').addEventListener('click', quickPlay);
             document.getElementById('trophy-room-btn').addEventListener('click', showTrophyRoom);
             document.getElementById('emoji-store-btn').addEventListener('click', showEmojiStore);
+            document.getElementById('passport-btn').addEventListener('click', showPassport);
             document.getElementById('trophy-room-btn-round').addEventListener('click', showTrophyRoom);
             document.getElementById('emoji-store-btn-round').addEventListener('click', showEmojiStore);
+            document.getElementById('passport-btn-round').addEventListener('click', showPassport);
+            document.getElementById('passport-btn-trophy').addEventListener('click', showPassport);
+            document.getElementById('passport-btn-store').addEventListener('click', showPassport);
+            document.getElementById('passport-btn-final').addEventListener('click', showPassport);
             document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('back-to-menu-btn-store').addEventListener('click', quitToMainMenu);
+            document.getElementById('back-to-menu-passport').addEventListener('click', quitToMainMenu);
             document.getElementById('logout-btn').addEventListener('click', logout);
             
             document.querySelectorAll('.avatar').forEach(avatar => {
@@ -1331,12 +1521,39 @@
                 });
             });
 
-            document.getElementById('refresh-btn').addEventListener('click', startNewRound);
             document.getElementById('quit-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('next-round-btn').addEventListener('click', startNewRound);
             document.getElementById('quit-round-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('play-again-btn').addEventListener('click', startNewGame);
             document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
+            document.getElementById('kid-mode-btn').addEventListener('click', toggleKidMode);
+            document.getElementById('mode-toggle').addEventListener('click', toggleGameMode);
+        }
+
+        function toggleGameMode() {
+            const modes = Object.values(GAME_MODES);
+            const currentIndex = modes.indexOf(currentGameMode);
+            currentGameMode = modes[(currentIndex + 1) % modes.length];
+            showNotification(`Modo cambiado a: ${currentGameMode.replace('_', ' ')}`);
+            startNewRound();
+        }
+
+        function toggleKidMode() {
+            isKidMode = !isKidMode;
+            const gameContainer = document.getElementById('game-container');
+            const kidModeBtn = document.getElementById('kid-mode-btn');
+            
+            if (isKidMode) {
+                gameContainer.classList.add('kid-mode');
+                kidModeBtn.textContent = '👶 Modo Normal';
+                showSuccess("Modo Niño Activado - ¡Tarjetas más grandes!");
+            } else {
+                gameContainer.classList.remove('kid-mode');
+                kidModeBtn.textContent = '👶 Modo Niño';
+                showSuccess("Modo Niño Desactivado");
+            }
+            
+            updateGameUI();
         }
 
         function selectAvatar(avatar) {
@@ -1351,6 +1568,7 @@
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             color.classList.add('selected');
             gameState.player.theme = color.dataset.color;
+            updatePlayerUI();
         }
 
         function updatePlayerUI() {
@@ -1424,6 +1642,19 @@
             
             collection.innerHTML = '';
             
+            const stickers = [
+                { emoji: '⭐', unlocked: true, points: 0 },
+                { emoji: '🎯', unlocked: true, points: 0 },
+                { emoji: '🏅', unlocked: false, points: 100 },
+                { emoji: '🏆', unlocked: false, points: 500 },
+                { emoji: '👑', unlocked: false, points: 1000 },
+                { emoji: '🎖️', unlocked: false, points: 1500 },
+                { emoji: '🎉', unlocked: false, points: 2000 },
+                { emoji: '🏅', unlocked: false, points: 2500 },
+                { emoji: '🏆', unlocked: false, points: 3000 },
+                { emoji: '👑', unlocked: false, points: 5000 }
+            ];
+            
             stickers.forEach(sticker => {
                 const div = document.createElement('div');
                 div.className = `sticker ${gameState.player.unlockedStickers.includes(sticker.emoji) ? 'unlocked' : 'locked'}`;
@@ -1433,6 +1664,45 @@
                     `Desbloquea con ${sticker.points} puntos`;
                 collection.appendChild(div);
             });
+        }
+
+        function updatePassportDisplay() {
+            const passportStamps = document.getElementById('passport-stamps');
+            passportStamps.innerHTML = '';
+            
+            gameState.player.passportWords = Object.keys(gameState.wordProgress).filter(word => gameState.wordProgress[word] >= 3);
+            
+            document.getElementById('passport-count').textContent = gameState.player.passportWords.length;
+            document.getElementById('passport-bar').style.width = `${(gameState.player.passportWords.length / 50) * 100}%`;
+            
+            // Show stamps for mastered words
+            gameState.player.passportWords.forEach((word, index) => {
+                const stamp = document.createElement('div');
+                stamp.className = 'passport-stamp unlocked';
+                stamp.textContent = '✈️'; // Default stamp, can be customized
+                stamp.title = word;
+                passportStamps.appendChild(stamp);
+                
+                // Unlock accessories every 10 words
+                if ((index + 1) % 10 === 0 && unlockedAccessories.length < passportAccessories.length) {
+                    const accessory = passportAccessories[unlockedAccessories.length];
+                    unlockedAccessories.push(accessory);
+                    showNotification(`¡Nuevo accesorio desbloqueado: ${accessory}!`);
+                }
+            });
+            
+            // Show next reward
+            const nextRewardIndex = Math.floor(gameState.player.passportWords.length / 10);
+            if (nextRewardIndex < passportAccessories.length) {
+                document.getElementById('next-reward').textContent = passportAccessories[nextRewardIndex];
+            } else {
+                document.getElementById('next-reward').textContent = "¡Todos los accesorios desbloqueados!";
+            }
+        }
+
+        function showPassport() {
+            updatePassportDisplay();
+            showScreen('passport');
         }
 
         function loadSelectedUser() {
@@ -1466,7 +1736,8 @@
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
+                            passportWords: playerData.passportWords || []
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1485,6 +1756,7 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
+                        updatePassportDisplay();
                         document.getElementById('character').textContent = gameState.player.avatar;
                         showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                         return;
@@ -1513,7 +1785,8 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                passportWords: []
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1521,6 +1794,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updatePassportDisplay();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -1556,7 +1830,8 @@
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯']
+                    unlockedStickers: ['⭐', '🎯'],
+                    passportWords: []
                 };
                 
                 gameState.streak = 0;
@@ -1570,6 +1845,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updatePassportDisplay();
             
             usernameInput.value = '';
             usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
@@ -1602,7 +1878,8 @@
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯']
+                    unlockedStickers: ['⭐', '🎯'],
+                    passportWords: []
                 };
                 gameState.streak = 0;
                 gameState.completedWords = 0;
@@ -1611,6 +1888,7 @@
                 updatePlayerUI();
                 updateLogoutButton();
                 updateStickerCollection();
+                updatePassportDisplay();
                 showSuccess("Jugando como Invitado. El progreso no se guardará.");
             }
             showScreen('start');
@@ -1632,7 +1910,8 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                passportWords: []
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1643,6 +1922,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updatePassportDisplay();
             populateUserSelect();
             
             document.getElementById('username-input').style.display = 'block';
@@ -1676,6 +1956,7 @@
                     completedWords: gameState.completedWords,
                     streak: gameState.streak,
                     unlockedStickers: gameState.player.unlockedStickers,
+                    passportWords: gameState.player.passportWords,
                     lastActive: new Date().toISOString()
                 };
                 
@@ -1711,7 +1992,8 @@
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
+                            passportWords: playerData.passportWords || []
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1729,6 +2011,7 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
+                        updatePassportDisplay();
                         document.getElementById('character').textContent = gameState.player.avatar;
                         return;
                     }
@@ -1753,7 +2036,8 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                passportWords: []
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1762,6 +2046,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updatePassportDisplay();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -1773,13 +2058,206 @@
         }
 
         function startNewRound() {
-            generateRoundData();
-            updateGameUI();
-            showScreen('game');
-            if (!isMobile) {
-                const roundWords = gameState.currentRound.pairs.map(p => p.word).join(', ');
-                showNotification(`Palabras de la ronda: ${roundWords}`);
+            roundsPlayed++;
+            setupGameModeRotation();
+            
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.innerHTML = '';
+            gameBoard.className = 'game-board';
+            
+            switch (currentGameMode) {
+                case GAME_MODES.FAST_TAP:
+                    setupFastTapMode();
+                    break;
+                case GAME_MODES.WORD_STORM:
+                    setupWordStormMode();
+                    break;
+                default:
+                    setupClassicMode();
             }
+            
+            showScreen('game');
+        }
+
+        function setupGameModeRotation() {
+            // Rotate modes every 3 rounds
+            if (roundsPlayed > 0 && roundsPlayed % 3 === 0) {
+                const modes = Object.values(GAME_MODES);
+                const currentIndex = modes.indexOf(currentGameMode);
+                currentGameMode = modes[(currentIndex + 1) % modes.length];
+            }
+        }
+
+        function setupClassicMode() {
+            generateRoundData();
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.className = 'game-board';
+            
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'column';
+            leftColumn.id = 'column-left';
+            
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'column';
+            rightColumn.id = 'column-right';
+            
+            gameBoard.appendChild(leftColumn);
+            gameBoard.appendChild(rightColumn);
+            
+            updateGameUI();
+        }
+
+        function setupFastTapMode() {
+            generateRoundData();
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.className = 'game-board fast-tap';
+            gameBoard.innerHTML = '';
+
+            const container = document.createElement('div');
+            container.className = 'fast-tap-container';
+
+            // Track progress
+            let correctTaps = 0;
+            const tapsRequired = 5;
+            const pointsPerTap = 10;
+
+            // Display instructions
+            const instructions = document.createElement('div');
+            instructions.className = 'round-instructions';
+            instructions.textContent = `🔊 Tap emojis to hear the word! (${correctTaps}/${tapsRequired})`;
+            gameBoard.appendChild(instructions);
+
+            // Add exit button
+            const exitBtn = document.createElement('button');
+            exitBtn.textContent = "🚪 Exit Round";
+            exitBtn.className = 'exit-tap-btn';
+            exitBtn.addEventListener('click', endRound);
+            gameBoard.appendChild(exitBtn);
+
+            // Create emoji cards
+            gameState.currentRound.pairs.forEach(pair => {
+                const card = document.createElement('div');
+                card.className = 'fast-tap-card emoji-card';
+                card.textContent = pair.emoji;
+                card.dataset.word = pair.word;
+
+                card.addEventListener('click', () => {
+                    speakWord(pair.word);
+                    playSound('correct');
+                    
+                    correctTaps++;
+                    gameState.player.points += pointsPerTap;
+                    gameState.streak++;
+                    instructions.textContent = `🔊 Tap emojis to hear the word! (${correctTaps}/${tapsRequired})`;
+                    
+                    card.classList.add('correct-tap');
+                    setTimeout(() => card.classList.remove('correct-tap'), 500);
+
+                    gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
+                    if (gameState.wordProgress[pair.word] === 3) {
+                        gameState.completedWords++;
+                        checkMilestone();
+                    }
+
+                    if (correctTaps >= tapsRequired) {
+                        endRound();
+                    }
+
+                    if (Math.random() < 0.1) showPinataBreak();
+                });
+
+                container.appendChild(card);
+            });
+
+            gameBoard.appendChild(container);
+        }
+
+        function setupWordStormMode() {
+            generateRoundData();
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.className = 'game-board';
+            
+            const stormContainer = document.createElement('div');
+            stormContainer.className = 'word-storm-container';
+            
+            const target = document.createElement('div');
+            target.className = 'storm-target';
+            target.textContent = gameState.currentRound.pairs[0].emoji;
+            stormContainer.appendChild(target);
+            
+            // Create falling words
+            gameState.currentRound.pairs.forEach(pair => {
+                if (pair.word === gameState.currentRound.pairs[0].word) return;
+                
+                const word = document.createElement('div');
+                word.className = 'falling-word';
+                word.textContent = pair.word;
+                word.dataset.emoji = pair.emoji;
+                word.style.left = `${Math.random() * 80 + 10}%`;
+                word.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                
+                word.addEventListener('click', () => {
+                    if (word.textContent === target.textContent) {
+                        // Correct match
+                        word.remove();
+                        playSound('correct');
+                        gameState.player.points += 10;
+                        
+                        // Random chance to show piñata break
+                        if (Math.random() < 0.15) {
+                            showPinataBreak();
+                        }
+                    } else {
+                        // Incorrect match
+                        playSound('incorrect');
+                    }
+                });
+                
+                stormContainer.appendChild(word);
+            });
+            
+            gameBoard.appendChild(stormContainer);
+            showNotification("¡Modo Tormenta de Palabras! Toca las palabras que coincidan con el emoji");
+        }
+
+        function showPinataBreak() {
+            const pinataContainer = document.createElement('div');
+            pinataContainer.className = 'pinata-container';
+            
+            const pinata = document.createElement('div');
+            pinata.className = 'pinata';
+            pinata.textContent = '🪅';
+            
+            const message = document.createElement('div');
+            message.className = 'pinata-message';
+            message.textContent = '¡Toca la piñata para ganar puntos!';
+            
+            let taps = 0;
+            const maxTaps = 5;
+            let bonusPoints = 0;
+            
+            pinata.addEventListener('click', () => {
+                taps++;
+                playSound('correct');
+                pinata.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+                
+                if (taps >= maxTaps) {
+                    bonusPoints = Math.floor(Math.random() * 50) + 50;
+                    gameState.player.points += bonusPoints;
+                    message.textContent = `¡Ganaste ${bonusPoints} puntos!`;
+                    pinata.textContent = '🎉';
+                    
+                    setTimeout(() => {
+                        pinataContainer.remove();
+                    }, 2000);
+                } else {
+                    message.textContent = `¡Sigue tocando! ${maxTaps - taps} toques más...`;
+                }
+            });
+            
+            pinataContainer.appendChild(pinata);
+            pinataContainer.appendChild(message);
+            document.body.appendChild(pinataContainer);
         }
 
         function sanitizePairId(word) {
@@ -1881,68 +2359,70 @@
             updateProgressBar();
             updateRewardPath();
             
-            const leftColumn = document.getElementById('column-left');
-            const rightColumn = document.getElementById('column-right');
-            leftColumn.innerHTML = '';
-            rightColumn.innerHTML = '';
-            
-            gameState.currentRound.leftColumn.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                card.dataset.pairId = item.pairId;
-                card.dataset.type = item.type;
-                card.textContent = item.value;
-                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+            if (currentGameMode === GAME_MODES.CLASSIC) {
+                const leftColumn = document.getElementById('column-left');
+                const rightColumn = document.getElementById('column-right');
+                leftColumn.innerHTML = '';
+                rightColumn.innerHTML = '';
                 
-                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                    card.classList.add('matched');
-                }
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                if (pair && gameState.wordProgress[pair.word]) {
-                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                }
-                
-                card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
-                card.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+                gameState.currentRound.leftColumn.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                    card.dataset.pairId = item.pairId;
+                    card.dataset.type = item.type;
+                    card.textContent = item.value;
+                    card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+                    
+                    if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                        card.classList.add('matched');
+                    }
+                    
+                    const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                    if (pair && gameState.wordProgress[pair.word]) {
+                        card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+                    }
+                    
+                    card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
+                    card.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+                    });
+                    
+                    leftColumn.appendChild(card);
                 });
                 
-                leftColumn.appendChild(card);
-            });
-            
-            gameState.currentRound.rightColumn.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                card.dataset.pairId = item.pairId;
-                card.dataset.type = item.type;
-                card.textContent = item.value;
-                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
-                
-                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                    card.classList.add('matched');
-                }
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                if (pair && gameState.wordProgress[pair.word]) {
-                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                }
-                
-                card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
-                card.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
+                gameState.currentRound.rightColumn.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                    card.dataset.pairId = item.pairId;
+                    card.dataset.type = item.type;
+                    card.textContent = item.value;
+                    card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+                    
+                    if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                        card.classList.add('matched');
+                    }
+                    
+                    const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                    if (pair && gameState.wordProgress[pair.word]) {
+                        card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+                    }
+                    
+                    card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
+                    card.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
+                    });
+                    
+                    rightColumn.appendChild(card);
                 });
                 
-                rightColumn.appendChild(card);
-            });
-            
-            if (gameState.currentRound.matchedPairs.length === 5) {
-                console.log('All pairs matched, ending round');
-                endRound();
+                if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
+                    console.log('All pairs matched, ending round');
+                    endRound();
+                }
             }
         }
 
@@ -2071,7 +2551,7 @@
                     gameState.currentRound.selectedRight = null;
                     isProcessingClick = false;
                     
-                    if (gameState.currentRound.matchedPairs.length === 5) {
+                    if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
                         console.log('All pairs matched, ending round');
                         endRound();
                     } else {
@@ -2099,6 +2579,19 @@
         }
 
         function checkStickerUnlock() {
+            const stickers = [
+                { emoji: '⭐', unlocked: true, points: 0 },
+                { emoji: '🎯', unlocked: true, points: 0 },
+                { emoji: '🏅', unlocked: false, points: 100 },
+                { emoji: '🏆', unlocked: false, points: 500 },
+                { emoji: '👑', unlocked: false, points: 1000 },
+                { emoji: '🎖️', unlocked: false, points: 1500 },
+                { emoji: '🎉', unlocked: false, points: 2000 },
+                { emoji: '🏅', unlocked: false, points: 2500 },
+                { emoji: '🏆', unlocked: false, points: 3000 },
+                { emoji: '👑', unlocked: false, points: 5000 }
+            ];
+            
             const stickerToUnlock = stickers.find(sticker => 
                 !gameState.player.unlockedStickers.includes(sticker.emoji) && 
                 gameState.player.points >= sticker.points
@@ -2159,6 +2652,46 @@
         }
 
         function checkEmojiPurchase() {
+            const emojiStore = [
+                { emoji: '🍊', points: 50, name: 'Naranja' },
+                { emoji: '🏺', points: 75, name: 'Cántaro' },
+                { emoji: '🥘', points: 100, name: 'Paella' },
+                { emoji: '🌮', points: 125, name: 'Taco' },
+                { emoji: '🍷', points: 150, name: 'Vino' },
+                { emoji: '🎸', points: 175, name: 'Guitarra' },
+                { emoji: '💃', points: 200, name: 'Bailarina' },
+                { emoji: '🌵', points: 300, name: 'Cactus' },
+                { emoji: '🦂', points: 400, name: 'Alacrán' },
+                { emoji: '🏰', points: 500, name: 'Castillo' },
+                { emoji: '⛪', points: 600, name: 'Catedral' },
+                { emoji: '🎭', points: 700, name: 'Teatro' },
+                { emoji: '🪕', points: 800, name: 'Charango' },
+                { emoji: '🥁', points: 900, name: 'Cajón' },
+                { emoji: '🗿', points: 1000, name: 'Moai' },
+                { emoji: '🌋', points: 1200, name: 'Volcán' },
+                { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
+                { emoji: '🎪', points: 1800, name: 'Feria' },
+                { emoji: '🛶', points: 2000, name: 'Canoa' },
+                { emoji: '🏺', points: 2200, name: 'Ánfora' },
+                { emoji: '🕌', points: 2500, name: 'Alhambra' },
+                { emoji: '👑', points: 3000, name: 'Corona Real' },
+                { emoji: '💎', points: 3500, name: 'Esmeralda' },
+                { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
+                { emoji: '🛕', points: 4500, name: 'Templo Maya' },
+                { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
+                { emoji: '🎻', points: 6000, name: 'Stradivarius' },
+                { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
+                { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
+                { emoji: '🏰', points: 9000, name: 'Alcázar' },
+                { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
+                { emoji: '📜', points: 12000, name: 'Carta de Colón' },
+                { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
+                { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
+                { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
+                { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
+                { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
+            ];
+
             const affordableEmojis = emojiStore.filter(item => !gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points);
             if (affordableEmojis.length > 0) {
                 const emoji = affordableEmojis[0];
@@ -2171,16 +2704,8 @@
             }
         }
 
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'milestone-notification';
-            notification.textContent = message;
-            document.getElementById('game-container').appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
-        }
-
         function endRound() {
-            if (gameState.currentRound.roundPoints === 50) {
+            if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
                 gameState.player.points += 50;
                 showNotification('¡Ronda perfecta! +50 puntos');
             }
@@ -2299,6 +2824,46 @@
             emojiList.innerHTML = '';
             document.getElementById('store-points').textContent = gameState.player.points;
             
+            const emojiStore = [
+                { emoji: '🍊', points: 50, name: 'Naranja' },
+                { emoji: '🏺', points: 75, name: 'Cántaro' },
+                { emoji: '🥘', points: 100, name: 'Paella' },
+                { emoji: '🌮', points: 125, name: 'Taco' },
+                { emoji: '🍷', points: 150, name: 'Vino' },
+                { emoji: '🎸', points: 175, name: 'Guitarra' },
+                { emoji: '💃', points: 200, name: 'Bailarina' },
+                { emoji: '🌵', points: 300, name: 'Cactus' },
+                { emoji: '🦂', points: 400, name: 'Alacrán' },
+                { emoji: '🏰', points: 500, name: 'Castillo' },
+                { emoji: '⛪', points: 600, name: 'Catedral' },
+                { emoji: '🎭', points: 700, name: 'Teatro' },
+                { emoji: '🪕', points: 800, name: 'Charango' },
+                { emoji: '🥁', points: 900, name: 'Cajón' },
+                { emoji: '🗿', points: 1000, name: 'Moai' },
+                { emoji: '🌋', points: 1200, name: 'Volcán' },
+                { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
+                { emoji: '🎪', points: 1800, name: 'Feria' },
+                { emoji: '🛶', points: 2000, name: 'Canoa' },
+                { emoji: '🏺', points: 2200, name: 'Ánfora' },
+                { emoji: '🕌', points: 2500, name: 'Alhambra' },
+                { emoji: '👑', points: 3000, name: 'Corona Real' },
+                { emoji: '💎', points: 3500, name: 'Esmeralda' },
+                { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
+                { emoji: '🛕', points: 4500, name: 'Templo Maya' },
+                { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
+                { emoji: '🎻', points: 6000, name: 'Stradivarius' },
+                { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
+                { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
+                { emoji: '🏰', points: 9000, name: 'Alcázar' },
+                { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
+                { emoji: '📜', points: 12000, name: 'Carta de Colón' },
+                { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
+                { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
+                { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
+                { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
+                { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
+            ];
+
             emojiStore.forEach(item => {
                 const div = document.createElement('div');
                 div.className = `emoji-item ${gameState.player.purchasedEmojis.includes(item.emoji) ? 'purchased' : ''}`;
@@ -2452,8 +3017,6 @@
                 console.warn("SpeechSynthesis not supported.");
             }
         }
-
-        window.addEventListener('DOMContentLoaded', initGame);
     </script>
 </body>
 </html>
