@@ -657,211 +657,208 @@
             filter: grayscale(100%);
         }
         
-        /* Fast Tap Mode Styles */
-        .game-board.fast-tap {
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .fast-tap-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            max-width: 500px;
-            margin: 20px 0;
-        }
-
-        .fast-tap-card {
-            background: rgba(30, 40, 70, 0.8);
-            border-radius: 15px;
-            aspect-ratio: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 3rem;
-            border: 3px solid rgba(100, 100, 200, 0.3);
-        }
-
-        .fast-tap-card:hover {
-            transform: scale(1.05);
-            background: rgba(40, 50, 90, 0.9);
-        }
-
-        .fast-tap-card.correct-tap {
-            animation: pulse 0.5s;
-            background: rgba(100, 255, 100, 0.5);
-            box-shadow: 0 0 15px rgba(100, 255, 100, 0.8);
-        }
-
-        .fast-tap-card.incorrect-tap {
-            animation: shake 0.5s;
-            background: rgba(255, 100, 100, 0.5);
-        }
-
-        .word-display {
-            font-size: 2rem;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            border: 2px solid #4ecdc4;
-        }
-
-        .game-timer, .game-score, .game-instructions {
-            font-size: 1.3rem;
-            margin: 10px 0;
+        /* Bonus Game Styles */
+        #bonus-game-screen {
+            background: radial-gradient(circle at center, #3a2a1a, #2a1a0d);
             text-align: center;
         }
-
-        .start-button, .exit-button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .start-button {
-            background: #4ecdc4;
-            color: white;
-        }
-
-        .exit-button {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        /* Word Catch Mode Styles */
-        .game-board.word-catch {
-            position: relative;
-            height: 500px;
-            overflow: hidden;
-        }
-
-        .word-catch-area {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .word-catcher {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            z-index: 10;
-            transition: left 0.1s ease;
-        }
-
-        .falling-word {
-            position: absolute;
-            top: 0;
-            font-size: 1.5rem;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #1a1a2e;
-            border-radius: 20px;
-            white-space: nowrap;
-            transition: top 0.05s linear;
-        }
-
-        .target-display {
-            font-size: 3rem;
-            text-align: center;
-            margin: 10px 0;
-            animation: pulse 1s infinite;
-        }
-
-        .catch-score, .catch-timer, .catch-instructions {
-            font-size: 1.3rem;
-            text-align: center;
-            margin: 5px 0;
-        }
-
-        /* Word Passport */
-        .passport-container {
+        
+        .bonus-game-container {
             max-width: 600px;
-            margin: 20px auto;
+            margin: 0 auto;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
-            padding: 20px;
-            border: 3px solid #4ecdc4;
+            border: 3px solid #ff6b6b;
         }
         
-        .passport-stamps {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+        .bonus-game-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffe66d;
+            text-shadow: 0 0 10px rgba(255, 230, 109, 0.7);
+        }
+        
+        .bonus-game-instructions {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+        }
+        
+        .bonus-game-area {
+            position: relative;
+            width: 100%;
+            height: 300px;
             margin: 20px 0;
-        }
-        
-        .passport-stamp {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-        }
-        
-        .passport-stamp.unlocked {
-            background: rgba(255, 215, 0, 0.3);
-            border: 2px solid gold;
-        }
-        
-        .passport-progress {
-            width: 100%;
-            height: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            margin: 10px 0;
             overflow: hidden;
+            border-radius: 10px;
+            border: 3px solid #4ecdc4;
+            background: rgba(0, 0, 0, 0.2);
         }
         
-        .passport-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            width: 0%;
-            transition: width 0.5s ease;
+        .bonus-game-score {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #ff6b6b;
         }
         
-        /* Piñata Break */
-        .pinata-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
+        .bonus-game-timer {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #4ecdc4;
         }
         
+        /* Piñata Game */
         .pinata {
+            position: absolute;
             font-size: 8rem;
             cursor: pointer;
             animation: bounce 1s infinite alternate;
+            transform-origin: center top;
+            left: 50%;
+            top: 50px;
+            transform: translateX(-50%);
+            z-index: 10;
         }
         
-        .pinata-message {
+        .pinata-hit {
+            animation: pinataHit 0.3s;
+        }
+        
+        .candy {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: fall 1s linear forwards;
+            z-index: 5;
+        }
+        
+        /* Bull Run Game */
+        .bull {
+            position: absolute;
+            font-size: 5rem;
+            left: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: bullRun 3s linear infinite;
+        }
+        
+        .matador {
+            position: absolute;
+            font-size: 4rem;
+            right: 20px;
+            bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        /* Flamenco Game */
+        .flamenco-dancer {
+            position: absolute;
+            font-size: 6rem;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            cursor: pointer;
+            animation: flamencoDance 1s infinite alternate;
+        }
+        
+        .castanet {
+            position: absolute;
             font-size: 2rem;
-            margin: 20px 0;
-            color: #ffe66d;
+            animation: castanetFall 1s linear forwards;
+        }
+        
+        /* Soccer Game */
+        .soccer-goal {
+            position: absolute;
+            font-size: 8rem;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+        }
+        
+        .soccer-ball {
+            position: absolute;
+            font-size: 3rem;
+            cursor: pointer;
+            animation: soccerKick 1s infinite alternate;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Tapas Game */
+        .tapas-plate {
+            position: absolute;
+            font-size: 4rem;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        
+        .tapas-item {
+            position: absolute;
+            font-size: 2rem;
+            animation: tapasFall 1s linear forwards;
+        }
+        
+        /* Fiesta Game */
+        .fiesta-item {
+            position: absolute;
+            font-size: 3rem;
+            cursor: pointer;
+            animation: fiestaFloat 3s infinite ease-in-out;
+        }
+        
+        /* Gaudi Game */
+        .gaudi-tile {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #ffe66d);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Churro Game */
+        .churro {
+            position: absolute;
+            font-size: 3rem;
+            cursor: pointer;
+            animation: churroFloat 2s infinite ease-in-out;
+        }
+        
+        /* Maracas Game */
+        .maraca {
+            position: absolute;
+            font-size: 4rem;
+            cursor: pointer;
+            animation: maracaShake 0.5s infinite alternate;
+        }
+        
+        /* Don Quixote Game */
+        .windmill {
+            position: absolute;
+            font-size: 6rem;
+            animation: windmillSpin 5s linear infinite;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .don-quixote {
+            position: absolute;
+            font-size: 4rem;
+            cursor: pointer;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         /* New Animations */
@@ -872,6 +869,59 @@
         
         @keyframes fall {
             to { transform: translateY(400px); }
+        }
+        
+        @keyframes pinataHit {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            25% { transform: translateX(-50%) rotate(15deg); }
+            50% { transform: translateX(-50%) rotate(-15deg); }
+            75% { transform: translateX(-50%) rotate(10deg); }
+            100% { transform: translateX(-50%) rotate(0deg); }
+        }
+        
+        @keyframes bullRun {
+            0% { left: -100px; }
+            100% { left: calc(100% + 100px); }
+        }
+        
+        @keyframes flamencoDance {
+            0% { transform: translateX(-50%) rotate(-5deg); }
+            100% { transform: translateX(-50%) rotate(5deg); }
+        }
+        
+        @keyframes castanetFall {
+            0% { top: -50px; opacity: 1; }
+            100% { top: 300px; opacity: 0; }
+        }
+        
+        @keyframes soccerKick {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        @keyframes tapasFall {
+            0% { top: -50px; opacity: 1; }
+            100% { top: 300px; opacity: 0; }
+        }
+        
+        @keyframes fiestaFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes churroFloat {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes maracaShake {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(15deg); }
+        }
+        
+        @keyframes windmillSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
         /* Mobile Scaling */
@@ -979,12 +1029,12 @@
                 left: 10px;
             }
             
-            .fast-tap-container {
-                grid-template-columns: repeat(2, 1fr);
+            .bonus-game-area {
+                height: 250px;
             }
             
-            .word-catch-area {
-                height: 300px;
+            .pinata {
+                font-size: 6rem;
             }
         }
         
@@ -1031,6 +1081,14 @@
             
             .character {
                 font-size: 2.5rem;
+            }
+            
+            .bonus-game-area {
+                height: 200px;
+            }
+            
+            .pinata {
+                font-size: 5rem;
             }
         }
         
@@ -1101,7 +1159,6 @@
                 <button id="quick-play-btn" aria-label="Juego rápido como invitado">🎮 Juego Rápido</button>
                 <button id="trophy-room-btn" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
                 <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
-                <button id="passport-btn" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
             
             <h3>Selecciona Modo de Juego:</h3>
@@ -1149,9 +1206,19 @@
             </div>
             
             <div class="btn-group">
-                <button id="mode-toggle" aria-label="Cambiar modo de juego">🔄 Cambiar Modo</button>
                 <button id="quit-btn" aria-label="Salir al menú principal">🏠 Salir</button>
                 <button id="kid-mode-btn" aria-label="Modo niño">👶 Modo Niño</button>
+            </div>
+        </div>
+        
+        <div id="bonus-game-screen" class="screen">
+            <div class="bonus-game-container">
+                <h2 class="bonus-game-title" id="bonus-game-title">¡Juego Bonus!</h2>
+                <p class="bonus-game-instructions" id="bonus-game-instructions">Toca la piñata para ganar puntos</p>
+                <div class="bonus-game-area" id="bonus-game-area"></div>
+                <div class="bonus-game-score">Puntos: <span id="bonus-score">0</span></div>
+                <div class="bonus-game-timer">Tiempo: <span id="bonus-timer">30</span>s</div>
+                <button id="bonus-continue-btn" class="mode-btn easy">Continuar al Juego Principal</button>
             </div>
         </div>
         
@@ -1186,7 +1253,6 @@
                 <button id="quit-round-btn" aria-label="Salir al menú principal">🏠 Salir</button>
                 <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
                 <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
-                <button id="passport-btn-round" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
         
@@ -1202,7 +1268,6 @@
             </div>
             <div class="btn-group">
                 <button id="back-to-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-                <button id="passport-btn-trophy" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
         
@@ -1214,22 +1279,6 @@
             </div>
             <div class="btn-group">
                 <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-                <button id="passport-btn-store" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
-            </div>
-        </div>
-        
-        <div id="passport-screen" class="screen">
-            <h2>Mi Pasaporte de Palabras</h2>
-            <div class="passport-container">
-                <h3>Palabras Dominadas: <span id="passport-count">0</span>/50</h3>
-                <div class="passport-progress">
-                    <div class="passport-progress-bar" id="passport-bar"></div>
-                </div>
-                <div class="passport-stamps" id="passport-stamps"></div>
-                <h3>Próxima Recompensa: <span id="next-reward">Accesorio para tu avatar</span></h3>
-            </div>
-            <div class="btn-group">
-                <button id="back-to-menu-passport" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
         
@@ -1249,97 +1298,11 @@
             <div class="btn-group">
                 <button id="play-again-btn" aria-label="Jugar de nuevo">🔄 Jugar Otra Vez</button>
                 <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-                <button id="passport-btn-final" aria-label="Ver pasaporte de palabras">📖 Pasaporte</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Game mode constants
-        const GAME_MODES = {
-            CLASSIC: 'classic',
-            FAST_TAP: 'fast_tap',
-            WORD_CATCH: 'word_catch'
-        };
-        
-        // Sound Manager
-        const soundManager = {
-            activeSounds: [],
-            context: null,
-            init() {
-                try {
-                    this.context = new (window.AudioContext || window.webkitAudioContext)();
-                } catch (e) {
-                    console.warn("AudioContext not supported:", e);
-                }
-            },
-            playSound(type) {
-                if (!this.context) return;
-                
-                // Stop any existing sounds of the same type
-                this.stopSounds(type);
-                
-                const sound = this.createSound(type);
-                if (sound) {
-                    this.activeSounds.push(sound);
-                    sound.oscillator.start();
-                    sound.oscillator.stop(this.context.currentTime + 0.3);
-                    
-                    // Automatically remove when finished
-                    setTimeout(() => {
-                        const index = this.activeSounds.indexOf(sound);
-                        if (index > -1) this.activeSounds.splice(index, 1);
-                    }, 300);
-                }
-            },
-            createSound(type) {
-                if (!this.context) return null;
-                
-                const oscillator = this.context.createOscillator();
-                const gainNode = this.context.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.context.destination);
-                
-                if (type === 'correct') {
-                    oscillator.type = 'triangle';
-                    oscillator.frequency.setValueAtTime(523.25, this.context.currentTime);
-                    gainNode.gain.setValueAtTime(0.3, this.context.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(1046.50, this.context.currentTime + 0.2);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.3);
-                } else if (type === 'incorrect') {
-                    oscillator.type = 'square';
-                    oscillator.frequency.setValueAtTime(220, this.context.currentTime);
-                    gainNode.gain.setValueAtTime(0.3, this.context.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(110, this.context.currentTime + 0.1);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.2);
-                } else if (type === 'character') {
-                    oscillator.type = 'sine';
-                    oscillator.frequency.setValueAtTime(880, this.context.currentTime);
-                    gainNode.gain.setValueAtTime(0.2, this.context.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(1760, this.context.currentTime + 0.1);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.2);
-                }
-                
-                return { oscillator, gainNode, type };
-            },
-            stopSounds(type = null) {
-                if (type) {
-                    // Stop specific type sounds
-                    this.activeSounds.forEach(sound => {
-                        if (sound.type === type) {
-                            sound.oscillator.stop();
-                        }
-                    });
-                    this.activeSounds = this.activeSounds.filter(sound => sound.type !== type);
-                } else {
-                    // Stop all sounds
-                    this.activeSounds.forEach(sound => sound.oscillator.stop());
-                    this.activeSounds = [];
-                }
-            }
-        };
-        
         // Game state variables
         const isMobile = window.innerWidth <= 768;
         let isProcessingClick = false;
@@ -1348,12 +1311,63 @@
         const milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         let backgroundMusic = null;
         let isMusicPlaying = false;
-        let currentGameMode = GAME_MODES.CLASSIC;
         let roundsPlayed = 0;
         let isKidMode = false;
-        let passportAccessories = ['🎩', '👓', '🎀', '🎮', '🧦', '🧤', '🎪', '🎯'];
-        let unlockedAccessories = [];
         
+        // Bonus games
+        const BONUS_GAMES = [
+            { 
+                name: "Piñata Party", 
+                instructions: "¡Golpea la piñata para ganar dulces y puntos!", 
+                setup: setupPinataGame 
+            },
+            { 
+                name: "Corrida de Toros", 
+                instructions: "¡Esquiva al toro para ganar puntos!", 
+                setup: setupBullRunGame 
+            },
+            { 
+                name: "Flamenco Fiesta", 
+                instructions: "¡Toca al bailarín para atrapar las castañuelas!", 
+                setup: setupFlamencoGame 
+            },
+            { 
+                name: "Fútbol Español", 
+                instructions: "¡Patea el balón para marcar goles!", 
+                setup: setupSoccerGame 
+            },
+            { 
+                name: "Tapas Time", 
+                instructions: "¡Atrapa las tapas que caen para ganar puntos!", 
+                setup: setupTapasGame 
+            },
+            { 
+                name: "Fiesta Española", 
+                instructions: "¡Toca los objetos de la fiesta para ganar puntos!", 
+                setup: setupFiestaGame 
+            },
+            { 
+                name: "Gaudi Mosaico", 
+                instructions: "¡Toca los mosaicos de colores para ganar puntos!", 
+                setup: setupGaudiGame 
+            },
+            { 
+                name: "Churros Challenge", 
+                instructions: "¡Atrapa los churros que caen para ganar puntos!", 
+                setup: setupChurroGame 
+            },
+            { 
+                name: "Maracas Madness", 
+                instructions: "¡Agita las maracas para ganar puntos!", 
+                setup: setupMaracaGame 
+            },
+            { 
+                name: "Don Quixote", 
+                instructions: "¡Toca a Don Quijote para detener los molinos!", 
+                setup: setupDonQuixoteGame 
+            }
+        ];
+
         // Default vocabulary - will be replaced if vocab.js loads
         const defaultVocab = [
             { word: 'gato', emoji: '😺', type: 'noun' },
@@ -1392,8 +1406,7 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                passportWords: []
+                unlockedStickers: ['⭐', '🎯']
             },
             mode: '',
             streak: 0,
@@ -1441,10 +1454,10 @@
         const screens = {
             start: document.getElementById('start-screen'),
             game: document.getElementById('game-screen'),
+            bonus: document.getElementById('bonus-game-screen'),
             roundComplete: document.getElementById('round-complete-screen'),
             trophyRoom: document.getElementById('trophy-room-screen'),
             emojiStore: document.getElementById('emoji-store-screen'),
-            passport: document.getElementById('passport-screen'),
             gameOver: document.getElementById('game-over-screen')
         };
 
@@ -1460,9 +1473,6 @@
                 showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
                 return;
             }
-            
-            // Initialize sound manager
-            soundManager.init();
             
             // Try to load vocab.js
             loadVocab().then(vocab => {
@@ -1496,7 +1506,6 @@
                 updateRewardPath();
                 updateLogoutButton();
                 updateStickerCollection();
-                updatePassportDisplay();
             });
         }
 
@@ -1582,7 +1591,6 @@
                 ];
                 const randomMessage = messages[Math.floor(Math.random() * messages.length)];
                 showNotification(randomMessage);
-                soundManager.playSound('character');
             });
         }
 
@@ -1621,16 +1629,10 @@
             document.getElementById('quick-play-btn').addEventListener('click', quickPlay);
             document.getElementById('trophy-room-btn').addEventListener('click', showTrophyRoom);
             document.getElementById('emoji-store-btn').addEventListener('click', showEmojiStore);
-            document.getElementById('passport-btn').addEventListener('click', showPassport);
             document.getElementById('trophy-room-btn-round').addEventListener('click', showTrophyRoom);
             document.getElementById('emoji-store-btn-round').addEventListener('click', showEmojiStore);
-            document.getElementById('passport-btn-round').addEventListener('click', showPassport);
-            document.getElementById('passport-btn-trophy').addEventListener('click', showPassport);
-            document.getElementById('passport-btn-store').addEventListener('click', showPassport);
-            document.getElementById('passport-btn-final').addEventListener('click', showPassport);
             document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('back-to-menu-btn-store').addEventListener('click', quitToMainMenu);
-            document.getElementById('back-to-menu-passport').addEventListener('click', quitToMainMenu);
             document.getElementById('logout-btn').addEventListener('click', logout);
             
             document.querySelectorAll('.avatar').forEach(avatar => {
@@ -1660,15 +1662,7 @@
             document.getElementById('play-again-btn').addEventListener('click', startNewGame);
             document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('kid-mode-btn').addEventListener('click', toggleKidMode);
-            document.getElementById('mode-toggle').addEventListener('click', toggleGameMode);
-        }
-
-        function toggleGameMode() {
-            const modes = Object.values(GAME_MODES);
-            const currentIndex = modes.indexOf(currentGameMode);
-            currentGameMode = modes[(currentIndex + 1) % modes.length];
-            showNotification(`Modo cambiado a: ${currentGameMode.replace('_', ' ')}`);
-            startNewRound();
+            document.getElementById('bonus-continue-btn').addEventListener('click', startNewRound);
         }
 
         function toggleKidMode() {
@@ -1799,45 +1793,6 @@
             });
         }
 
-        function updatePassportDisplay() {
-            const passportStamps = document.getElementById('passport-stamps');
-            passportStamps.innerHTML = '';
-            
-            gameState.player.passportWords = Object.keys(gameState.wordProgress).filter(word => gameState.wordProgress[word] >= 3);
-            
-            document.getElementById('passport-count').textContent = gameState.player.passportWords.length;
-            document.getElementById('passport-bar').style.width = `${(gameState.player.passportWords.length / 50) * 100}%`;
-            
-            // Show stamps for mastered words
-            gameState.player.passportWords.forEach((word, index) => {
-                const stamp = document.createElement('div');
-                stamp.className = 'passport-stamp unlocked';
-                stamp.textContent = '✈️'; // Default stamp, can be customized
-                stamp.title = word;
-                passportStamps.appendChild(stamp);
-                
-                // Unlock accessories every 10 words
-                if ((index + 1) % 10 === 0 && unlockedAccessories.length < passportAccessories.length) {
-                    const accessory = passportAccessories[unlockedAccessories.length];
-                    unlockedAccessories.push(accessory);
-                    showNotification(`¡Nuevo accesorio desbloqueado: ${accessory}!`);
-                }
-            });
-            
-            // Show next reward
-            const nextRewardIndex = Math.floor(gameState.player.passportWords.length / 10);
-            if (nextRewardIndex < passportAccessories.length) {
-                document.getElementById('next-reward').textContent = passportAccessories[nextRewardIndex];
-            } else {
-                document.getElementById('next-reward').textContent = "¡Todos los accesorios desbloqueados!";
-            }
-        }
-
-        function showPassport() {
-            updatePassportDisplay();
-            showScreen('passport');
-        }
-
         function loadSelectedUser() {
             const userSelect = document.getElementById('user-select');
             const username = userSelect.value;
@@ -1869,8 +1824,7 @@
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
-                            passportWords: playerData.passportWords || []
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1889,7 +1843,6 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
-                        updatePassportDisplay();
                         document.getElementById('character').textContent = gameState.player.avatar;
                         showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                         return;
@@ -1918,8 +1871,7 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                passportWords: []
+                unlockedStickers: ['⭐', '🎯']
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1927,7 +1879,6 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
-            updatePassportDisplay();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -1963,8 +1914,7 @@
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯'],
-                    passportWords: []
+                    unlockedStickers: ['⭐', '🎯']
                 };
                 
                 gameState.streak = 0;
@@ -1978,7 +1928,6 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
-            updatePassportDisplay();
             
             usernameInput.value = '';
             usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
@@ -2011,8 +1960,7 @@
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯'],
-                    passportWords: []
+                    unlockedStickers: ['⭐', '🎯']
                 };
                 gameState.streak = 0;
                 gameState.completedWords = 0;
@@ -2021,7 +1969,6 @@
                 updatePlayerUI();
                 updateLogoutButton();
                 updateStickerCollection();
-                updatePassportDisplay();
                 showSuccess("Jugando como Invitado. El progreso no se guardará.");
             }
             showScreen('start');
@@ -2043,8 +1990,7 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                passportWords: []
+                unlockedStickers: ['⭐', '🎯']
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -2055,7 +2001,6 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
-            updatePassportDisplay();
             populateUserSelect();
             
             document.getElementById('username-input').style.display = 'block';
@@ -2089,7 +2034,6 @@
                     completedWords: gameState.completedWords,
                     streak: gameState.streak,
                     unlockedStickers: gameState.player.unlockedStickers,
-                    passportWords: gameState.player.passportWords,
                     lastActive: new Date().toISOString()
                 };
                 
@@ -2125,8 +2069,7 @@
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
-                            passportWords: playerData.passportWords || []
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -2144,7 +2087,6 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
-                        updatePassportDisplay();
                         return;
                     }
                 }
@@ -2168,8 +2110,7 @@
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                passportWords: []
+                unlockedStickers: ['⭐', '🎯']
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -2178,7 +2119,6 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
-            updatePassportDisplay();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -2191,414 +2131,515 @@
 
         function startNewRound() {
             roundsPlayed++;
-            setupGameModeRotation();
             
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.innerHTML = '';
-            gameBoard.className = 'game-board';
-            
-            switch (currentGameMode) {
-                case GAME_MODES.FAST_TAP:
-                    setupFastTapMode();
-                    break;
-                case GAME_MODES.WORD_CATCH:
-                    setupWordCatchMode();
-                    break;
-                default:
-                    setupClassicMode();
+            // Check if we should show a bonus game (every 3 rounds)
+            if (roundsPlayed > 0 && roundsPlayed % 3 === 0) {
+                showBonusGame();
+                return;
             }
             
+            setupClassicMode();
             showScreen('game');
         }
 
-        function setupGameModeRotation() {
-            // Rotate modes every 3 rounds
-            if (roundsPlayed > 0 && roundsPlayed % 3 === 0) {
-                const modes = Object.values(GAME_MODES);
-                const currentIndex = modes.indexOf(currentGameMode);
-                currentGameMode = modes[(currentIndex + 1) % modes.length];
-            }
+        function showBonusGame() {
+            const randomGame = BONUS_GAMES[Math.floor(Math.random() * BONUS_GAMES.length)];
+            document.getElementById('bonus-game-title').textContent = randomGame.name;
+            document.getElementById('bonus-game-instructions').textContent = randomGame.instructions;
+            document.getElementById('bonus-score').textContent = '0';
+            document.getElementById('bonus-timer').textContent = '30';
+            
+            // Clear previous game
+            const gameArea = document.getElementById('bonus-game-area');
+            gameArea.innerHTML = '';
+            
+            // Setup the new game
+            randomGame.setup();
+            
+            showScreen('bonus');
         }
 
-        function setupClassicMode() {
-            generateRoundData();
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board';
-            
-            const leftColumn = document.createElement('div');
-            leftColumn.className = 'column';
-            leftColumn.id = 'column-left';
-            
-            const rightColumn = document.createElement('div');
-            rightColumn.className = 'column';
-            rightColumn.id = 'column-right';
-            
-            gameBoard.appendChild(leftColumn);
-            gameBoard.appendChild(rightColumn);
-            
-            updateGameUI();
-        }
-
-        function setupFastTapMode() {
-            generateRoundData();
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board fast-tap';
-            gameBoard.innerHTML = '';
-
-            // Game variables
+        function setupPinataGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
             let timeLeft = 30;
-            let score = 0;
-            let activeCard = null;
-            let gameInterval = null;
-            let lastSoundTime = 0;
-            
-            // Create game elements
-            const timerDisplay = document.createElement('div');
-            timerDisplay.className = 'game-timer';
-            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-            
-            const scoreDisplay = document.createElement('div');
-            scoreDisplay.className = 'game-score';
-            scoreDisplay.textContent = `Puntos: ${score}`;
-            
-            const instructions = document.createElement('div');
-            instructions.className = 'game-instructions';
-            instructions.textContent = '¡Toca el emoji que coincida con la palabra!';
-            
-            const wordDisplay = document.createElement('div');
-            wordDisplay.className = 'word-display';
-            
-            const cardContainer = document.createElement('div');
-            cardContainer.className = 'fast-tap-container';
-            
-            // Create emoji cards (4 options)
-            const shuffledPairs = shuffleArray([...gameState.currentRound.pairs]);
-            const gamePairs = shuffledPairs.slice(0, 4);
-            
-            gamePairs.forEach(pair => {
-                const card = document.createElement('div');
-                card.className = 'fast-tap-card emoji-card';
-                card.textContent = pair.emoji;
-                card.dataset.word = pair.word;
-                
-                card.addEventListener('click', () => {
-                    if (activeCard && card.dataset.word === activeCard.word) {
-                        // Correct match
-                        const now = Date.now();
-                        if (now - lastSoundTime > 100) { // 100ms cooldown
-                            soundManager.playSound('correct');
-                            lastSoundTime = now;
-                        }
-                        
-                        score += 10;
-                        gameState.player.points += 5;
-                        scoreDisplay.textContent = `Puntos: ${score}`;
-                        
-                        // Visual feedback
-                        card.classList.add('correct-tap');
-                        setTimeout(() => card.classList.remove('correct-tap'), 300);
-                        
-                        // Update word progress
-                        gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
-                        if (gameState.wordProgress[pair.word] === 3) {
-                            gameState.completedWords++;
-                            checkMilestone();
-                        }
-                        
-                        // New word
-                        setupNewWord();
-                    } else {
-                        // Incorrect
-                        const now = Date.now();
-                        if (now - lastSoundTime > 100) { // 100ms cooldown
-                            soundManager.playSound('incorrect');
-                            lastSoundTime = now;
-                        }
-                        card.classList.add('incorrect-tap');
-                        setTimeout(() => card.classList.remove('incorrect-tap'), 300);
-                    }
-                });
-                
-                cardContainer.appendChild(card);
-            });
-            
-            // Start button
-            const startButton = document.createElement('button');
-            startButton.className = 'start-button';
-            startButton.textContent = 'Comenzar';
-            startButton.addEventListener('click', () => {
-                startButton.remove();
-                setupNewWord();
-                startTimer();
-            });
-            
-            // Exit button
-            const exitButton = document.createElement('button');
-            exitButton.className = 'exit-button';
-            exitButton.textContent = 'Salir';
-            exitButton.addEventListener('click', endFastTapGame);
-            
-            // Assemble game UI
-            gameBoard.appendChild(timerDisplay);
-            gameBoard.appendChild(scoreDisplay);
-            gameBoard.appendChild(instructions);
-            gameBoard.appendChild(wordDisplay);
-            gameBoard.appendChild(cardContainer);
-            gameBoard.appendChild(startButton);
-            gameBoard.appendChild(exitButton);
-            
-            function setupNewWord() {
-                activeCard = shuffleArray([...gamePairs])[0];
-                wordDisplay.textContent = activeCard.word;
-                speakWord(activeCard.word);
-            }
-            
-            function startTimer() {
-                gameInterval = setInterval(() => {
-                    timeLeft--;
-                    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-                    
-                    if (timeLeft <= 0) {
-                        endFastTapGame();
-                    }
-                }, 1000);
-            }
-            
-            function endFastTapGame() {
-                soundManager.stopSounds(); // Stop all sounds
-                clearInterval(gameInterval);
-                gameState.player.points += Math.floor(score / 2);
-                showNotification(`¡Obtuviste ${score} puntos en Fast Tap!`);
-                endRound();
-            }
-        }
-
-        function setupWordCatchMode() {
-            generateRoundData();
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board word-catch';
-            gameBoard.innerHTML = '';
-
-            // Game variables
-            let score = 0;
-            let timeLeft = 45;
-            let fallingSpeed = 1500; // ms per word
             let gameActive = true;
-            let catcherPosition = 50; // Percentage from left
-            let lastSoundTime = 0;
             
-            // Create game elements
-            const scoreDisplay = document.createElement('div');
-            scoreDisplay.className = 'catch-score';
-            scoreDisplay.textContent = `Puntos: ${score}`;
-            
-            const timerDisplay = document.createElement('div');
-            timerDisplay.className = 'catch-timer';
-            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-            
-            const catcher = document.createElement('div');
-            catcher.className = 'word-catcher';
-            catcher.textContent = '🕴️';
-            catcher.style.left = `${catcherPosition}%`;
-            
-            const gameArea = document.createElement('div');
-            gameArea.className = 'word-catch-area';
-            
-            // Instructions
-            const instructions = document.createElement('div');
-            instructions.className = 'catch-instructions';
-            instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
-            
-            // Target emoji display
-            const targetDisplay = document.createElement('div');
-            targetDisplay.className = 'target-display';
-            targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
-            
-            // Assemble UI
-            gameBoard.appendChild(scoreDisplay);
-            gameBoard.appendChild(timerDisplay);
-            gameBoard.appendChild(instructions);
-            gameBoard.appendChild(targetDisplay);
-            gameBoard.appendChild(gameArea);
-            gameBoard.appendChild(catcher);
-            
-            // Timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-                
-                if (timeLeft <= 0) {
-                    endWordCatchGame();
-                }
-            }, 1000);
-            
-            // Catcher movement - Keyboard
-            const handleKeyDown = (e) => {
-                if (!gameActive) return;
-                
-                if (e.key === 'ArrowLeft') {
-                    catcherPosition = Math.max(0, catcherPosition - 5);
-                } else if (e.key === 'ArrowRight') {
-                    catcherPosition = Math.min(95, catcherPosition + 5);
-                }
-                catcher.style.left = `${catcherPosition}%`;
-            };
-            
-            document.addEventListener('keydown', handleKeyDown);
-            
-            // Touch support for mobile
-            gameArea.addEventListener('touchmove', (e) => {
-                if (!gameActive) return;
-                e.preventDefault();
-                
-                const touchX = e.touches[0].clientX;
-                const gameAreaRect = gameArea.getBoundingClientRect();
-                const relativeX = touchX - gameAreaRect.left;
-                catcherPosition = (relativeX / gameAreaRect.width) * 100;
-                catcher.style.left = `${Math.max(0, Math.min(95, catcherPosition))}%`;
-            }, { passive: false });
-            
-            // Word falling logic
-            function dropWord() {
-                if (!gameActive) return;
-                
-                const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
-                const wordElement = document.createElement('div');
-                wordElement.className = 'falling-word';
-                wordElement.textContent = wordPair.word;
-                wordElement.dataset.emoji = wordPair.emoji;
-                wordElement.style.left = `${Math.random() * 80 + 10}%`;
-                wordElement.style.top = '0px';
-                
-                gameArea.appendChild(wordElement);
-                
-                const fallInterval = setInterval(() => {
-                    if (!gameActive) {
-                        clearInterval(fallInterval);
-                        wordElement.remove();
-                        return;
-                    }
-                    
-                    const currentTop = parseInt(wordElement.style.top) || 0;
-                    wordElement.style.top = `${currentTop + 5}px`;
-                    
-                    // Check if caught
-                    const wordRect = wordElement.getBoundingClientRect();
-                    const catcherRect = catcher.getBoundingClientRect();
-                    
-                    if (wordRect.bottom >= catcherRect.top && 
-                        wordRect.right >= catcherRect.left && 
-                        wordRect.left <= catcherRect.right) {
-                        
-                        clearInterval(fallInterval);
-                        wordElement.remove();
-                        
-                        if (wordPair.emoji === targetDisplay.textContent) {
-                            // Correct catch
-                            const now = Date.now();
-                            if (now - lastSoundTime > 100) { // 100ms cooldown
-                                soundManager.playSound('correct');
-                                lastSoundTime = now;
-                            }
-                            
-                            score += 10;
-                            gameState.player.points += 5;
-                            scoreDisplay.textContent = `Puntos: ${score}`;
-                            
-                            // Update word progress
-                            gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
-                            if (gameState.wordProgress[wordPair.word] === 3) {
-                                gameState.completedWords++;
-                                checkMilestone();
-                            }
-                            
-                            // Change target emoji
-                            const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
-                            targetDisplay.textContent = newTarget.emoji;
-                        } else {
-                            // Wrong catch
-                            const now = Date.now();
-                            if (now - lastSoundTime > 100) { // 100ms cooldown
-                                soundManager.playSound('incorrect');
-                                lastSoundTime = now;
-                            }
-                            score = Math.max(0, score - 5);
-                            scoreDisplay.textContent = `Puntos: ${score}`;
-                        }
-                    }
-                    
-                    // Check if missed (fell to bottom)
-                    if (parseInt(wordElement.style.top) > gameArea.offsetHeight) {
-                        clearInterval(fallInterval);
-                        wordElement.remove();
-                    }
-                }, 50);
-            }
-            
-            // Start dropping words
-            const wordDropInterval = setInterval(dropWord, fallingSpeed);
-            
-            // Gradually increase difficulty
-            const difficultyInterval = setInterval(() => {
-                fallingSpeed = Math.max(500, fallingSpeed - 100);
-            }, 5000);
-            
-            function endWordCatchGame() {
-                soundManager.stopSounds(); // Stop all sounds
-                gameActive = false;
-                clearInterval(timer);
-                clearInterval(wordDropInterval);
-                clearInterval(difficultyInterval);
-                document.removeEventListener('keydown', handleKeyDown);
-                
-                gameState.player.points += Math.floor(score / 2);
-                showNotification(`¡Atrapaste ${score} palabras correctas!`);
-                endRound();
-            }
-        }
-
-        function showPinataBreak() {
-            const pinataContainer = document.createElement('div');
-            pinataContainer.className = 'pinata-container';
-            
+            // Create piñata
             const pinata = document.createElement('div');
             pinata.className = 'pinata';
             pinata.textContent = '🪅';
-            
-            const message = document.createElement('div');
-            message.className = 'pinata-message';
-            message.textContent = '¡Toca la piñata para ganar puntos!';
-            
-            let taps = 0;
-            const maxTaps = 5;
-            let bonusPoints = 0;
-            
             pinata.addEventListener('click', () => {
-                taps++;
-                soundManager.playSound('correct');
-                pinata.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+                if (!gameActive) return;
                 
-                if (taps >= maxTaps) {
-                    bonusPoints = Math.floor(Math.random() * 50) + 50;
-                    gameState.player.points += bonusPoints;
-                    message.textContent = `¡Ganaste ${bonusPoints} puntos!`;
-                    pinata.textContent = '🎉';
+                // Add hit animation
+                pinata.classList.add('pinata-hit');
+                setTimeout(() => pinata.classList.remove('pinata-hit'), 300);
+                
+                // Add score
+                score += 5;
+                document.getElementById('bonus-score').textContent = score;
+                
+                // Create falling candies
+                for (let i = 0; i < 5; i++) {
+                    const candy = document.createElement('div');
+                    candy.className = 'candy';
+                    candy.textContent = '🍬';
+                    candy.style.left = `${Math.random() * 80 + 10}%`;
+                    candy.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
+                    gameArea.appendChild(candy);
                     
                     setTimeout(() => {
-                        pinataContainer.remove();
-                    }, 2000);
-                } else {
-                    message.textContent = `¡Sigue tocando! ${maxTaps - taps} toques más...`;
+                        candy.remove();
+                    }, 1000);
                 }
             });
             
-            pinataContainer.appendChild(pinata);
-            pinataContainer.appendChild(message);
-            document.body.appendChild(pinataContainer);
+            gameArea.appendChild(pinata);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
         }
 
-        function sanitizePairId(word) {
-            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        function setupBullRunGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create matador (player)
+            const matador = document.createElement('div');
+            matador.className = 'matador';
+            matador.textContent = '🕴️';
+            matador.addEventListener('click', () => {
+                if (!gameActive) return;
+                
+                // Jump animation
+                matador.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    matador.style.transform = 'translateY(0)';
+                }, 300);
+            });
+            
+            gameArea.appendChild(matador);
+            
+            // Bull spawning
+            const bullSpawn = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(bullSpawn);
+                    return;
+                }
+                
+                const bull = document.createElement('div');
+                bull.className = 'bull';
+                bull.textContent = '🐂';
+                
+                bull.addEventListener('animationend', () => {
+                    if (gameActive) {
+                        score += 10;
+                        document.getElementById('bonus-score').textContent = score;
+                    }
+                    bull.remove();
+                });
+                
+                gameArea.appendChild(bull);
+            }, 2000);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    clearInterval(bullSpawn);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupFlamencoGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create flamenco dancer
+            const dancer = document.createElement('div');
+            dancer.className = 'flamenco-dancer';
+            dancer.textContent = '💃';
+            dancer.addEventListener('click', () => {
+                if (!gameActive) return;
+                
+                // Create castanets
+                for (let i = 0; i < 3; i++) {
+                    const castanet = document.createElement('div');
+                    castanet.className = 'castanet';
+                    castanet.textContent = '🎵';
+                    castanet.style.left = `${Math.random() * 80 + 10}%`;
+                    castanet.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
+                    
+                    castanet.addEventListener('click', (e) => {
+                        if (!gameActive) return;
+                        e.stopPropagation();
+                        score += 5;
+                        document.getElementById('bonus-score').textContent = score;
+                        castanet.remove();
+                    });
+                    
+                    gameArea.appendChild(castanet);
+                    
+                    setTimeout(() => {
+                        castanet.remove();
+                    }, 1000);
+                }
+            });
+            
+            gameArea.appendChild(dancer);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupSoccerGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create goal
+            const goal = document.createElement('div');
+            goal.className = 'soccer-goal';
+            goal.textContent = '🥅';
+            gameArea.appendChild(goal);
+            
+            // Create ball
+            const ball = document.createElement('div');
+            ball.className = 'soccer-ball';
+            ball.textContent = '⚽';
+            ball.addEventListener('click', () => {
+                if (!gameActive) return;
+                
+                // Kick animation
+                ball.style.animation = 'none';
+                void ball.offsetWidth; // Trigger reflow
+                ball.style.animation = 'soccerKick 0.5s forwards';
+                
+                setTimeout(() => {
+                    score += 10;
+                    document.getElementById('bonus-score').textContent = score;
+                    ball.style.animation = 'soccerKick 1s infinite alternate';
+                }, 500);
+            });
+            
+            gameArea.appendChild(ball);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupTapasGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create plate
+            const plate = document.createElement('div');
+            plate.className = 'tapas-plate';
+            plate.textContent = '🍽️';
+            gameArea.appendChild(plate);
+            
+            // Tapas falling
+            const tapasSpawn = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(tapasSpawn);
+                    return;
+                }
+                
+                const tapas = document.createElement('div');
+                tapas.className = 'tapas-item';
+                tapas.textContent = ['🍤', '🍖', '🧀', '🥖', '🍅'][Math.floor(Math.random() * 5)];
+                tapas.style.left = `${Math.random() * 80 + 10}%`;
+                tapas.style.animationDuration = `${Math.random() * 1 + 1}s`;
+                
+                tapas.addEventListener('click', () => {
+                    if (!gameActive) return;
+                    score += 5;
+                    document.getElementById('bonus-score').textContent = score;
+                    tapas.remove();
+                });
+                
+                gameArea.appendChild(tapas);
+                
+                setTimeout(() => {
+                    tapas.remove();
+                }, 2000);
+            }, 1000);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    clearInterval(tapasSpawn);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupFiestaGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create fiesta items
+            const fiestaItems = ['🎉', '🎊', '🎈', '🪅', '🥁', '🎪'];
+            
+            fiestaItems.forEach((item, index) => {
+                const fiestaItem = document.createElement('div');
+                fiestaItem.className = 'fiesta-item';
+                fiestaItem.textContent = item;
+                fiestaItem.style.left = `${Math.random() * 80 + 10}%`;
+                fiestaItem.style.top = `${Math.random() * 70 + 10}%`;
+                fiestaItem.style.animationDelay = `${index * 0.5}s`;
+                
+                fiestaItem.addEventListener('click', () => {
+                    if (!gameActive) return;
+                    score += 5;
+                    document.getElementById('bonus-score').textContent = score;
+                    
+                    // Replace with new position
+                    fiestaItem.style.left = `${Math.random() * 80 + 10}%`;
+                    fiestaItem.style.top = `${Math.random() * 70 + 10}%`;
+                });
+                
+                gameArea.appendChild(fiestaItem);
+            });
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupGaudiGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create mosaic tiles
+            for (let i = 0; i < 20; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'gaudi-tile';
+                tile.style.left = `${Math.random() * 80 + 10}%`;
+                tile.style.top = `${Math.random() * 70 + 10}%`;
+                
+                tile.addEventListener('click', () => {
+                    if (!gameActive) return;
+                    score += 5;
+                    document.getElementById('bonus-score').textContent = score;
+                    
+                    // Change color
+                    tile.style.background = `linear-gradient(45deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})`;
+                });
+                
+                gameArea.appendChild(tile);
+            }
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupChurroGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create churros
+            const churroSpawn = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(churroSpawn);
+                    return;
+                }
+                
+                const churro = document.createElement('div');
+                churro.className = 'churro';
+                churro.textContent = '🥨';
+                churro.style.left = `${Math.random() * 80 + 10}%`;
+                churro.style.top = `${Math.random() * 70 + 10}%`;
+                churro.style.animationDelay = `${Math.random() * 2}s`;
+                
+                churro.addEventListener('click', () => {
+                    if (!gameActive) return;
+                    score += 5;
+                    document.getElementById('bonus-score').textContent = score;
+                    churro.remove();
+                });
+                
+                gameArea.appendChild(churro);
+                
+                setTimeout(() => {
+                    churro.remove();
+                }, 3000);
+            }, 1000);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    clearInterval(churroSpawn);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupMaracaGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create maracas
+            const maraca1 = document.createElement('div');
+            maraca1.className = 'maraca';
+            maraca1.textContent = '🥁';
+            maraca1.style.left = '30%';
+            maraca1.style.top = '50%';
+            gameArea.appendChild(maraca1);
+            
+            const maraca2 = document.createElement('div');
+            maraca2.className = 'maraca';
+            maraca2.textContent = '🥁';
+            maraca2.style.left = '70%';
+            maraca2.style.top = '50%';
+            gameArea.appendChild(maraca2);
+            
+            // Click handler
+            function handleMaracaClick() {
+                if (!gameActive) return;
+                score += 2;
+                document.getElementById('bonus-score').textContent = score;
+            }
+            
+            maraca1.addEventListener('click', handleMaracaClick);
+            maraca2.addEventListener('click', handleMaracaClick);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function setupDonQuixoteGame() {
+            const gameArea = document.getElementById('bonus-game-area');
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = true;
+            
+            // Create windmill
+            const windmill = document.createElement('div');
+            windmill.className = 'windmill';
+            windmill.textContent = '🎡';
+            gameArea.appendChild(windmill);
+            
+            // Create Don Quixote
+            const donQuixote = document.createElement('div');
+            donQuixote.className = 'don-quixote';
+            donQuixote.textContent = '🤺';
+            donQuixote.addEventListener('click', () => {
+                if (!gameActive) return;
+                
+                // Attack animation
+                donQuixote.style.transform = 'translateX(-50%) translateY(-20px)';
+                setTimeout(() => {
+                    donQuixote.style.transform = 'translateX(-50%)';
+                }, 300);
+                
+                score += 10;
+                document.getElementById('bonus-score').textContent = score;
+            });
+            
+            gameArea.appendChild(donQuixote);
+            
+            // Game timer
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('bonus-timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timer);
+                    endBonusGame(score);
+                }
+            }, 1000);
+        }
+
+        function endBonusGame(score) {
+            gameState.player.points += score;
+            showNotification(`¡Ganaste ${score} puntos en el juego bonus!`);
+            startNewRound();
         }
 
         function generateRoundData() {
@@ -2687,6 +2728,25 @@
             return shuffleArray(reviewCandidates).slice(0, count);
         }
 
+        function setupClassicMode() {
+            generateRoundData();
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.className = 'game-board';
+            
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'column';
+            leftColumn.id = 'column-left';
+            
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'column';
+            rightColumn.id = 'column-right';
+            
+            gameBoard.appendChild(leftColumn);
+            gameBoard.appendChild(rightColumn);
+            
+            updateGameUI();
+        }
+
         function updateGameUI() {
             document.getElementById('score').textContent = gameState.player.points;
             document.getElementById('streak').textContent = gameState.streak;
@@ -2696,70 +2756,68 @@
             updateProgressBar();
             updateRewardPath();
             
-            if (currentGameMode === GAME_MODES.CLASSIC) {
-                const leftColumn = document.getElementById('column-left');
-                const rightColumn = document.getElementById('column-right');
-                leftColumn.innerHTML = '';
-                rightColumn.innerHTML = '';
+            const leftColumn = document.getElementById('column-left');
+            const rightColumn = document.getElementById('column-right');
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+            
+            gameState.currentRound.leftColumn.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                card.dataset.pairId = item.pairId;
+                card.dataset.type = item.type;
+                card.textContent = item.value;
+                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
                 
-                gameState.currentRound.leftColumn.forEach((item, index) => {
-                    const card = document.createElement('div');
-                    card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                    card.dataset.pairId = item.pairId;
-                    card.dataset.type = item.type;
-                    card.textContent = item.value;
-                    card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                    card.setAttribute('role', 'button');
-                    card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
-                    
-                    if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                        card.classList.add('matched');
-                    }
-                    
-                    const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                    if (pair && gameState.wordProgress[pair.word]) {
-                        card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                    }
-                    
-                    card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
-                    card.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
-                    });
-                    
-                    leftColumn.appendChild(card);
-                });
-                
-                gameState.currentRound.rightColumn.forEach((item, index) => {
-                    const card = document.createElement('div');
-                    card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                    card.dataset.pairId = item.pairId;
-                    card.dataset.type = item.type;
-                    card.textContent = item.value;
-                    card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                    card.setAttribute('role', 'button');
-                    card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
-                    
-                    if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                        card.classList.add('matched');
-                    }
-                    
-                    const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                    if (pair && gameState.wordProgress[pair.word]) {
-                        card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                    }
-                    
-                    card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
-                    card.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
-                    });
-                    
-                    rightColumn.appendChild(card);
-                });
-                
-                if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
-                    console.log('All pairs matched, ending round');
-                    endRound();
+                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                    card.classList.add('matched');
                 }
+                
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                if (pair && gameState.wordProgress[pair.word]) {
+                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+                }
+                
+                card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+                });
+                
+                leftColumn.appendChild(card);
+            });
+            
+            gameState.currentRound.rightColumn.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+                card.dataset.pairId = item.pairId;
+                card.dataset.type = item.type;
+                card.textContent = item.value;
+                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+                
+                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+                    card.classList.add('matched');
+                }
+                
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+                if (pair && gameState.wordProgress[pair.word]) {
+                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+                }
+                
+                card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
+                });
+                
+                rightColumn.appendChild(card);
+            });
+            
+            if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
+                console.log('All pairs matched, ending round');
+                endRound();
             }
         }
 
@@ -2849,7 +2907,6 @@
             if (leftId === rightId) {
                 leftCard.classList.add('correct');
                 rightCard.classList.add('correct');
-                soundManager.playSound('correct');
                 
                 gameState.player.points += 10;
                 gameState.streak++;
@@ -2898,7 +2955,6 @@
             } else {
                 leftCard.classList.add('incorrect');
                 rightCard.classList.add('incorrect');
-                soundManager.playSound('incorrect');
                 
                 gameState.streak = 0;
                 
@@ -3256,7 +3312,6 @@
         }
 
         function quitToMainMenu() {
-            soundManager.stopSounds(); // Stop all sounds when returning to main menu
             showScreen('start');
             populateUserSelect();
         }
@@ -3302,6 +3357,10 @@
             } else {
                 console.warn("SpeechSynthesis not supported.");
             }
+        }
+
+        function sanitizePairId(word) {
+            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         }
     </script>
 </body>
