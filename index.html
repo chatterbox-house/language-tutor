@@ -2281,183 +2281,178 @@
             }
         }
 
-        function setupWordCatchMode() {
-            generateRoundData();
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board word-catch';
-            gameBoard.innerHTML = '';
+function setupWordCatchMode() {
+    generateRoundData();
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.className = 'game-board word-catch';
+    gameBoard.innerHTML = '';
 
-            // Game variables
-            let score = 0;
-            let timeLeft = 45;
-            let fallingSpeed = 1500; // ms per word
-            let gameActive = true;
-            
-            // Create game elements
-            const scoreDisplay = document.createElement('div');
-            scoreDisplay.className = 'catch-score';
-            scoreDisplay.textContent = `Puntos: ${score}`;
-            
-            const timerDisplay = document.createElement('div');
-            timerDisplay.className = 'catch-timer';
-            timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-            
-            const catcher = document.createElement('div');
-            catcher.className = 'word-catcher';
-            catcher.textContent = '🕴️';
-            
-            const gameArea = document.createElement('div');
-            gameArea.className = 'word-catch-area';
-            
-            // Instructions
-            const instructions = document.createElement('div');
-            instructions.className = 'catch-instructions';
-            instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
-            
-            // Target emoji display
-            const targetDisplay = document.createElement('div');
-            targetDisplay.className = 'target-display';
-            targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
-            
-            // Assemble UI
-            gameBoard.appendChild(scoreDisplay);
-            gameBoard.appendChild(timerDisplay);
-            gameBoard.appendChild(instructions);
-            gameBoard.appendChild(targetDisplay);
-            gameBoard.appendChild(gameArea);
-            gameBoard.appendChild(catcher);
-            
-            // Timer
-            const timer = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-                
-                if (timeLeft <= 0) {
-                    endWordCatchGame();
-                }
-            }, 1000);
-            
-            // Catcher movement
-            document.addEventListener('keydown', (e) => {
-                if (!gameActive) return;
-                
-                const catcherRect = catcher.getBoundingClientRect();
-                const gameAreaRect = gameArea.getBoundingClientRect();
-                
-                if (e.key === 'ArrowLeft' && catcherRect.left > gameAreaRect.left) {
-                    catcher.style.left = `${catcher.offsetLeft - 20}px`;
-                } else if (e.key === 'ArrowRight' && catcherRect.right < gameAreaRect.right) {
-                    catcher.style.left = `${catcher.offsetLeft + 20}px`;
-                }
-            });
-            
-            // Touch support for mobile
-            let touchStartX = 0;
-            gameArea.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-            });
-            
-            gameArea.addEventListener('touchmove', (e) => {
-                if (!gameActive) return;
-                
-                const touchX = e.touches[0].clientX;
-                const diff = touchX - touchStartX;
-                const newLeft = catcher.offsetLeft + diff;
-                
-                const gameAreaRect = gameArea.getBoundingClientRect();
-                const catcherWidth = catcher.offsetWidth;
-                
-                if (newLeft > 0 && newLeft < (gameAreaRect.width - catcherWidth)) {
-                    catcher.style.left = `${newLeft}px`;
-                }
-                
-                touchStartX = touchX;
-            });
-            
-            // Word falling logic
-            function dropWord() {
-                if (!gameActive) return;
-                
-                const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
-                const wordElement = document.createElement('div');
-                wordElement.className = 'falling-word';
-                wordElement.textContent = wordPair.word;
-                wordElement.dataset.emoji = wordPair.emoji;
-                wordElement.style.left = `${Math.random() * 80}%`;
-                
-                gameArea.appendChild(wordElement);
-                
-                const fallInterval = setInterval(() => {
-                    if (!gameActive) {
-                        clearInterval(fallInterval);
-                        return;
-                    }
-                    
-                    const wordRect = wordElement.getBoundingClientRect();
-                    const catcherRect = catcher.getBoundingClientRect();
-                    
-                    wordElement.style.top = `${wordElement.offsetTop + 5}px`;
-                    
-                    // Check if caught
-                    if (wordRect.bottom >= catcherRect.top && 
-                        wordRect.left >= catcherRect.left && 
-                        wordRect.right <= catcherRect.right) {
-                        
-                        clearInterval(fallInterval);
-                        wordElement.remove();
-                        
-                        if (wordPair.emoji === targetDisplay.textContent) {
-                            // Correct catch
-                            playSound('correct');
-                            score += 10;
-                            gameState.player.points += 5;
-                            scoreDisplay.textContent = `Puntos: ${score}`;
-                            
-                            // Update word progress
-                            gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
-                            if (gameState.wordProgress[wordPair.word] === 3) {
-                                gameState.completedWords++;
-                                checkMilestone();
-                            }
-                            
-                            // Change target emoji
-                            const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
-                            targetDisplay.textContent = newTarget.emoji;
-                        } else {
-                            // Wrong catch
-                            playSound('incorrect');
-                            score = Math.max(0, score - 5);
-                            scoreDisplay.textContent = `Puntos: ${score}`;
-                        }
-                    }
-                    
-                    // Check if missed (fell to bottom)
-                    if (wordRect.bottom >= gameArea.getBoundingClientRect().bottom) {
-                        clearInterval(fallInterval);
-                        wordElement.remove();
-                    }
-                }, 50);
-            }
-            
-            // Start dropping words
-            const wordDropInterval = setInterval(dropWord, fallingSpeed);
-            
-            // Gradually increase difficulty
-            const difficultyInterval = setInterval(() => {
-                fallingSpeed = Math.max(500, fallingSpeed - 100);
-            }, 5000);
-            
-            function endWordCatchGame() {
-                gameActive = false;
-                clearInterval(timer);
-                clearInterval(wordDropInterval);
-                clearInterval(difficultyInterval);
-                
-                gameState.player.points += Math.floor(score / 2);
-                showNotification(`¡Atrapaste ${score} palabras correctas!`);
-                endRound();
-            }
+    // Game variables
+    let score = 0;
+    let timeLeft = 45;
+    let fallingSpeed = 1500; // ms per word
+    let gameActive = true;
+    let catcherPosition = 50; // Percentage from left
+    
+    // Create game elements
+    const scoreDisplay = document.createElement('div');
+    scoreDisplay.className = 'catch-score';
+    scoreDisplay.textContent = `Puntos: ${score}`;
+    
+    const timerDisplay = document.createElement('div');
+    timerDisplay.className = 'catch-timer';
+    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+    
+    const catcher = document.createElement('div');
+    catcher.className = 'word-catcher';
+    catcher.textContent = '🕴️';
+    catcher.style.left = `${catcherPosition}%`;
+    
+    const gameArea = document.createElement('div');
+    gameArea.className = 'word-catch-area';
+    
+    // Instructions
+    const instructions = document.createElement('div');
+    instructions.className = 'catch-instructions';
+    instructions.textContent = '¡Atrapa las palabras que coincidan con el emoji!';
+    
+    // Target emoji display
+    const targetDisplay = document.createElement('div');
+    targetDisplay.className = 'target-display';
+    targetDisplay.textContent = gameState.currentRound.pairs[0].emoji;
+    
+    // Assemble UI
+    gameBoard.appendChild(scoreDisplay);
+    gameBoard.appendChild(timerDisplay);
+    gameBoard.appendChild(instructions);
+    gameBoard.appendChild(targetDisplay);
+    gameBoard.appendChild(gameArea);
+    gameBoard.appendChild(catcher);
+    
+    // Timer
+    const timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+        
+        if (timeLeft <= 0) {
+            endWordCatchGame();
         }
+    }, 1000);
+    
+    // Catcher movement - Keyboard
+    const handleKeyDown = (e) => {
+        if (!gameActive) return;
+        
+        if (e.key === 'ArrowLeft') {
+            catcherPosition = Math.max(0, catcherPosition - 5);
+        } else if (e.key === 'ArrowRight') {
+            catcherPosition = Math.min(95, catcherPosition + 5);
+        }
+        catcher.style.left = `${catcherPosition}%`;
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // Touch support for mobile
+    gameArea.addEventListener('touchmove', (e) => {
+        if (!gameActive) return;
+        e.preventDefault();
+        
+        const touchX = e.touches[0].clientX;
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const relativeX = touchX - gameAreaRect.left;
+        catcherPosition = (relativeX / gameAreaRect.width) * 100;
+        catcher.style.left = `${Math.max(0, Math.min(95, catcherPosition))}%`;
+    }, { passive: false });
+    
+    // Word falling logic
+    function dropWord() {
+        if (!gameActive) return;
+        
+        const wordPair = shuffleArray([...gameState.currentRound.pairs])[0];
+        const wordElement = document.createElement('div');
+        wordElement.className = 'falling-word';
+        wordElement.textContent = wordPair.word;
+        wordElement.dataset.emoji = wordPair.emoji;
+        wordElement.style.left = `${Math.random() * 80 + 10}%`;
+        wordElement.style.top = '0px';
+        
+        gameArea.appendChild(wordElement);
+        
+        const fallInterval = setInterval(() => {
+            if (!gameActive) {
+                clearInterval(fallInterval);
+                wordElement.remove();
+                return;
+            }
+            
+            const currentTop = parseInt(wordElement.style.top) || 0;
+            wordElement.style.top = `${currentTop + 5}px`;
+            
+            // Check if caught
+            const wordRect = wordElement.getBoundingClientRect();
+            const catcherRect = catcher.getBoundingClientRect();
+            
+            if (wordRect.bottom >= catcherRect.top && 
+                wordRect.right >= catcherRect.left && 
+                wordRect.left <= catcherRect.right) {
+                
+                clearInterval(fallInterval);
+                wordElement.remove();
+                
+                if (wordPair.emoji === targetDisplay.textContent) {
+                    // Correct catch
+                    playSound('correct');
+                    score += 10;
+                    gameState.player.points += 5;
+                    scoreDisplay.textContent = `Puntos: ${score}`;
+                    
+                    // Update word progress
+                    gameState.wordProgress[wordPair.word] = (gameState.wordProgress[wordPair.word] || 0) + 1;
+                    if (gameState.wordProgress[wordPair.word] === 3) {
+                        gameState.completedWords++;
+                        checkMilestone();
+                    }
+                    
+                    // Change target emoji
+                    const newTarget = shuffleArray([...gameState.currentRound.pairs])[0];
+                    targetDisplay.textContent = newTarget.emoji;
+                } else {
+                    // Wrong catch
+                    playSound('incorrect');
+                    score = Math.max(0, score - 5);
+                    scoreDisplay.textContent = `Puntos: ${score}`;
+                }
+            }
+            
+            // Check if missed (fell to bottom)
+            if (parseInt(wordElement.style.top) > gameArea.offsetHeight) {
+                clearInterval(fallInterval);
+                wordElement.remove();
+            }
+        }, 50);
+    }
+    
+    // Start dropping words
+    const wordDropInterval = setInterval(dropWord, fallingSpeed);
+    
+    // Gradually increase difficulty
+    const difficultyInterval = setInterval(() => {
+        fallingSpeed = Math.max(500, fallingSpeed - 100);
+    }, 5000);
+    
+    function endWordCatchGame() {
+        gameActive = false;
+        clearInterval(timer);
+        clearInterval(wordDropInterval);
+        clearInterval(difficultyInterval);
+        document.removeEventListener('keydown', handleKeyDown);
+        
+        gameState.player.points += Math.floor(score / 2);
+        showNotification(`¡Atrapaste ${score} palabras correctas!`);
+        endRound();
+    }
+}
 
         function showPinataBreak() {
             const pinataContainer = document.createElement('div');
