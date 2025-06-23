@@ -319,6 +319,42 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
+        /* New Progress Tracker Styles */
+        .progress-tracker {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #4ecdc4;
+            font-size: 0.9rem;
+            text-align: center;
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .progress-tracker-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+        
+        .progress-tracker-label {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .progress-tracker-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
         .game-board {
             display: flex;
             justify-content: space-around;
@@ -555,18 +591,6 @@
             opacity: 0.8;
         }
         
-        .progress-tracker {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid #4ecdc4;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        
         .daily-streak {
             display: flex;
             align-items: center;
@@ -738,6 +762,79 @@
             cursor: pointer;
         }
 
+        /* Bonus Game Popup */
+        .bonus-game-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .bonus-game-content {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #ffe66d;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .bonus-game-content h3 {
+            color: #ffe66d;
+            margin-bottom: 15px;
+        }
+
+        .bonus-game-content p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .bonus-game-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .bonus-game-buttons button {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+        }
+
+        /* Avatar Customization */
+        .avatar-customization {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .avatar-accessory {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .avatar-accessory:hover {
+            transform: scale(1.2);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .avatar-accessory.selected {
+            transform: scale(1.3);
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px gold;
+        }
+
         /* Animations */
         @keyframes fadeInOut {
             0% { opacity: 0.3; transform: scale(0.9); }
@@ -833,7 +930,7 @@
             .avatar { font-size: 4rem; margin: 8px; }
             .player-avatar { font-size: 1.5rem; }
             
-            .progress-tracker, .logout-btn {
+            .logout-btn {
                 position: static;
                 margin: 10px auto;
                 width: 90%;
@@ -851,6 +948,13 @@
                 font-size: 1.2rem;
                 bottom: 10px;
                 left: 10px;
+            }
+            
+            .progress-tracker {
+                position: static;
+                margin: 10px auto;
+                width: 90%;
+                flex-direction: column;
             }
         }
         
@@ -928,6 +1032,26 @@
         
         <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
         
+        <!-- Progress Tracker (always visible) -->
+        <div class="progress-tracker">
+            <div class="progress-tracker-item">
+                <div class="progress-tracker-label">Palabras Dominadas</div>
+                <div class="progress-tracker-value"><span id="mastered-words">0</span>/50</div>
+            </div>
+            <div class="progress-tracker-item">
+                <div class="progress-tracker-label">Medallas</div>
+                <div class="progress-tracker-value"><span id="medals-count">0</span>/10</div>
+            </div>
+            <div class="progress-tracker-item">
+                <div class="progress-tracker-label">Trofeos</div>
+                <div class="progress-tracker-value"><span id="trophies-count">0</span>/10</div>
+            </div>
+            <div class="progress-tracker-item">
+                <div class="progress-tracker-label">Coronas</div>
+                <div class="progress-tracker-value"><span id="crowns-count">0</span></div>
+            </div>
+        </div>
+        
         <!-- Character element -->
         <div id="character" class="character">🐉</div>
         
@@ -973,7 +1097,7 @@
             <div class="btn-group">
                 <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">😊 Modo Fácil</button>
                 <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">😃 Modo Medio</button>
-                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">🤓 Modo Difícil</button>
+                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">🤓 Modo Difícil (2x puntos)</button>
             </div>
             
             <!-- New sticker collection preview -->
@@ -987,13 +1111,6 @@
         </div>
         
         <div id="game-screen" class="screen">
-            <div class="progress-tracker">
-                <div>Palabras: <span id="completed">0</span>/50</div>
-                <div class="daily-streak" id="streak-display">
-                    <span class="streak-fire">🔥</span> <span id="streak-count">0</span>
-                </div>
-            </div>
-            
             <div class="game-header">
                 <div class="player-info">
                     <span class="player-avatar" id="player-avatar">🐉</span>
@@ -1073,6 +1190,10 @@
             <div class="emoji-store-container">
                 <h3>Tus Puntos: <span id="store-points">0</span></h3>
                 <div id="emoji-list"></div>
+                <h3>Personalización de Avatar</h3>
+                <div class="avatar-customization" id="avatar-customization">
+                    <!-- Avatar accessories will be added here dynamically -->
+                </div>
             </div>
             <div class="btn-group">
                 <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">🏠 Menú Principal</button>
@@ -1097,6 +1218,18 @@
                 <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
             </div>
         </div>
+        
+        <!-- Bonus Game Popup (hidden by default) -->
+        <div id="bonus-game-popup" class="bonus-game-popup" style="display: none;">
+            <div class="bonus-game-content">
+                <h3>¡Bonus Game Desbloqueado!</h3>
+                <p>¡Has completado 15 emparejamientos! Juega un minijuego para ganar puntos extra.</p>
+                <div class="bonus-game-buttons">
+                    <button id="play-bonus-game-btn" aria-label="Jugar juego bonus ahora">🎮 Jugar Ahora</button>
+                    <button id="save-bonus-game-btn" aria-label="Guardar juego bonus para después">💾 Guardar para Después</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <button id="music-control" class="music-control">🎵</button>
@@ -1112,6 +1245,8 @@
         let isMusicPlaying = false;
         let roundsPlayed = 0;
         let isKidMode = false;
+        let matchesCompleted = 0; // Track matches for bonus games
+        let bonusGameAvailable = false;
 
         // Default vocabulary - will be replaced if vocab.js loads
         const defaultVocab = [
@@ -1147,11 +1282,18 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
-                rewards: { easy: { medals: 0, trophies: 0, crowns: 0 }, medium: { medals: 0, trophies: 0, crowns: 0 }, hard: { medals: 0, trophies: 0, crowns: 0 } },
+                avatarAccessories: [], // New field for avatar customization
+                rewards: { 
+                    medals: 0, // Now global across all modes
+                    trophies: 0,
+                    crowns: 0,
+                    totalWordsMastered: 0
+                },
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                bonusGamesAvailable: 0
             },
             mode: '',
             streak: 0,
@@ -1248,7 +1390,15 @@
                 updateRewardPath();
                 updateLogoutButton();
                 updateStickerCollection();
+                updateProgressTracker();
             });
+        }
+
+        function updateProgressTracker() {
+            document.getElementById('mastered-words').textContent = gameState.player.rewards.totalWordsMastered;
+            document.getElementById('medals-count').textContent = `${gameState.player.rewards.medals}/10`;
+            document.getElementById('trophies-count').textContent = `${gameState.player.rewards.trophies}/10`;
+            document.getElementById('crowns-count').textContent = gameState.player.rewards.crowns;
         }
 
         function loadVocab() {
@@ -1355,6 +1505,10 @@
             document.getElementById('play-again-btn').addEventListener('click', startNewGame);
             document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
             document.getElementById('kid-mode-btn').addEventListener('click', toggleKidMode);
+            
+            // Bonus game event listeners
+            document.getElementById('play-bonus-game-btn').addEventListener('click', playBonusGame);
+            document.getElementById('save-bonus-game-btn').addEventListener('click', saveBonusGame);
         }
 
         function toggleKidMode() {
@@ -1430,27 +1584,26 @@
         }
 
         function updateRewardPath() {
-            const modeRewards = gameState.player.rewards[gameState.mode] || { medals: 0, trophies: 0, crowns: 0 };
             const steps = document.querySelectorAll('.reward-step');
             
             steps.forEach(step => {
                 step.classList.remove('earned', 'next');
                 const stepType = step.dataset.step;
                 
-                if (stepType === 'medal' && modeRewards.medals > 0) {
+                if (stepType === 'medal' && gameState.player.rewards.medals > 0) {
                     step.classList.add('earned');
-                } else if (stepType === 'trophy' && modeRewards.trophies > 0) {
+                } else if (stepType === 'trophy' && gameState.player.rewards.trophies > 0) {
                     step.classList.add('earned');
-                } else if (stepType === 'crown' && modeRewards.crowns > 0) {
+                } else if (stepType === 'crown' && gameState.player.rewards.crowns > 0) {
                     step.classList.add('earned');
                 }
             });
             
-            if (modeRewards.medals === 0) {
+            if (gameState.player.rewards.medals < 10) {
                 document.querySelector('.reward-step[data-step="medal"]').classList.add('next');
-            } else if (modeRewards.trophies === 0) {
+            } else if (gameState.player.rewards.trophies < 10) {
                 document.querySelector('.reward-step[data-step="trophy"]').classList.add('next');
-            } else if (modeRewards.crowns === 0) {
+            } else if (gameState.player.rewards.crowns < 10) {
                 document.querySelector('.reward-step[data-step="crown"]').classList.add('next');
             }
         }
@@ -1508,15 +1661,18 @@
                             emoji: playerData.emoji || '',
                             points: playerData.points || 0,
                             purchasedEmojis: playerData.purchasedEmojis || [],
+                            avatarAccessories: playerData.avatarAccessories || [],
                             rewards: playerData.rewards || { 
-                                easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                                medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                                hard: { medals: 0, trophies: 0, crowns: 0 } 
+                                medals: 0,
+                                trophies: 0,
+                                crowns: 0,
+                                totalWordsMastered: 0
                             },
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
+                            bonusGamesAvailable: playerData.bonusGamesAvailable || 0
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1535,6 +1691,7 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
+                        updateProgressTracker();
                         document.getElementById('character').textContent = gameState.player.avatar;
                         showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                         return;
@@ -1555,15 +1712,18 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
+                avatarAccessories: [],
                 rewards: { 
-                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                    medals: 0,
+                    trophies: 0,
+                    crowns: 0,
+                    totalWordsMastered: 0
                 },
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                bonusGamesAvailable: 0
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1571,6 +1731,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updateProgressTracker();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -1598,15 +1759,18 @@
                     emoji: '',
                     points: 0,
                     purchasedEmojis: [],
+                    avatarAccessories: [],
                     rewards: { 
-                        easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                        medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                        hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        medals: 0,
+                        trophies: 0,
+                        crowns: 0,
+                        totalWordsMastered: 0
                     },
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯']
+                    unlockedStickers: ['⭐', '🎯'],
+                    bonusGamesAvailable: 0
                 };
                 
                 gameState.streak = 0;
@@ -1620,6 +1784,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updateProgressTracker();
             
             usernameInput.value = '';
             usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
@@ -1644,15 +1809,18 @@
                     emoji: '',
                     points: 0,
                     purchasedEmojis: [],
+                    avatarAccessories: [],
                     rewards: { 
-                        easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                        medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                        hard: { medals: 0, trophies: 0, crowns: 0 } 
+                        medals: 0,
+                        trophies: 0,
+                        crowns: 0,
+                        totalWordsMastered: 0
                     },
                     dailyStreak: 0,
                     lastPlayedDate: null,
                     weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯']
+                    unlockedStickers: ['⭐', '🎯'],
+                    bonusGamesAvailable: 0
                 };
                 gameState.streak = 0;
                 gameState.completedWords = 0;
@@ -1661,6 +1829,7 @@
                 updatePlayerUI();
                 updateLogoutButton();
                 updateStickerCollection();
+                updateProgressTracker();
                 showSuccess("Jugando como Invitado. El progreso no se guardará.");
             }
             showScreen('start');
@@ -1674,15 +1843,18 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
+                avatarAccessories: [],
                 rewards: { 
-                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                    medals: 0,
+                    trophies: 0,
+                    crowns: 0,
+                    totalWordsMastered: 0
                 },
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                bonusGamesAvailable: 0
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1693,6 +1865,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updateProgressTracker();
             populateUserSelect();
             
             document.getElementById('username-input').style.display = 'block';
@@ -1718,6 +1891,7 @@
                     emoji: gameState.player.emoji,
                     points: gameState.player.points,
                     purchasedEmojis: gameState.player.purchasedEmojis,
+                    avatarAccessories: gameState.player.avatarAccessories,
                     rewards: gameState.player.rewards,
                     dailyStreak: gameState.player.dailyStreak,
                     lastPlayedDate: gameState.player.lastPlayedDate,
@@ -1726,6 +1900,7 @@
                     completedWords: gameState.completedWords,
                     streak: gameState.streak,
                     unlockedStickers: gameState.player.unlockedStickers,
+                    bonusGamesAvailable: gameState.player.bonusGamesAvailable,
                     lastActive: new Date().toISOString()
                 };
                 
@@ -1753,15 +1928,18 @@
                             emoji: playerData.emoji || '',
                             points: playerData.points || 0,
                             purchasedEmojis: playerData.purchasedEmojis || [],
+                            avatarAccessories: playerData.avatarAccessories || [],
                             rewards: playerData.rewards || { 
-                                easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                                medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                                hard: { medals: 0, trophies: 0, crowns: 0 } 
+                                medals: 0,
+                                trophies: 0,
+                                crowns: 0,
+                                totalWordsMastered: 0
                             },
                             dailyStreak: playerData.dailyStreak || 0,
                             lastPlayedDate: playerData.lastPlayedDate || null,
                             weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯']
+                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
+                            bonusGamesAvailable: playerData.bonusGamesAvailable || 0
                         };
                         
                         gameState.streak = playerData.streak || 0;
@@ -1779,6 +1957,7 @@
                         updatePlayerUI();
                         updateLogoutButton();
                         updateStickerCollection();
+                        updateProgressTracker();
                         return;
                     }
                 }
@@ -1794,15 +1973,18 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
+                avatarAccessories: [],
                 rewards: { 
-                    easy: { medals: 0, trophies: 0, crowns: 0 }, 
-                    medium: { medals: 0, trophies: 0, crowns: 0 }, 
-                    hard: { medals: 0, trophies: 0, crowns: 0 } 
+                    medals: 0,
+                    trophies: 0,
+                    crowns: 0,
+                    totalWordsMastered: 0
                 },
                 dailyStreak: 0,
                 lastPlayedDate: null,
                 weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯']
+                unlockedStickers: ['⭐', '🎯'],
+                bonusGamesAvailable: 0
             };
             gameState.streak = 0;
             gameState.completedWords = 0;
@@ -1811,6 +1993,7 @@
             updatePlayerUI();
             updateLogoutButton();
             updateStickerCollection();
+            updateProgressTracker();
             document.getElementById('character').textContent = '🐉';
         }
 
@@ -1936,10 +2119,10 @@
             document.getElementById('score').textContent = gameState.player.points;
             document.getElementById('streak').textContent = gameState.streak;
             document.getElementById('progress').textContent = gameState.completedWords;
-            document.getElementById('completed').textContent = gameState.completedWords;
             document.getElementById('percent-complete').textContent = Math.round((gameState.completedWords / 50) * 100);
             updateProgressBar();
             updateRewardPath();
+            updateProgressTracker();
             
             const leftColumn = document.getElementById('column-left');
             const rightColumn = document.getElementById('column-right');
@@ -2108,14 +2291,23 @@
                     }, 3000);
                 }
                 
-                gameState.player.points += 10;
+                // Calculate points - double for hard mode
+                const basePoints = gameState.mode === 'hard' ? 20 : 10;
+                gameState.player.points += basePoints;
                 gameState.streak++;
-                gameState.currentRound.roundPoints += 10;
+                gameState.currentRound.roundPoints += basePoints;
+                matchesCompleted++;
+                
+                // Check for bonus game every 15 matches
+                if (matchesCompleted % 15 === 0) {
+                    showBonusGamePopup();
+                }
                 
                 if (pair) {
                     gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
                     if (gameState.wordProgress[pair.word] === 3) {
                         gameState.completedWords++;
+                        gameState.player.rewards.totalWordsMastered++;
                         checkMilestone();
                         checkModeCompletion();
                         checkStickerUnlock();
@@ -2170,6 +2362,37 @@
             savePlayerProgress();
         }
 
+        function showBonusGamePopup() {
+            document.getElementById('bonus-game-popup').style.display = 'flex';
+        }
+
+        function playBonusGame() {
+            // Hide the popup
+            document.getElementById('bonus-game-popup').style.display = 'none';
+            
+            // In a real implementation, you would start a bonus game here
+            // For now, we'll just give some bonus points
+            const bonusPoints = Math.floor(Math.random() * 50) + 50;
+            gameState.player.points += bonusPoints;
+            showSuccess(`¡Bonus Game completado! +${bonusPoints} puntos`);
+            
+            // Update UI
+            updateGameUI();
+            savePlayerProgress();
+        }
+
+        function saveBonusGame() {
+            // Hide the popup
+            document.getElementById('bonus-game-popup').style.display = 'none';
+            
+            // Save the bonus game for later
+            gameState.player.bonusGamesAvailable++;
+            showSuccess(`¡Bonus Game guardado! Ahora tienes ${gameState.player.bonusGamesAvailable} juegos disponibles.`);
+            
+            // Update UI
+            savePlayerProgress();
+        }
+
         function checkStickerUnlock() {
             const stickers = [
                 { emoji: '⭐', unlocked: true, points: 0 },
@@ -2219,69 +2442,55 @@
         }
 
         function checkModeCompletion() {
-            if (gameState.completedWords >= 50) {
-                const modeRewards = gameState.player.rewards[gameState.mode];
-                modeRewards.medals++;
-                showNotification(`🎖️ ¡Medalla de ${gameState.mode} ganada!`);
+            // Check for medals (every 50 words mastered)
+            if (gameState.player.rewards.totalWordsMastered % 50 === 0) {
+                gameState.player.rewards.medals++;
+                showNotification(`🎖️ ¡Medalla ganada!`);
                 createConfetti(document.getElementById('game-screen'), 20);
                 
-                if (modeRewards.medals >= 5) {
-                    modeRewards.medals = 0;
-                    modeRewards.trophies++;
-                    showNotification(`🏆 ¡Trofeo de ${gameState.mode} ganado!`);
+                // Check if we've earned enough medals for a trophy (10 medals)
+                if (gameState.player.rewards.medals >= 10) {
+                    gameState.player.rewards.medals = 0;
+                    gameState.player.rewards.trophies++;
+                    showNotification(`🏆 ¡Trofeo ganado!`);
                     createConfetti(document.getElementById('game-screen'), 20);
                 }
                 
-                if (modeRewards.trophies >= 5) {
-                    modeRewards.trophies = 0;
-                    modeRewards.crowns++;
-                    showNotification(`👑 ¡Corona de ${gameState.mode} ganada!`);
+                // Check if we've earned enough trophies for a crown (10 trophies)
+                if (gameState.player.rewards.trophies >= 10) {
+                    gameState.player.rewards.trophies = 0;
+                    gameState.player.rewards.crowns++;
+                    showNotification(`👑 ¡Corona ganada!`);
                     createConfetti(document.getElementById('game-screen'), 20);
                 }
                 
                 savePlayerProgress();
+                updateProgressTracker();
             }
         }
 
         function checkEmojiPurchase() {
             const emojiStore = [
-                { emoji: '🍊', points: 50, name: 'Naranja' },
-                { emoji: '🏺', points: 75, name: 'Cántaro' },
-                { emoji: '🥘', points: 100, name: 'Paella' },
-                { emoji: '🌮', points: 125, name: 'Taco' },
-                { emoji: '🍷', points: 150, name: 'Vino' },
-                { emoji: '🎸', points: 175, name: 'Guitarra' },
-                { emoji: '💃', points: 200, name: 'Bailarina' },
-                { emoji: '🌵', points: 300, name: 'Cactus' },
-                { emoji: '🦂', points: 400, name: 'Alacrán' },
-                { emoji: '🏰', points: 500, name: 'Castillo' },
-                { emoji: '⛪', points: 600, name: 'Catedral' },
-                { emoji: '🎭', points: 700, name: 'Teatro' },
-                { emoji: '🪕', points: 800, name: 'Charango' },
-                { emoji: '🥁', points: 900, name: 'Cajón' },
-                { emoji: '🗿', points: 1000, name: 'Moai' },
-                { emoji: '🌋', points: 1200, name: 'Volcán' },
-                { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
-                { emoji: '🎪', points: 1800, name: 'Feria' },
-                { emoji: '🛶', points: 2000, name: 'Canoa' },
-                { emoji: '🏺', points: 2200, name: 'Ánfora' },
-                { emoji: '🕌', points: 2500, name: 'Alhambra' },
-                { emoji: '👑', points: 3000, name: 'Corona Real' },
-                { emoji: '💎', points: 3500, name: 'Esmeralda' },
-                { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
-                { emoji: '🛕', points: 4500, name: 'Templo Maya' },
-                { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
-                { emoji: '🎻', points: 6000, name: 'Stradivarius' },
-                { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
-                { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
-                { emoji: '🏰', points: 9000, name: 'Alcázar' },
-                { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
-                { emoji: '📜', points: 12000, name: 'Carta de Colón' },
-                { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
-                { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
-                { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
-                { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
-                { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
+                { emoji: '🎩', points: 100, name: 'Sombrero' },
+                { emoji: '👒', points: 150, name: 'Sombrero de mujer' },
+                { emoji: '👑', points: 500, name: 'Corona' },
+                { emoji: '🎓', points: 200, name: 'Gorra de graduación' },
+                { emoji: '🧢', points: 100, name: 'Gorra' },
+                { emoji: '👓', points: 120, name: 'Gafas' },
+                { emoji: '🕶️', points: 150, name: 'Gafas de sol' },
+                { emoji: '🐶', points: 200, name: 'Perro mascota' },
+                { emoji: '🐱', points: 200, name: 'Gato mascota' },
+                { emoji: '🐭', points: 150, name: 'Ratón mascota' },
+                { emoji: '🐹', points: 180, name: 'Hámster mascota' },
+                { emoji: '🐰', points: 220, name: 'Conejo mascota' },
+                { emoji: '🦊', points: 250, name: 'Zorro mascota' },
+                { emoji: '🐻', points: 300, name: 'Oso mascota' },
+                { emoji: '🐼', points: 350, name: 'Panda mascota' },
+                { emoji: '🦄', points: 400, name: 'Unicornio mascota' },
+                { emoji: '🌈', points: 100, name: 'Arcoíris' },
+                { emoji: '🌠', points: 150, name: 'Estrella fugaz' },
+                { emoji: '🎀', points: 80, name: 'Moño' },
+                { emoji: '🎁', points: 120, name: 'Regalo' }
             ];
 
             const affordableEmojis = emojiStore.filter(item => !gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points);
@@ -2309,6 +2518,7 @@
             
             updateTrophyDisplay(document.getElementById('trophy-display'));
             updateRewardPath();
+            updateProgressTracker();
             
             savePlayerProgress();
             checkEmojiPurchase();
@@ -2327,46 +2537,40 @@
             const trophyList = document.getElementById('trophy-list');
             trophyList.innerHTML = '';
             
-            const modes = ['easy', 'medium', 'hard'];
-            modes.forEach(mode => {
-                const rewards = gameState.player.rewards[mode];
-                const modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
+            if (gameState.player.rewards.medals > 0 || gameState.player.rewards.trophies > 0 || gameState.player.rewards.crowns > 0) {
+                const modeHeader = document.createElement('h4');
+                modeHeader.textContent = `Tus Logros`;
+                trophyList.appendChild(modeHeader);
                 
-                if (rewards.medals > 0 || rewards.trophies > 0 || rewards.crowns > 0) {
-                    const modeHeader = document.createElement('h4');
-                    modeHeader.textContent = `Modo ${modeName}`;
-                    trophyList.appendChild(modeHeader);
-                    
-                    const modeContainer = document.createElement('div');
-                    modeContainer.style.display = 'flex';
-                    modeContainer.style.flexWrap = 'wrap';
-                    modeContainer.style.justifyContent = 'center';
-                    
-                    if (rewards.medals > 0) {
-                        const medalDiv = document.createElement('div');
-                        medalDiv.className = 'trophy-item';
-                        medalDiv.textContent = '🎖️';
-                        medalDiv.title = `${rewards.medals} Medallas de ${modeName}`;
-                        modeContainer.appendChild(medalDiv);
-                    }
-                    if (rewards.trophies > 0) {
-                        const trophyDiv = document.createElement('div');
-                        trophyDiv.className = 'trophy-item';
-                        trophyDiv.textContent = '🏆';
-                        trophyDiv.title = `${rewards.trophies} Trofeos de ${modeName}`;
-                        modeContainer.appendChild(trophyDiv);
-                    }
-                    if (rewards.crowns > 0) {
-                        const crownDiv = document.createElement('div');
-                        crownDiv.className = 'trophy-item';
-                        crownDiv.textContent = '👑';
-                        crownDiv.title = `${rewards.crowns} Coronas de ${modeName}`;
-                        modeContainer.appendChild(crownDiv);
-                    }
-                    
-                    trophyList.appendChild(modeContainer);
+                const modeContainer = document.createElement('div');
+                modeContainer.style.display = 'flex';
+                modeContainer.style.flexWrap = 'wrap';
+                modeContainer.style.justifyContent = 'center';
+                
+                if (gameState.player.rewards.medals > 0) {
+                    const medalDiv = document.createElement('div');
+                    medalDiv.className = 'trophy-item';
+                    medalDiv.textContent = '🎖️';
+                    medalDiv.title = `${gameState.player.rewards.medals} Medallas`;
+                    modeContainer.appendChild(medalDiv);
                 }
-            });
+                if (gameState.player.rewards.trophies > 0) {
+                    const trophyDiv = document.createElement('div');
+                    trophyDiv.className = 'trophy-item';
+                    trophyDiv.textContent = '🏆';
+                    trophyDiv.title = `${gameState.player.rewards.trophies} Trofeos`;
+                    modeContainer.appendChild(trophyDiv);
+                }
+                if (gameState.player.rewards.crowns > 0) {
+                    const crownDiv = document.createElement('div');
+                    crownDiv.className = 'trophy-item';
+                    crownDiv.textContent = '👑';
+                    crownDiv.title = `${gameState.player.rewards.crowns} Coronas`;
+                    modeContainer.appendChild(crownDiv);
+                }
+                
+                trophyList.appendChild(modeContainer);
+            }
             
             if (trophyList.innerHTML === '') {
                 trophyList.textContent = '¡No hay recompensas todavía! ¡Sigue jugando!';
@@ -2378,33 +2582,28 @@
 
         function updateTrophyDisplay(container) {
             container.innerHTML = '';
-            const modes = ['easy', 'medium', 'hard'];
-            modes.forEach(mode => {
-                const rewards = gameState.player.rewards[mode];
-                const modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
-                
-                if (rewards.medals > 0) {
-                    const medalDiv = document.createElement('div');
-                    medalDiv.className = 'trophy-item';
-                    medalDiv.textContent = '🎖️';
-                    medalDiv.title = `${rewards.medals} Medallas de ${modeName}`;
-                    container.appendChild(medalDiv);
-                }
-                if (rewards.trophies > 0) {
-                    const trophyDiv = document.createElement('div');
-                    trophyDiv.className = 'trophy-item';
-                    trophyDiv.textContent = '🏆';
-                    trophyDiv.title = `${rewards.trophies} Trofeos de ${modeName}`;
-                    container.appendChild(trophyDiv);
-                }
-                if (rewards.crowns > 0) {
-                    const crownDiv = document.createElement('div');
-                    crownDiv.className = 'trophy-item';
-                    crownDiv.textContent = '👑';
-                    crownDiv.title = `${rewards.crowns} Coronas de ${modeName}`;
-                    container.appendChild(crownDiv);
-                }
-            });
+            
+            if (gameState.player.rewards.medals > 0) {
+                const medalDiv = document.createElement('div');
+                medalDiv.className = 'trophy-item';
+                medalDiv.textContent = '🎖️';
+                medalDiv.title = `${gameState.player.rewards.medals} Medallas`;
+                container.appendChild(medalDiv);
+            }
+            if (gameState.player.rewards.trophies > 0) {
+                const trophyDiv = document.createElement('div');
+                trophyDiv.className = 'trophy-item';
+                trophyDiv.textContent = '🏆';
+                trophyDiv.title = `${gameState.player.rewards.trophies} Trofeos`;
+                container.appendChild(trophyDiv);
+            }
+            if (gameState.player.rewards.crowns > 0) {
+                const crownDiv = document.createElement('div');
+                crownDiv.className = 'trophy-item';
+                crownDiv.textContent = '👑';
+                crownDiv.title = `${gameState.player.rewards.crowns} Coronas`;
+                container.appendChild(crownDiv);
+            }
             
             if (container.innerHTML === '') {
                 container.textContent = '¡Gana recompensas dominando palabras!';
@@ -2416,64 +2615,49 @@
             emojiList.innerHTML = '';
             document.getElementById('store-points').textContent = gameState.player.points;
             
-            const emojiStore = [
-                { emoji: '🍊', points: 50, name: 'Naranja' },
-                { emoji: '🏺', points: 75, name: 'Cántaro' },
-                { emoji: '🥘', points: 100, name: 'Paella' },
-                { emoji: '🌮', points: 125, name: 'Taco' },
-                { emoji: '🍷', points: 150, name: 'Vino' },
-                { emoji: '🎸', points: 175, name: 'Guitarra' },
-                { emoji: '💃', points: 200, name: 'Bailarina' },
-                { emoji: '🌵', points: 300, name: 'Cactus' },
-                { emoji: '🦂', points: 400, name: 'Alacrán' },
-                { emoji: '🏰', points: 500, name: 'Castillo' },
-                { emoji: '⛪', points: 600, name: 'Catedral' },
-                { emoji: '🎭', points: 700, name: 'Teatro' },
-                { emoji: '🪕', points: 800, name: 'Charango' },
-                { emoji: '🥁', points: 900, name: 'Cajón' },
-                { emoji: '🗿', points: 1000, name: 'Moai' },
-                { emoji: '🌋', points: 1200, name: 'Volcán' },
-                { emoji: '🏆', points: 1500, name: 'Trofeo de Torero' },
-                { emoji: '🎪', points: 1800, name: 'Feria' },
-                { emoji: '🛶', points: 2000, name: 'Canoa' },
-                { emoji: '🏺', points: 2200, name: 'Ánfora' },
-                { emoji: '🕌', points: 2500, name: 'Alhambra' },
-                { emoji: '👑', points: 3000, name: 'Corona Real' },
-                { emoji: '💎', points: 3500, name: 'Esmeralda' },
-                { emoji: '🏇', points: 4000, name: 'Caballo Andaluz' },
-                { emoji: '🛕', points: 4500, name: 'Templo Maya' },
-                { emoji: '🏟️', points: 5000, name: 'Plaza de Toros' },
-                { emoji: '🎻', points: 6000, name: 'Stradivarius' },
-                { emoji: '🖼️', points: 7000, name: 'Obra de Goya' },
-                { emoji: '⚜️', points: 8000, name: 'Flor de Lis' },
-                { emoji: '🏰', points: 9000, name: 'Alcázar' },
-                { emoji: '🛡️', points: 10000, name: 'Escudo de los Reyes Católicos' },
-                { emoji: '📜', points: 12000, name: 'Carta de Colón' },
-                { emoji: '🗡️', points: 15000, name: 'Espada de El Cid' },
-                { emoji: '🏛️', points: 20000, name: 'Acueducto de Segovia' },
-                { emoji: '👑', points: 25000, name: 'Corona de Isabel la Católica' },
-                { emoji: '🪙', points: 30000, name: 'Doblón de Oro' },
-                { emoji: '🏆', points: 50000, name: 'Trofeo de la Copa del Rey' }
+            // Avatar accessories for purchase
+            const avatarAccessories = [
+                { emoji: '🎩', points: 100, name: 'Sombrero' },
+                { emoji: '👒', points: 150, name: 'Sombrero de mujer' },
+                { emoji: '👑', points: 500, name: 'Corona' },
+                { emoji: '🎓', points: 200, name: 'Gorra de graduación' },
+                { emoji: '🧢', points: 100, name: 'Gorra' },
+                { emoji: '👓', points: 120, name: 'Gafas' },
+                { emoji: '🕶️', points: 150, name: 'Gafas de sol' },
+                { emoji: '🐶', points: 200, name: 'Perro mascota' },
+                { emoji: '🐱', points: 200, name: 'Gato mascota' },
+                { emoji: '🐭', points: 150, name: 'Ratón mascota' },
+                { emoji: '🐹', points: 180, name: 'Hámster mascota' },
+                { emoji: '🐰', points: 220, name: 'Conejo mascota' },
+                { emoji: '🦊', points: 250, name: 'Zorro mascota' },
+                { emoji: '🐻', points: 300, name: 'Oso mascota' },
+                { emoji: '🐼', points: 350, name: 'Panda mascota' },
+                { emoji: '🦄', points: 400, name: 'Unicornio mascota' }
             ];
 
-            emojiStore.forEach(item => {
+            // Show avatar accessories
+            const avatarCustomization = document.getElementById('avatar-customization');
+            avatarCustomization.innerHTML = '';
+            
+            avatarAccessories.forEach(item => {
                 const div = document.createElement('div');
-                div.className = `emoji-item ${gameState.player.purchasedEmojis.includes(item.emoji) ? 'purchased' : ''}`;
-                div.innerHTML = `${item.emoji} ${item.name} (${item.points} Puntos)`;
-                div.setAttribute('role', 'button');
-                div.setAttribute('aria-label', `Seleccionar emoji ${item.name}`);
-                if (!gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points) {
+                div.className = `avatar-accessory ${gameState.player.avatarAccessories.includes(item.emoji) ? 'selected' : ''}`;
+                div.textContent = item.emoji;
+                div.title = `${item.name} (${item.points} puntos)`;
+                
+                if (!gameState.player.avatarAccessories.includes(item.emoji) && gameState.player.points >= item.points) {
                     div.addEventListener('click', () => {
-                        gameState.player.purchasedEmojis.push(item.emoji);
-                        gameState.player.emoji = item.emoji;
+                        gameState.player.avatarAccessories.push(item.emoji);
                         gameState.player.points -= item.points;
                         savePlayerProgress();
                         showEmojiStore();
-                        updatePlayerUI();
-                        showNotification(`¡Comprado emoji ${item.name} ${item.emoji}!`);
+                        showSuccess(`¡Comprado ${item.name} ${item.emoji}!`);
                     });
+                } else if (gameState.player.avatarAccessories.includes(item.emoji)) {
+                    div.title = `${item.name} (Ya comprado)`;
                 }
-                emojiList.appendChild(div);
+                
+                avatarCustomization.appendChild(div);
             });
             
             showScreen('emojiStore');
