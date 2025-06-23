@@ -1033,24 +1033,29 @@
         <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
         
         <!-- Progress Tracker (always visible) -->
-        <div class="progress-tracker">
-            <div class="progress-tracker-item">
-                <div class="progress-tracker-label">Palabras Dominadas</div>
-                <div class="progress-tracker-value"><span id="mastered-words">0</span>/50</div>
-            </div>
-            <div class="progress-tracker-item">
-                <div class="progress-tracker-label">Medallas</div>
-                <div class="progress-tracker-value"><span id="medals-count">0</span>/10</div>
-            </div>
-            <div class="progress-tracker-item">
-                <div class="progress-tracker-label">Trofeos</div>
-                <div class="progress-tracker-value"><span id="trophies-count">0</span>/10</div>
-            </div>
-            <div class="progress-tracker-item">
-                <div class="progress-tracker-label">Coronas</div>
-                <div class="progress-tracker-value"><span id="crowns-count">0</span></div>
-            </div>
-        </div>
+<div class="progress-tracker">
+    <div class="progress-tracker-item">
+        <div class="progress-tracker-label">Palabras Dominadas</div>
+        <div class="progress-tracker-value"><span id="mastered-words">0</span>/50</div>
+    </div>
+    <div class="progress-tracker-item">
+        <div class="progress-tracker-label">Medallas</div>
+        <div class="progress-tracker-value"><span id="medals-count">0</span>/10</div>
+    </div>
+    <div class="progress-tracker-item">
+        <div class="progress-tracker-label">Trofeos</div>
+        <div class="progress-tracker-value"><span id="trophies-count">0</span>/10</div>
+    </div>
+    <div class="progress-tracker-item">
+        <div class="progress-tracker-label">Coronas</div>
+        <div class="progress-tracker-value"><span id="crowns-count">0</span></div>
+    </div>
+    <!-- Add this new item for daily streak -->
+    <div class="progress-tracker-item">
+        <div class="progress-tracker-label">Racha Diaria</div>
+        <div class="progress-tracker-value"><span id="streak-count">0</span></div>
+    </div>
+</div>
         
         <!-- Character element -->
         <div id="character" class="character">🐉</div>
@@ -1805,25 +1810,30 @@
             }
         }
 
-        function updateStreakDisplay() {
-            const today = new Date().toDateString();
-            if (gameState.player.lastPlayedDate !== today) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
-                    gameState.player.dailyStreak++;
-                    showSuccess(`¡Racha extendida a ${gameState.player.dailyStreak} días!`);
-                    if (sounds.milestone) sounds.milestone();
-                } else if (gameState.player.lastPlayedDate !== today) {
-                    gameState.player.dailyStreak = 1;
-                    showSuccess('¡Nueva racha comenzada!');
-                }
-                gameState.player.lastPlayedDate = today;
-                savePlayerProgress();
-            }
-            
-            document.getElementById('streak-count').textContent = gameState.player.dailyStreak;
+function updateStreakDisplay() {
+    const today = new Date().toDateString();
+    if (gameState.player.lastPlayedDate !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
+            gameState.player.dailyStreak++;
+            showSuccess(`¡Racha extendida a ${gameState.player.dailyStreak} días!`);
+            if (sounds.milestone) sounds.milestone();
+        } else if (gameState.player.lastPlayedDate !== today) {
+            gameState.player.dailyStreak = 1;
+            showSuccess('¡Nueva racha comenzada!');
         }
+        gameState.player.lastPlayedDate = today;
+        savePlayerProgress();
+    }
+    
+    // This line was causing the error - now it will work since we added the element
+    const streakCountElement = document.getElementById('streak-count');
+    if (streakCountElement) {
+        streakCountElement.textContent = gameState.player.dailyStreak;
+    }
+}
+
 
         function updateRewardPath() {
             const steps = document.querySelectorAll('.reward-step');
