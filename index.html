@@ -1318,6 +1318,8 @@ let totalWords = 0;
 let milestones = [];
 let roundsPlayed = 0;
 let matchesCompleted = 0; // Track matches for bonus games
+let matchesInRound = 0; // Track matches in current 5-match round
+let perfectRound = true; // Track if all matches in round were correct
 let bonusGameAvailable = false;
 
 // Sound effects
@@ -2251,21 +2253,34 @@ function checkMatch() {
         return;
     }
     
-    if (leftId === rightId) {
-        // Correct match
-        playSound('correct');
+if (leftId === rightId) {
+    // Correct match
+    playSound('correct');
+    
+    // Calculate points - double for hard mode
+    const basePoints = gameState.mode === 'hard' ? 20 : 10;
+    gameState.player.points += basePoints;
+    gameState.streak++;
+    gameState.currentRound.roundPoints += basePoints;
+    matchesCompleted++;
+    matchesInRound++;
+    
+    // Check for bonus game every 5 matches
+    if (matchesInRound >= 5) {
+        matchesInRound = 0;
+        showBonusGamePopup();
         
-        // Calculate points - double for hard mode
-        const basePoints = gameState.mode === 'hard' ? 20 : 10;
-        gameState.player.points += basePoints;
-        gameState.streak++;
-        gameState.currentRound.roundPoints += basePoints;
-        matchesCompleted++;
-        
-        // Check for bonus game every 15 matches
-        if (matchesCompleted % 15 === 0) {
-            showBonusGamePopup();
+        // Play musical flourish if perfect round
+        if (perfectRound) {
+            playSound('win');
+            createConfetti(document.getElementById('game-screen'), 30);
+            showNotification("¡Ronda Perfecta! ¡5/5 correctas!");
+        } else {
+            playSound('flamenco');
         }
+        
+        perfectRound = true; // Reset for next round
+    }
         
         const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
         if (pair) {
@@ -2327,6 +2342,8 @@ function checkMatch() {
         // Incorrect match
         playSound('incorrect');
         gameState.streak = 0;
+    perfectRound = false;
+    matchesInRound++;
         
         leftCard.classList.add('incorrect');
         rightCard.classList.add('incorrect');
@@ -2415,7 +2432,17 @@ function playFruitMachine() {
         
         setTimeout(() => {
             clearInterval(spinInterval);
-            const result = fruits[Math.floor(Math.random() * fruits.length)];
+            // 33% chance all reels show the same fruit
+            const shouldWin = Math.random() < 0.33;
+            let result;
+            
+            if (shouldWin && index > 0) {
+                // Force same result as first reel for a win
+                result = results[0];
+            } else {
+                result = fruits[Math.floor(Math.random() * fruits.length)];
+            }
+            
             reel.textContent = result;
             results.push(result);
             
