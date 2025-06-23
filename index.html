@@ -1248,29 +1248,257 @@
         let matchesCompleted = 0; // Track matches for bonus games
         let bonusGameAvailable = false;
 
-        // Default vocabulary - will be replaced if vocab.js loads
-        const defaultVocab = [
-            { word: 'gato', emoji: '😺', type: 'noun' },
-            { word: 'perro', emoji: '🐶', type: 'noun' },
-            { word: 'sol', emoji: '☀️', type: 'noun' },
-            { word: 'luna', emoji: '🌙', type: 'noun' },
-            { word: 'casa', emoji: '🏠', type: 'noun' },
-            { word: 'árbol', emoji: '🌳', type: 'noun' },
-            { word: 'agua', emoji: '💧', type: 'noun' },
-            { word: 'fuego', emoji: '🔥', type: 'noun' },
-            { word: 'libro', emoji: '📖', type: 'noun' },
-            { word: 'manzana', emoji: '🍎', type: 'noun' },
-            { word: 'correr', emoji: '🏃', type: 'verb' },
-            { word: 'saltar', emoji: '🦘', type: 'verb' },
-            { word: 'comer', emoji: '🍽️', type: 'verb' },
-            { word: 'beber', emoji: '🥛', type: 'verb' },
-            { word: 'dormir', emoji: '😴', type: 'verb' },
-            { word: 'grande', emoji: '🐘', type: 'adjective' },
-            { word: 'pequeño', emoji: '🐜', type: 'adjective' },
-            { word: 'feliz', emoji: '😊', type: 'adjective' },
-            { word: 'triste', emoji: '😢', type: 'adjective' },
-            { word: 'rápido', emoji: '⚡', type: 'adjective' }
-        ];
+        // Audio context and sounds
+        let audioContext;
+        let sounds = {
+            correct: null,
+            incorrect: null,
+            roundComplete: null,
+            milestone: null
+        };
+
+        // Initialize audio context
+        function initAudio() {
+            try {
+                // Create audio context
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create all sound effects
+                createSounds();
+                
+                // Set up music control button
+                document.getElementById('music-control').addEventListener('click', toggleMusic);
+            } catch (e) {
+                console.warn("Web Audio API not supported:", e);
+            }
+        }
+
+        // Create all sound effects with Spanish/Flamenco style
+        function createSounds() {
+            // Correct answer sound (short flamenco-style guitar pluck)
+            sounds.correct = () => {
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(880, now);
+                osc.frequency.exponentialRampToValueAtTime(440, now + 0.3);
+                
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.3);
+            };
+
+            // Incorrect answer sound (short "olé" style)
+            sounds.incorrect = () => {
+                const now = audioContext.currentTime;
+                
+                // Create noise burst (like castanets)
+                const bufferSize = audioContext.sampleRate * 0.02;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                
+                const noise = audioContext.createBufferSource();
+                noise.buffer = buffer;
+                
+                const noiseGain = audioContext.createGain();
+                noiseGain.gain.setValueAtTime(0.3, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                
+                noise.connect(noiseGain);
+                noiseGain.connect(audioContext.destination);
+                
+                noise.start(now);
+                noise.stop(now + 0.1);
+                
+                // Add a short "olé" style vocal sound
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                osc1.type = "sine";
+                osc2.type = "sine";
+                osc1.frequency.setValueAtTime(220, now);
+                osc2.frequency.setValueAtTime(440, now);
+                
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                
+                osc1.connect(gainNode);
+                osc2.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.3);
+                osc2.stop(now + 0.3);
+            };
+
+            // Round complete sound (flamenco rhythm)
+            sounds.roundComplete = () => {
+                const now = audioContext.currentTime;
+                
+                // Create a flamenco rhythm pattern
+                const playNote = (freq, duration, when) => {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, when);
+                    
+                    gain.gain.setValueAtTime(0.3, when);
+                    gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    
+                    osc.start(when);
+                    osc.stop(when + duration);
+                };
+                
+                // Flamenco-style chord progression
+                playNote(587.33, 0.1, now); // D5
+                playNote(493.88, 0.1, now + 0.1); // B4
+                playNote(392.00, 0.1, now + 0.2); // G4
+                playNote(329.63, 0.3, now + 0.3); // E4
+                
+                // Add hand claps
+                for (let i = 0; i < 3; i++) {
+                    const clapTime = now + 0.1 + (i * 0.2);
+                    const clapBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.02, audioContext.sampleRate);
+                    const clapOutput = clapBuffer.getChannelData(0);
+                    
+                    for (let j = 0; j < clapBuffer.length; j++) {
+                        clapOutput[j] = Math.random() * 2 - 1;
+                    }
+                    
+                    const clap = audioContext.createBufferSource();
+                    clap.buffer = clapBuffer;
+                    
+                    const clapGain = audioContext.createGain();
+                    clapGain.gain.setValueAtTime(0.5, clapTime);
+                    clapGain.gain.exponentialRampToValueAtTime(0.001, clapTime + 0.05);
+                    
+                    clap.connect(clapGain);
+                    clapGain.connect(audioContext.destination);
+                    
+                    clap.start(clapTime);
+                    clap.stop(clapTime + 0.05);
+                }
+            };
+
+            // Milestone sound (celebratory castanets)
+            sounds.milestone = () => {
+                const now = audioContext.currentTime;
+                
+                // Create castanet sounds
+                for (let i = 0; i < 5; i++) {
+                    const clickTime = now + (i * 0.1);
+                    const bufferSize = audioContext.sampleRate * 0.01;
+                    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                    const output = buffer.getChannelData(0);
+                    
+                    for (let j = 0; j < bufferSize; j++) {
+                        output[j] = Math.random() * 2 - 1;
+                    }
+                    
+                    const noise = audioContext.createBufferSource();
+                    noise.buffer = buffer;
+                    
+                    const gain = audioContext.createGain();
+                    gain.gain.setValueAtTime(0.5, clickTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, clickTime + 0.05);
+                    
+                    noise.connect(gain);
+                    gain.connect(audioContext.destination);
+                    
+                    noise.start(clickTime);
+                    noise.stop(clickTime + 0.05);
+                }
+                
+                // Add a celebratory "¡Olé!" vocal sound
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                osc1.type = "sine";
+                osc2.type = "sine";
+                osc1.frequency.setValueAtTime(294, now); // D4
+                osc2.frequency.setValueAtTime(440, now); // A4
+                
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                
+                osc1.connect(gainNode);
+                osc2.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.5);
+                osc2.stop(now + 0.5);
+            };
+        }
+
+        // Toggle background music
+        function toggleMusic() {
+            const musicBtn = document.getElementById('music-control');
+            
+            if (!backgroundMusic) {
+                // Create simple background music
+                backgroundMusic = {
+                    oscillator: audioContext.createOscillator(),
+                    gain: audioContext.createGain()
+                };
+                
+                backgroundMusic.oscillator.type = "sine";
+                backgroundMusic.oscillator.frequency.setValueAtTime(330, audioContext.currentTime);
+                backgroundMusic.gain.gain.setValueAtTime(0.05, audioContext.currentTime);
+                
+                // Create a simple flamenco rhythm pattern
+                const bpm = 120;
+                const interval = 60 / bpm;
+                let time = audioContext.currentTime;
+                
+                for (let i = 0; i < 32; i++) {
+                    // Change note every beat
+                    const noteFreq = i % 4 === 0 ? 440 : 330;
+                    backgroundMusic.oscillator.frequency.setValueAtTime(noteFreq, time);
+                    
+                    // Add emphasis on the first beat
+                    if (i % 4 === 0) {
+                        backgroundMusic.gain.gain.setValueAtTime(0.08, time);
+                        backgroundMusic.gain.gain.linearRampToValueAtTime(0.05, time + interval * 0.5);
+                    }
+                    
+                    time += interval;
+                }
+                
+                backgroundMusic.oscillator.connect(backgroundMusic.gain);
+                backgroundMusic.gain.connect(audioContext.destination);
+                backgroundMusic.oscillator.start();
+            }
+            
+            if (isMusicPlaying) {
+                backgroundMusic.gain.gain.setValueAtTime(0, audioContext.currentTime);
+                musicBtn.textContent = "🔇";
+                isMusicPlaying = false;
+            } else {
+                backgroundMusic.gain.gain.setValueAtTime(0.05, audioContext.currentTime);
+                musicBtn.textContent = "🎵";
+                isMusicPlaying = true;
+            }
+        }
 
         // Main game state
         const gameState = {
@@ -1282,9 +1510,9 @@
                 emoji: '',
                 points: 0,
                 purchasedEmojis: [],
-                avatarAccessories: [], // New field for avatar customization
+                avatarAccessories: [],
                 rewards: { 
-                    medals: 0, // Now global across all modes
+                    medals: 0,
                     trophies: 0,
                     crowns: 0,
                     totalWordsMastered: 0
@@ -1362,6 +1590,9 @@
                 return;
             }
             
+            // Initialize audio
+            initAudio();
+            
             loadVocab().then(vocab => {
                 if (!vocab || vocab.length === 0) {
                     console.warn("vocab.js not loaded, using default vocab");
@@ -1434,6 +1665,9 @@
                 ];
                 const randomMessage = messages[Math.floor(Math.random() * messages.length)];
                 showNotification(randomMessage);
+                
+                // Play a fun sound when character is clicked
+                if (sounds.milestone) sounds.milestone();
             });
         }
 
@@ -1520,6 +1754,7 @@
                 gameContainer.classList.add('kid-mode');
                 kidModeBtn.textContent = '👶 Modo Normal';
                 showSuccess("Modo Niño Activado - ¡Tarjetas más grandes!");
+                if (sounds.correct) sounds.correct();
             } else {
                 gameContainer.classList.remove('kid-mode');
                 kidModeBtn.textContent = '👶 Modo Niño';
@@ -1535,6 +1770,9 @@
             gameState.player.avatar = avatar.dataset.avatar;
             updatePlayerUI();
             document.getElementById('character').textContent = avatar.dataset.avatar;
+            
+            // Play a sound when avatar is selected
+            if (sounds.correct) sounds.correct();
         }
 
         function selectColor(color) {
@@ -1542,6 +1780,9 @@
             color.classList.add('selected');
             gameState.player.theme = color.dataset.color;
             updatePlayerUI();
+            
+            // Play a sound when color is selected
+            if (sounds.correct) sounds.correct();
         }
 
         function updatePlayerUI() {
@@ -1572,6 +1813,7 @@
                 if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
                     gameState.player.dailyStreak++;
                     showSuccess(`¡Racha extendida a ${gameState.player.dailyStreak} días!`);
+                    if (sounds.milestone) sounds.milestone();
                 } else if (gameState.player.lastPlayedDate !== today) {
                     gameState.player.dailyStreak = 1;
                     showSuccess('¡Nueva racha comenzada!');
@@ -1694,6 +1936,7 @@
                         updateProgressTracker();
                         document.getElementById('character').textContent = gameState.player.avatar;
                         showSuccess(`¡Bienvenido de nuevo, ${username}!`);
+                        if (sounds.correct) sounds.correct();
                         return;
                     }
                 } catch (e) {
@@ -1741,6 +1984,7 @@
             
             if (!username) {
                 showError("Por favor introduce un nombre de usuario");
+                if (sounds.incorrect) sounds.incorrect();
                 return;
             }
             
@@ -1797,6 +2041,7 @@
             document.getElementById('user-select').value = username;
             
             showSuccess(isNewUser ? `¡Nueva cuenta creada para ${username}!` : `¡Bienvenido de nuevo ${username}!`);
+            if (sounds.roundComplete) sounds.roundComplete();
         }
 
         function quickPlay() {
@@ -2273,23 +2518,8 @@
             }
             
             if (leftId === rightId) {
-                leftCard.classList.add('correct');
-                rightCard.classList.add('correct');
-                
-                // Show translations
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
-                if (pair && (pair.en || pair.jp)) {
-                    const translationDisplay = document.getElementById('translation-display');
-                    translationDisplay.innerHTML = `
-                        <span class="word">${pair.word}</span>
-                        ${pair.en ? `<span class="translation">EN: ${pair.en}</span>` : ''}
-                        ${pair.jp ? `<span class="translation">JP: ${pair.jp}</span>` : ''}
-                    `;
-                    translationDisplay.style.display = 'block';
-                    setTimeout(() => {
-                        translationDisplay.style.display = 'none';
-                    }, 3000);
-                }
+                // Correct match
+                if (sounds.correct) sounds.correct();
                 
                 // Calculate points - double for hard mode
                 const basePoints = gameState.mode === 'hard' ? 20 : 10;
@@ -2303,6 +2533,7 @@
                     showBonusGamePopup();
                 }
                 
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
                 if (pair) {
                     gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
                     if (gameState.wordProgress[pair.word] === 3) {
@@ -2325,6 +2556,9 @@
                 
                 checkEmojiPurchase();
                 
+                leftCard.classList.add('correct');
+                rightCard.classList.add('correct');
+                
                 setTimeout(() => {
                     leftCard.classList.remove('correct');
                     rightCard.classList.remove('correct');
@@ -2344,10 +2578,28 @@
                     }
                 }, 500);
             } else {
-                leftCard.classList.add('incorrect');
-                rightCard.classList.add('incorrect');
+                // Incorrect match
+                if (sounds.incorrect) sounds.incorrect();
+                
+                // Show translations
+                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
+                if (pair && (pair.en || pair.jp)) {
+                    const translationDisplay = document.getElementById('translation-display');
+                    translationDisplay.innerHTML = `
+                        <span class="word">${pair.word}</span>
+                        ${pair.en ? `<span class="translation">EN: ${pair.en}</span>` : ''}
+                        ${pair.jp ? `<span class="translation">JP: ${pair.jp}</span>` : ''}
+                    `;
+                    translationDisplay.style.display = 'block';
+                    setTimeout(() => {
+                        translationDisplay.style.display = 'none';
+                    }, 3000);
+                }
                 
                 gameState.streak = 0;
+                
+                leftCard.classList.add('incorrect');
+                rightCard.classList.add('incorrect');
                 
                 setTimeout(() => {
                     leftCard.classList.remove('selected', 'incorrect');
@@ -2364,6 +2616,7 @@
 
         function showBonusGamePopup() {
             document.getElementById('bonus-game-popup').style.display = 'flex';
+            if (sounds.milestone) sounds.milestone();
         }
 
         function playBonusGame() {
@@ -2375,6 +2628,9 @@
             const bonusPoints = Math.floor(Math.random() * 50) + 50;
             gameState.player.points += bonusPoints;
             showSuccess(`¡Bonus Game completado! +${bonusPoints} puntos`);
+            
+            // Play success sound
+            if (sounds.roundComplete) sounds.roundComplete();
             
             // Update UI
             updateGameUI();
@@ -2388,6 +2644,9 @@
             // Save the bonus game for later
             gameState.player.bonusGamesAvailable++;
             showSuccess(`¡Bonus Game guardado! Ahora tienes ${gameState.player.bonusGamesAvailable} juegos disponibles.`);
+            
+            // Play success sound
+            if (sounds.correct) sounds.correct();
             
             // Update UI
             savePlayerProgress();
@@ -2415,6 +2674,7 @@
             if (stickerToUnlock) {
                 gameState.player.unlockedStickers.push(stickerToUnlock.emoji);
                 showNotification(`¡Nueva pegatina desbloqueada: ${stickerToUnlock.emoji}!`);
+                if (sounds.milestone) sounds.milestone();
                 updateStickerCollection();
                 savePlayerProgress();
             }
@@ -2432,12 +2692,8 @@
             const previousWords = gameState.completedWords - 1;
             const currentWords = gameState.completedWords;
             if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
+                if (sounds.milestone) sounds.milestone();
                 showNotification(`¡Logro! ${currentWords}/50 palabras dominadas`);
-                createConfetti(document.getElementById('game-screen'), 20);
-                document.getElementById('character').style.animation = 'bounce 0.5s 3';
-                setTimeout(() => {
-                    document.getElementById('character').style.animation = 'bounce 2s infinite';
-                }, 1500);
             }
         }
 
@@ -2500,12 +2756,14 @@
                 gameState.player.emoji = emoji.emoji;
                 gameState.player.points -= emoji.points;
                 showNotification(`¡Comprado emoji ${emoji.name} ${emoji.emoji}!`);
+                if (sounds.milestone) sounds.milestone();
                 updatePlayerUI();
                 savePlayerProgress();
             }
         }
 
         function endRound() {
+            if (sounds.roundComplete) sounds.roundComplete();
             if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
                 gameState.player.points += 50;
                 showNotification('¡Ronda perfecta! +50 puntos');
@@ -2652,6 +2910,7 @@
                         savePlayerProgress();
                         showEmojiStore();
                         showSuccess(`¡Comprado ${item.name} ${item.emoji}!`);
+                        if (sounds.correct) sounds.correct();
                     });
                 } else if (gameState.player.avatarAccessories.includes(item.emoji)) {
                     div.title = `${item.name} (Ya comprado)`;
@@ -2690,6 +2949,9 @@
                 showNotification('¡Pegatina especial desbloqueada: 🎉!');
                 savePlayerProgress();
             }
+            
+            // Play celebration sound
+            if (sounds.roundComplete) sounds.roundComplete();
             
             showScreen('gameOver');
         }
