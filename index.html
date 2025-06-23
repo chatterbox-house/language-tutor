@@ -630,14 +630,16 @@
             z-index: 2000;
         }
 
-        .bonus-game-content {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            padding: 25px;
-            border-radius: 15px;
-            border: 3px solid #ffe66d;
-            max-width: 80%;
-            text-align: center;
-        }
+.bonus-game-content {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    padding: 25px;
+    border-radius: 15px;
+    border: 3px solid #ffe66d;
+    max-width: 80%;
+    text-align: center;
+    position: relative; /* Add this line */
+    min-height: 300px;
+}
 
         .bonus-game-content h3 {
             color: #ffe66d;
@@ -696,30 +698,41 @@
             margin: 20px 0;
         }
 
-        .balloon {
-            width: 60px;
-            height: 80px;
-            background: #ff6b6b;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: white;
-            cursor: pointer;
-            position: relative;
-            animation: float 3s infinite ease-in-out;
-        }
+.balloon {
+    width: 60px;
+    height: 80px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    transition: transform 0.1s;
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 
-        .balloon:after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            width: 2px;
-            height: 15px;
-            background: #ccc;
-        }
+.balloon:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 2px;
+    height: 15px;
+    background: #ccc;
+    transform: translateX(-50%);
+}
+
+.balloon:hover {
+    transform: scale(1.1);
+}
+
+#target-letter {
+    text-shadow: 0 0 10px rgba(255,230,109,0.7);
+}
 
 .bonus-game-content {
     position: relative;
@@ -1324,21 +1337,120 @@ let bonusGameAvailable = false;
 
 // Sound effects
 function playSound(type) {
-    if (typeof Audio === 'undefined') return;
-    
-    const sounds = {
-        correct: 'https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3',
-        incorrect: 'https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3',
-        spin: 'https://assets.mixkit.co/sfx/preview/mixkit-slot-machine-spin-1930.mp3',
-        win: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
-        flamenco: 'https://assets.mixkit.co/sfx/preview/mixkit-flamenco-guitar-stroke-1255.mp3',
-        pop: 'https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3'
-    };
-    
-    if (sounds[type]) {
-        const audio = new Audio(sounds[type]);
-        audio.volume = 0.3; // Lower volume to be less intrusive
-        audio.play().catch(e => console.log("Audio play failed:", e));
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillator, gainNode;
+        
+        switch(type) {
+            case 'correct':
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 880;
+                gainNode.gain.value = 0.1;
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+                break;
+                
+            case 'incorrect':
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 220;
+                gainNode.gain.value = 0.1;
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+                break;
+                
+            case 'win':
+                // Happy flourish sound
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gn = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.value = 440 + (i * 220);
+                        gn.gain.value = 0.1;
+                        osc.connect(gn);
+                        gn.connect(audioCtx.destination);
+                        osc.start();
+                        gn.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                        osc.stop(audioCtx.currentTime + 0.3);
+                    }, i * 150);
+                }
+                break;
+                
+            case 'flamenco':
+                // Guitar-like sound
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gn = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.value = 330 + (i * 110);
+                        gn.gain.value = 0.1;
+                        osc.connect(gn);
+                        gn.connect(audioCtx.destination);
+                        osc.start();
+                        gn.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }, i * 100);
+                }
+                break;
+                
+            case 'pop':
+                // Balloon pop sound
+                const popOsc = audioCtx.createOscillator();
+                const popGn = audioCtx.createGain();
+                popOsc.type = 'square';
+                popOsc.frequency.value = 50;
+                popGn.gain.value = 0.2;
+                popOsc.connect(popGn);
+                popGn.connect(audioCtx.destination);
+                popOsc.start();
+                popOsc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.1);
+                popGn.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                popOsc.stop(audioCtx.currentTime + 0.1);
+                break;
+                
+            case 'fart':
+                // Funny fail sound
+                const fartOsc = audioCtx.createOscillator();
+                const fartGn = audioCtx.createGain();
+                fartOsc.type = 'sawtooth';
+                fartOsc.frequency.value = 80;
+                fartGn.gain.value = 0.1;
+                fartOsc.connect(fartGn);
+                fartGn.connect(audioCtx.destination);
+                fartOsc.start();
+                fartOsc.frequency.linearRampToValueAtTime(20, audioCtx.currentTime + 0.5);
+                fartGn.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                fartOsc.stop(audioCtx.currentTime + 0.5);
+                break;
+                
+            case 'spin':
+                // Slot machine spin sound
+                const spinOsc = audioCtx.createOscillator();
+                const spinGn = audioCtx.createGain();
+                spinOsc.type = 'sine';
+                spinOsc.frequency.value = 100;
+                spinGn.gain.value = 0.1;
+                spinOsc.connect(spinGn);
+                spinGn.connect(audioCtx.destination);
+                spinOsc.start();
+                spinOsc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 1);
+                spinGn.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+                spinOsc.stop(audioCtx.currentTime + 1);
+                break;
+        }
+    } catch (e) {
+        console.log("Audio error:", e);
     }
 }
 // Main game state
@@ -2477,11 +2589,32 @@ function checkFruitMachineResult(results) {
         showError("¡Casi! Inténtalo de nuevo la próxima vez.");
     }
 }
+// Balloon Game State
+let balloonGameState = {
+    currentTarget: '',
+    score: 0,
+    highScore: 0,
+    speedLevel: 1,
+    balloons: [],
+    timer: null,
+    timeLeft: 30,
+    correctCount: 0
+};
 
 function startBalloonGame() {
     const balloonGame = document.getElementById('balloon-game');
     balloonGame.innerHTML = '';
     balloonGame.style.display = 'flex';
+    
+    // Reset game state
+    balloonGameState = {
+        ...balloonGameState,
+        currentTarget: '',
+        score: 0,
+        balloons: [],
+        timeLeft: 30,
+        correctCount: 0
+    };
     
     // Create Spanish alphabet balloons
     const spanishAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
@@ -2490,41 +2623,193 @@ function startBalloonGame() {
     // Shuffle and take 10 random letters
     const shuffledLetters = shuffleArray([...spanishAlphabet]).slice(0, 10);
     
+    // Create target display
+    const targetDisplay = document.createElement('div');
+    targetDisplay.id = 'target-letter';
+    targetDisplay.style.textAlign = 'center';
+    targetDisplay.style.width = '100%';
+    targetDisplay.style.fontSize = '2rem';
+    targetDisplay.style.margin = '10px 0';
+    targetDisplay.style.fontWeight = 'bold';
+    targetDisplay.style.color = '#ffe66d';
+    balloonGame.appendChild(targetDisplay);
+    
+    // Create score display
+    const scoreDisplay = document.createElement('div');
+    scoreDisplay.id = 'balloon-score';
+    scoreDisplay.style.textAlign = 'center';
+    scoreDisplay.style.width = '100%';
+    scoreDisplay.style.fontSize = '1.5rem';
+    scoreDisplay.style.margin = '5px 0';
+    scoreDisplay.textContent = `Puntos: 0 | Record: ${balloonGameState.highScore} | Nivel: ${balloonGameState.speedLevel}`;
+    balloonGame.appendChild(scoreDisplay);
+    
+    // Create timer display
+    const timerDisplay = document.createElement('div');
+    timerDisplay.id = 'balloon-timer';
+    timerDisplay.style.textAlign = 'center';
+    timerDisplay.style.width = '100%';
+    timerDisplay.style.fontSize = '1.5rem';
+    timerDisplay.style.margin = '5px 0';
+    timerDisplay.textContent = `Tiempo: 30s`;
+    balloonGame.appendChild(timerDisplay);
+    
+    // Create balloons container
+    const balloonsContainer = document.createElement('div');
+    balloonsContainer.id = 'balloons-container';
+    balloonsContainer.style.display = 'flex';
+    balloonsContainer.style.flexWrap = 'wrap';
+    balloonsContainer.style.justifyContent = 'center';
+    balloonsContainer.style.gap = '10px';
+    balloonsContainer.style.width = '100%';
+    balloonGame.appendChild(balloonsContainer);
+    
+    // Create balloons with random positions and movements
     shuffledLetters.forEach(letter => {
         const balloon = document.createElement('div');
         balloon.className = 'balloon';
         balloon.textContent = letter;
+        balloon.dataset.letter = letter;
+        
+        // Random starting position
+        const startLeft = Math.random() * 80;
+        const startTop = Math.random() * 60;
+        
+        balloon.style.left = `${startLeft}%`;
+        balloon.style.top = `${startTop}%`;
+        balloon.style.position = 'absolute';
+        
+        // Random movement direction and speed (based on speedLevel)
+        balloon.dataset.speedX = (Math.random() > 0.5 ? 1 : -1) * (0.5 + balloonGameState.speedLevel * 0.1);
+        balloon.dataset.speedY = (Math.random() > 0.5 ? 1 : -1) * (0.5 + balloonGameState.speedLevel * 0.1);
+        
         balloon.addEventListener('click', () => popBalloon(balloon, letter));
-        balloonGame.appendChild(balloon);
+        balloonsContainer.appendChild(balloon);
+        
+        balloonGameState.balloons.push({
+            element: balloon,
+            x: startLeft,
+            y: startTop
+        });
     });
     
-    // Set 30-second timer
-    let timeLeft = 30;
-    const timerDisplay = document.createElement('div');
-    timerDisplay.style.textAlign = 'center';
-    timerDisplay.style.width = '100%';
-    timerDisplay.style.fontSize = '1.5rem';
-    timerDisplay.style.margin = '10px 0';
-    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
-    balloonGame.insertBefore(timerDisplay, balloonGame.firstChild);
+    // Set new target letter every 3 seconds
+    setNewTarget();
+    const targetInterval = setInterval(setNewTarget, 3000);
     
-    const timer = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+    // Update balloon positions
+    const moveInterval = setInterval(moveBalloons, 50);
+    
+    // Set 30-second timer
+    balloonGameState.timer = setInterval(() => {
+        balloonGameState.timeLeft--;
+        document.getElementById('balloon-timer').textContent = `Tiempo: ${balloonGameState.timeLeft}s`;
         
-        if (timeLeft <= 0) {
-            clearInterval(timer);
+        if (balloonGameState.timeLeft <= 0) {
+            clearInterval(targetInterval);
+            clearInterval(moveInterval);
+            clearInterval(balloonGameState.timer);
             endBalloonGame();
         }
     }, 1000);
 }
 
-function popBalloon(balloon, letter) {
-    balloon.style.display = 'none';
-    playSound('pop');
-    speakLetter(letter);
+function setNewTarget() {
+    if (balloonGameState.balloons.length === 0) return;
+    
+    // Choose random balloon as target
+    const randomIndex = Math.floor(Math.random() * balloonGameState.balloons.length);
+    const targetBalloon = balloonGameState.balloons[randomIndex];
+    balloonGameState.currentTarget = targetBalloon.element.dataset.letter;
+    
+    document.getElementById('target-letter').textContent = `¡Revienta: ${balloonGameState.currentTarget}!`;
+    
+    // Speak the target letter
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(balloonGameState.currentTarget);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+    }
 }
 
+function moveBalloons() {
+    balloonGameState.balloons.forEach(balloonObj => {
+        const balloon = balloonObj.element;
+        
+        // Update position
+        balloonObj.x += parseFloat(balloon.dataset.speedX);
+        balloonObj.y += parseFloat(balloon.dataset.speedY);
+        
+        // Bounce off edges
+        if (balloonObj.x <= 0 || balloonObj.x >= 90) {
+            balloon.dataset.speedX = -parseFloat(balloon.dataset.speedX);
+        }
+        if (balloonObj.y <= 0 || balloonObj.y >= 70) {
+            balloon.dataset.speedY = -parseFloat(balloon.dataset.speedY);
+        }
+        
+        // Apply new position
+        balloon.style.left = `${balloonObj.x}%`;
+        balloon.style.top = `${balloonObj.y}%`;
+    });
+}
+
+function popBalloon(balloon, letter) {
+    if (letter === balloonGameState.currentTarget) {
+        // Correct balloon
+        playSound('pop');
+        balloonGameState.score += 10 * balloonGameState.speedLevel;
+        balloonGameState.correctCount++;
+        
+        // Remove balloon
+        balloon.remove();
+        balloonGameState.balloons = balloonGameState.balloons.filter(b => b.element !== balloon);
+        
+        // Update score display
+        document.getElementById('balloon-score').textContent = 
+            `Puntos: ${balloonGameState.score} | Record: ${balloonGameState.highScore} | Nivel: ${balloonGameState.speedLevel}`;
+        
+        // If all balloons are popped, create new ones
+        if (balloonGameState.balloons.length === 0) {
+            setTimeout(startBalloonGame, 1000);
+        }
+    } else {
+        // Wrong balloon
+        playSound('fart');
+        balloonGameState.score = Math.max(0, balloonGameState.score - 5);
+        document.getElementById('balloon-score').textContent = 
+            `Puntos: ${balloonGameScore} | Record: ${balloonGameState.highScore} | Nivel: ${balloonGameState.speedLevel}`;
+    }
+}
+
+function endBalloonGame() {
+    document.getElementById('balloon-game').style.display = 'none';
+    
+    // Update high score
+    if (balloonGameState.score > balloonGameState.highScore) {
+        balloonGameState.highScore = balloonGameState.score;
+        showSuccess(`¡Nuevo record! ${balloonGameState.score} puntos`);
+    } else {
+        showSuccess(`Puntos finales: ${balloonGameState.score}`);
+    }
+    
+    // Adjust difficulty for next time
+    if (balloonGameState.correctCount >= 15) {
+        balloonGameState.speedLevel = Math.min(10, balloonGameState.speedLevel + 1);
+        showNotification(`¡Nivel aumentado a ${balloonGameState.speedLevel}!`);
+    } else if (balloonGameState.correctCount < 5) {
+        balloonGameState.speedLevel = Math.max(1, balloonGameState.speedLevel - 1);
+        showNotification(`¡Nivel reducido a ${balloonGameState.speedLevel}!`);
+    }
+    
+    // Award points
+    const bonusPoints = Math.floor(balloonGameState.score / 5);
+    gameState.player.points += bonusPoints;
+    
+    showSuccess(`¡Ganaste ${bonusPoints} puntos extra!`);
+    savePlayerProgress();
+}
 function speakLetter(letter) {
     if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(letter);
@@ -2534,17 +2819,7 @@ function speakLetter(letter) {
     }
 }
 
-function endBalloonGame() {
-    document.getElementById('balloon-game').style.display = 'none';
-    
-    // Award points based on performance
-    const balloonsPopped = document.querySelectorAll('.balloon[style*="display: none"]').length;
-    const bonusPoints = balloonsPopped * 5;
-    gameState.player.points += bonusPoints;
-    
-    showSuccess(`¡Ganaste ${bonusPoints} puntos en el juego de globos!`);
-    savePlayerProgress();
-}
+
 
 function resetSelections() {
     gameState.currentRound.selectedLeft = null;
@@ -2588,6 +2863,8 @@ function checkModeCompletion() {
 }
 
 function endRound() {
+    playSound('win'); // Add this line
+    
     document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
     document.getElementById('total-score').textContent = gameState.player.points;
     
