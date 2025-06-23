@@ -319,7 +319,7 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
-        /* New Progress Tracker Styles */
+        /* Simplified Progress Tracker */
         .progress-tracker {
             position: fixed;
             top: 10px;
@@ -473,40 +473,6 @@
             animation: trophySpin 2s infinite linear;
         }
         
-        #emoji-store-screen {
-            background: radial-gradient(circle at center, #2a2a3a, #1a1a2a);
-            text-align: center;
-        }
-        
-        .emoji-store-container {
-            max-width: 700px;
-            margin: 20px auto;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 25px;
-            border: 3px solid #4ecdc4;
-        }
-        
-        .emoji-item {
-            display: inline-flex;
-            align-items: center;
-            margin: 10px;
-            padding: 15px;
-            background: rgba(30, 40, 70, 0.8);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .emoji-item:hover {
-            transform: scale(1.1);
-        }
-        
-        .emoji-item.purchased {
-            background: rgba(100, 255, 100, 0.5);
-        }
-        
         #game-over-screen {
             background: radial-gradient(circle at center, #3a2a2a, #2a1a1a);
             text-align: center;
@@ -591,19 +557,6 @@
             opacity: 0.8;
         }
         
-        .daily-streak {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-        
-        .streak-fire {
-            color: #ff6b6b;
-            animation: flamePulse 1s infinite alternate;
-        }
-        
         .reward-path {
             display: flex;
             justify-content: space-between;
@@ -663,105 +616,6 @@
             transform: translateY(-2px);
         }
         
-        /* New kid-friendly elements */
-        .character {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 5rem;
-            z-index: 100;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-        }
-        
-        .music-control {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .music-control {
-            transition: all 0.3s;
-        }
-
-        .music-control:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .sticker-collection {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .sticker {
-            font-size: 2.5rem;
-            margin: 10px;
-            animation: wiggle 3s infinite;
-        }
-        
-        .sticker.unlocked {
-            filter: drop-shadow(0 0 5px gold);
-        }
-        
-        .sticker.locked {
-            opacity: 0.3;
-            filter: grayscale(100%);
-        }
-        
-        /* Tutorial Popup Styles */
-        .tutorial-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .tutorial-content {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            padding: 25px;
-            border-radius: 15px;
-            border: 3px solid #ff6b6b;
-            max-width: 80%;
-            text-align: center;
-        }
-
-        .tutorial-content h3 {
-            color: #ffe66d;
-            margin-bottom: 15px;
-        }
-
-        .tutorial-content button {
-            background: linear-gradient(145deg, #3a7, #4bc);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
         /* Bonus Game Popup */
         .bonus-game-popup {
             position: fixed;
@@ -806,33 +660,84 @@
             font-size: 1.2rem;
         }
 
-        /* Avatar Customization */
-        .avatar-customization {
+        /* Fruit Machine Styles */
+        .fruit-machine {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .fruit-reel {
+            width: 80px;
+            height: 80px;
+            font-size: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            border: 2px solid #4ecdc4;
+            overflow: hidden;
+        }
+
+        .fruit-reel-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Balloon Game Styles */
+        .balloon-game {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin: 20px 0;
         }
 
-        .avatar-accessory {
-            font-size: 2rem;
+        .balloon {
+            width: 60px;
+            height: 80px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s;
-            padding: 10px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
+            position: relative;
+            animation: float 3s infinite ease-in-out;
         }
 
-        .avatar-accessory:hover {
-            transform: scale(1.2);
-            background: rgba(255,255,255,0.2);
+        .balloon:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: #ccc;
         }
 
-        .avatar-accessory.selected {
-            transform: scale(1.3);
-            background: rgba(255,255,255,0.3);
-            box-shadow: 0 0 15px gold;
+.bonus-game-content {
+    position: relative;
+    min-height: 300px;
+}
+
+#close-bonus-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #ff6b6b;
+}
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         /* Animations */
@@ -843,16 +748,6 @@
         
         @keyframes fall {
             to { transform: translateY(400px); }
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
         }
         
         @keyframes pulse {
@@ -874,21 +769,7 @@
             100% { transform: rotate(360deg); }
         }
         
-        @keyframes flamePulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2); }
-        }
-        
         /* Mobile Scaling */
-        .kid-mode .card {
-            transform: scale(1.2);
-            margin: 15px auto;
-        }
-        
-        .kid-mode .game-board {
-            flex-direction: column;
-        }
-        
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.6rem; }
@@ -934,20 +815,6 @@
                 position: static;
                 margin: 10px auto;
                 width: 90%;
-            }
-            
-            .character {
-                font-size: 3rem;
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            .music-control {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-                bottom: 10px;
-                left: 10px;
             }
             
             .progress-tracker {
@@ -998,10 +865,6 @@
                 margin: 5px;
                 font-size: 1.5rem;
             }
-            
-            .character {
-                font-size: 2.5rem;
-            }
         }
         
         @media (max-width: 360px) {
@@ -1022,2001 +885,1814 @@
         .theme-red { background: radial-gradient(circle at center, #3a1a1a, #2a0d0d); }
         .theme-purple { background: radial-gradient(circle at center, #3a1a3a, #2a0d2a); }
         .theme-orange { background: radial-gradient(circle at center, #3a2a1a, #2a1a0d); }
+        
+        /* Language Toggle Button */
+        .language-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid #4ecdc4;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 1000;
+        }
+
+        .language-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="error-notification" class="error-notification" style="display: none;"></div>
-        <div id="success-notification" class="success-notification" style="display: none;"></div>
-        <div id="translation-display" class="translation-display" style="display: none;"></div>
+<div id="game-container">
+    <!-- Language toggle button -->
+    <button id="language-toggle" class="language-toggle">🌐 English</button>
+    
+    <div id="error-notification" class="error-notification" style="display: none;"></div>
+    <div id="success-notification" class="success-notification" style="display: none;"></div>
+    <div id="translation-display" class="translation-display" style="display: none;"></div>
         
-        <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
+    <button id="logout-btn" class="logout-btn" style="display: none;">🚪 Cerrar Sesión</button>
         
-        <!-- Progress Tracker (always visible) -->
-<div class="progress-tracker">
-    <div class="progress-tracker-item">
-        <div class="progress-tracker-label">Palabras Dominadas</div>
-        <div class="progress-tracker-value"><span id="mastered-words">0</span>/50</div>
+    <!-- Simplified Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-tracker-item">
+            <div class="progress-tracker-label">Palabras Dominadas</div>
+            <div class="progress-tracker-value"><span id="mastered-words">0</span>/<span id="total-words">0</span></div>
+        </div>
+        <div class="progress-tracker-item" id="medals-tracker" style="display: none;">
+            <div class="progress-tracker-label">Medallas</div>
+            <div class="progress-tracker-value"><span id="medals-count">0</span></div>
+        </div>
+        <div class="progress-tracker-item" id="trophies-tracker" style="display: none;">
+            <div class="progress-tracker-label">Trofeos</div>
+            <div class="progress-tracker-value"><span id="trophies-count">0</span></div>
+        </div>
     </div>
-    <div class="progress-tracker-item">
-        <div class="progress-tracker-label">Medallas</div>
-        <div class="progress-tracker-value"><span id="medals-count">0</span>/10</div>
+        
+    <div id="start-screen" class="screen active">
+        <h1>NANDOmode</h1>
+        <h2>Aprende Vocabulario Español</h2>
+        
+        <div class="username-container">
+            <h3>Selecciona o Introduce Nombre:</h3>
+            <select id="user-select" aria-label="Seleccionar usuario existente">
+                <option value="">Nuevo Usuario</option>
+            </select>
+            <input type="text" id="username-input" placeholder="Escribe nuevo nombre..." maxlength="20" aria-label="Introducir nuevo nombre">
+            <button id="save-username" aria-label="Guardar nombre y continuar">💾 Guardar & Continuar</button>
+        </div>
+        
+        <div class="avatar-container">
+            <div class="avatar" data-avatar="👾" role="button" tabindex="0" aria-label="Seleccionar avatar: Alien">👾</div>
+            <div class="avatar" data-avatar="🦊" role="button" tabindex="0" aria-label="Seleccionar avatar: Zorro">🦊</div>
+            <div class="avatar selected" data-avatar="🐉" role="button" tabindex="0" aria-label="Seleccionar avatar: Dragón">🐉</div>
+            <div class="avatar" data-avatar="🦄" role="button" tabindex="0" aria-label="Seleccionar avatar: Unicornio">🦄</div>
+        </div>
+        
+        <div class="color-picker">
+            <div class="color-option selected" style="background: #3a7;" data-color="green" role="button" tabindex="0" aria-label="Seleccionar tema verde"></div>
+            <div class="color-option" style="background: #47a;" data-color="blue" role="button" tabindex="0" aria-label="Seleccionar tema azul"></div>
+            <div class="color-option" style="background: #a54;" data-color="red" role="button" tabindex="0" aria-label="Seleccionar tema rojo"></div>
+        </div>
+        
+        <div class="btn-group">
+            <button id="quick-play-btn" aria-label="Juego rápido como invitado">🎮 Juego Rápido</button>
+        </div>
+        
+        <h3>Selecciona Modo de Juego:</h3>
+        <div class="btn-group">
+            <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">😊 Modo Fácil</button>
+            <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">😃 Modo Medio</button>
+            <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">🤓 Modo Difícil (2x puntos)</button>
+        </div>
     </div>
-    <div class="progress-tracker-item">
-        <div class="progress-tracker-label">Trofeos</div>
-        <div class="progress-tracker-value"><span id="trophies-count">0</span>/10</div>
+    
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="player-info">
+                <span class="player-avatar" id="player-avatar">🐉</span>
+                Jugador: <span id="player-name">Invitado</span>
+            </div>
+            <div>Puntos: <span id="score">0</span></div>
+            <div>Racha: <span id="streak">0</span></div>
+            <div>Progreso: <span id="progress">0</span>/50</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-text"><span id="percent-complete">0</span>%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-board" id="game-board">
+            <!-- Dynamic content based on game mode -->
+        </div>
+        
+        <div class="btn-group">
+            <button id="quit-btn" aria-label="Salir al menú principal">🏠 Salir</button>
+        </div>
     </div>
-    <div class="progress-tracker-item">
-        <div class="progress-tracker-label">Coronas</div>
-        <div class="progress-tracker-value"><span id="crowns-count">0</span></div>
+    
+    <div id="round-complete-screen" class="screen">
+        <h2>¡Bien Hecho!</h2>
+        <div class="round-result" role="alert">
+            Puntos de Ronda: <span id="round-score">0</span><br>
+            Puntos Totales: <span id="total-score">0</span><br>
+            Palabras Dominadas: <span id="progress-count">0</span>/50<br>
+            Racha Actual: <span id="progress-streak">0</span>
+        </div>
+        <div class="trophy-container">
+            <h3>Tus Recompensas</h3>
+            <div id="trophy-display"></div>
+            <div class="reward-path" id="reward-path-display">
+                <div class="reward-step" data-step="medal">
+                    🎖️
+                    <div class="reward-label">Medalla</div>
+                </div>
+                <div class="reward-step" data-step="trophy">
+                    🏆
+                    <div class="reward-label">Trofeo</div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button id="next-round-btn" aria-label="Continuar a siguiente ronda">⏭️ Siguiente Ronda</button>
+            <button id="quit-round-btn" aria-label="Salir al menú principal">🏠 Salir</button>
+        </div>
     </div>
-    <!-- Add this new item for daily streak -->
-    <div class="progress-tracker-item">
-        <div class="progress-tracker-label">Racha Diaria</div>
-        <div class="progress-tracker-value"><span id="streak-count">0</span></div>
+    
+    <div id="trophy-room-screen" class="screen">
+        <h2>Sala de Trofeos</h2>
+        <div class="trophy-container">
+            <h3>Tus Logros</h3>
+            <div id="trophy-list"></div>
+        </div>
+        <div class="btn-group">
+            <button id="back-to-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
+        </div>
+    </div>
+    
+    <div id="game-over-screen" class="screen">
+        <h2>¡Felicidades!</h2>
+        <div class="round-result" role="alert">
+            ¡Enhorabuena <span id="final-player">Jugador</span>!<br>
+            ¡Has dominado 50 palabras en español!<br>
+            Puntos Finales: <span id="final-score">0</span>
+        </div>
+        <div class="trophy-container">
+            <h3>Tus Recompensas</h3>
+            <div id="final-trophy-display"></div>
+        </div>
+        <div class="btn-group">
+            <button id="play-again-btn" aria-label="Jugar de nuevo">🔄 Jugar Otra Vez</button>
+            <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
+        </div>
+    </div>
+    
+    <!-- Bonus Game Popup (hidden by default) -->
+    <div id="bonus-game-popup" class="bonus-game-popup" style="display: none;">
+        <div class="bonus-game-content">
+            <h3>¡Bonus Game Desbloqueado!</h3>
+            <p>¡Has completado 15 emparejamientos! Juega un minijuego para ganar puntos extra.</p>
+            <div class="fruit-machine" id="fruit-machine">
+                <div class="fruit-reel">
+                    <div class="fruit-reel-inner" id="fruit-reel-1">🍎</div>
+                </div>
+                <div class="fruit-reel">
+                    <div class="fruit-reel-inner" id="fruit-reel-2">🍊</div>
+                </div>
+                <div class="fruit-reel">
+                    <div class="fruit-reel-inner" id="fruit-reel-3">🍋</div>
+                </div>
+            </div>
+            <div class="balloon-game" id="balloon-game" style="display: none;">
+                <!-- Balloons will be added dynamically -->
+            </div>
+            <div class="bonus-game-buttons">
+                <button id="play-bonus-game-btn" aria-label="Jugar juego bonus ahora">🎮 Jugar Ahora</button>
+                <button id="save-bonus-game-btn" aria-label="Guardar juego bonus para después">💾 Guardar para Después</button>
+            </div>
+        </div>
     </div>
 </div>
-        
-        <!-- Character element -->
-        <div id="character" class="character">🐉</div>
-        
-        <div id="start-screen" class="screen active">
-            <h1>NANDOmode</h1>
-            <h2>Aprende Vocabulario Español</h2>
-            
-            <div class="username-container">
-                <h3>Selecciona o Introduce Nombre:</h3>
-                <select id="user-select" aria-label="Seleccionar usuario existente">
-                    <option value="">Nuevo Usuario</option>
-                </select>
-                <input type="text" id="username-input" placeholder="Escribe nuevo nombre..." maxlength="20" aria-label="Introducir nuevo nombre">
-                <button id="save-username" aria-label="Guardar nombre y continuar">💾 Guardar & Continuar</button>
-            </div>
-            
-            <div class="avatar-container">
-                <div class="avatar" data-avatar="👾" role="button" tabindex="0" aria-label="Seleccionar avatar: Alien">👾</div>
-                <div class="avatar" data-avatar="🦊" role="button" tabindex="0" aria-label="Seleccionar avatar: Zorro">🦊</div>
-                <div class="avatar selected" data-avatar="🐉" role="button" tabindex="0" aria-label="Seleccionar avatar: Dragón">🐉</div>
-                <div class="avatar" data-avatar="🦄" role="button" tabindex="0" aria-label="Seleccionar avatar: Unicornio">🦄</div>
-                <div class="avatar" data-avatar="🤖" role="button" tabindex="0" aria-label="Seleccionar avatar: Robot">🤖</div>
-                <div class="avatar" data-avatar="👻" role="button" tabindex="0" aria-label="Seleccionar avatar: Fantasma">👻</div>
-                <div class="avatar" data-avatar="🐧" role="button" tabindex="0" aria-label="Seleccionar avatar: Pingüino">🐧</div>
-                <div class="avatar" data-avatar="🦖" role="button" tabindex="0" aria-label="Seleccionar avatar: Dinosaurio">🦖</div>
-            </div>
-            
-            <div class="color-picker">
-                <div class="color-option selected" style="background: #3a7;" data-color="green" role="button" tabindex="0" aria-label="Seleccionar tema verde"></div>
-                <div class="color-option" style="background: #47a;" data-color="blue" role="button" tabindex="0" aria-label="Seleccionar tema azul"></div>
-                <div class="color-option" style="background: #a54;" data-color="red" role="button" tabindex="0" aria-label="Seleccionar tema rojo"></div>
-                <div class="color-option" style="background: #a37;" data-color="purple" role="button" tabindex="0" aria-label="Seleccionar tema morado"></div>
-                <div class="color-option" style="background: #ea6;" data-color="orange" role="button" tabindex="0" aria-label="Seleccionar tema naranja"></div>
-            </div>
-            
-            <div class="btn-group">
-                <button id="quick-play-btn" aria-label="Juego rápido como invitado">🎮 Juego Rápido</button>
-                <button id="trophy-room-btn" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
-                <button id="emoji-store-btn" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
-            </div>
-            
-            <h3>Selecciona Modo de Juego:</h3>
-            <div class="btn-group">
-                <button class="mode-btn easy" data-mode="easy" aria-label="Iniciar modo fácil">😊 Modo Fácil</button>
-                <button class="mode-btn medium" data-mode="medium" aria-label="Iniciar modo medio">😃 Modo Medio</button>
-                <button class="mode-btn hard" data-mode="hard" aria-label="Iniciar modo difícil">🤓 Modo Difícil (2x puntos)</button>
-            </div>
-            
-            <!-- New sticker collection preview -->
-            <div class="sticker-collection">
-                <div class="sticker unlocked">⭐</div>
-                <div class="sticker unlocked">🎯</div>
-                <div class="sticker locked">🏅</div>
-                <div class="sticker locked">🏆</div>
-                <div class="sticker locked">👑</div>
-            </div>
-        </div>
-        
-        <div id="game-screen" class="screen">
-            <div class="game-header">
-                <div class="player-info">
-                    <span class="player-avatar" id="player-avatar">🐉</span>
-                    Jugador: <span id="player-name">Invitado</span>
-                </div>
-                <div>Puntos: <span id="score">0</span></div>
-                <div>Racha: <span id="streak">0</span></div>
-                <div>Progreso: <span id="progress">0</span>/50</div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-text"><span id="percent-complete">0</span>%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="game-board" id="game-board">
-                <!-- Dynamic content based on game mode -->
-            </div>
-            
-            <div class="btn-group">
-                <button id="quit-btn" aria-label="Salir al menú principal">🏠 Salir</button>
-                <button id="kid-mode-btn" aria-label="Modo niño">👶 Modo Niño</button>
-            </div>
-        </div>
-        
-        <div id="round-complete-screen" class="screen">
-            <h2>¡Bien Hecho!</h2>
-            <div class="round-result" role="alert">
-                Puntos de Ronda: <span id="round-score">0</span><br>
-                Puntos Totales: <span id="total-score">0</span><br>
-                Palabras Dominadas: <span id="progress-count">0</span>/50<br>
-                Racha Actual: <span id="progress-streak">0</span>
-            </div>
-            <div class="trophy-container">
-                <h3>Tus Recompensas</h3>
-                <div id="trophy-display"></div>
-                <div class="reward-path" id="reward-path-display">
-                    <div class="reward-step" data-step="medal">
-                        🎖️
-                        <div class="reward-label">Medalla</div>
-                    </div>
-                    <div class="reward-step" data-step="trophy">
-                        🏆
-                        <div class="reward-label">Trofeo</div>
-                    </div>
-                    <div class="reward-step" data-step="crown">
-                        👑
-                        <div class="reward-label">Corona</div>
-                    </div>
-                </div>
-            </div>
-            <div class="btn-group">
-                <button id="next-round-btn" aria-label="Continuar a siguiente ronda">⏭️ Siguiente Ronda</button>
-                <button id="quit-round-btn" aria-label="Salir al menú principal">🏠 Salir</button>
-                <button id="trophy-room-btn-round" aria-label="Ver sala de trofeos">🏆 Sala de Trofeos</button>
-                <button id="emoji-store-btn-round" aria-label="Visitar tienda de emojis">🛒 Tienda de Emojis</button>
-            </div>
-        </div>
-        
-        <div id="trophy-room-screen" class="screen">
-            <h2>Sala de Trofeos</h2>
-            <div class="trophy-container">
-                <h3>Tus Logros</h3>
-                <div id="trophy-list"></div>
-                <h3>Tus Pegatinas</h3>
-                <div class="sticker-collection" id="sticker-collection">
-                    <!-- Stickers will be added here dynamically -->
-                </div>
-            </div>
-            <div class="btn-group">
-                <button id="back-to-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-            </div>
-        </div>
-        
-        <div id="emoji-store-screen" class="screen">
-            <h2>Tienda de Emojis</h2>
-            <div class="emoji-store-container">
-                <h3>Tus Puntos: <span id="store-points">0</span></h3>
-                <div id="emoji-list"></div>
-                <h3>Personalización de Avatar</h3>
-                <div class="avatar-customization" id="avatar-customization">
-                    <!-- Avatar accessories will be added here dynamically -->
-                </div>
-            </div>
-            <div class="btn-group">
-                <button id="back-to-menu-btn-store" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-            </div>
-        </div>
-        
-        <div id="game-over-screen" class="screen">
-            <h2>¡Felicidades!</h2>
-            <div class="round-result" role="alert">
-                ¡Enhorabuena <span id="final-player">Jugador</span>!<br>
-                ¡Has dominado 50 palabras en español!<br>
-                Puntos Finales: <span id="final-score">0</span>
-            </div>
-            <div class="trophy-container">
-                <h3>Tus Recompensas</h3>
-                <div id="final-trophy-display"></div>
-                <h3>¡Nueva Pegatina Desbloqueada!</h3>
-                <div class="sticker unlocked" style="font-size: 4rem;">🎉</div>
-            </div>
-            <div class="btn-group">
-                <button id="play-again-btn" aria-label="Jugar de nuevo">🔄 Jugar Otra Vez</button>
-                <button id="main-menu-btn" aria-label="Volver al menú principal">🏠 Menú Principal</button>
-            </div>
-        </div>
-        
-        <!-- Bonus Game Popup (hidden by default) -->
-        <div id="bonus-game-popup" class="bonus-game-popup" style="display: none;">
-            <div class="bonus-game-content">
-                <h3>¡Bonus Game Desbloqueado!</h3>
-                <p>¡Has completado 15 emparejamientos! Juega un minijuego para ganar puntos extra.</p>
-                <div class="bonus-game-buttons">
-                    <button id="play-bonus-game-btn" aria-label="Jugar juego bonus ahora">🎮 Jugar Ahora</button>
-                    <button id="save-bonus-game-btn" aria-label="Guardar juego bonus para después">💾 Guardar para Después</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <button id="music-control" class="music-control">🎵</button>
+<script>
+// ===== LANGUAGE SUPPORT =====
+const translations = {
+    es: {
+        appName: "NANDOmode",
+        subtitle: "Aprende Vocabulario Español",
+        selectUser: "Selecciona o Introduce Nombre:",
+        newUser: "Nuevo Usuario",
+        usernamePlaceholder: "Escribe nuevo nombre...",
+        saveContinue: "💾 Guardar & Continuar",
+        selectMode: "Selecciona Modo de Juego:",
+        easyMode: "😊 Modo Fácil",
+        mediumMode: "😃 Modo Medio",
+        hardMode: "🤓 Modo Difícil (2x puntos)",
+        quickPlay: "🎮 Juego Rápido",
+        logout: "🚪 Cerrar Sesión",
+        quit: "🏠 Salir",
+        nextRound: "⏭️ Siguiente Ronda",
+        playAgain: "🔄 Jugar Otra Vez",
+        mainMenu: "🏠 Menú Principal",
+        masteredWords: "Palabras Dominadas",
+        medals: "Medallas",
+        trophies: "Trofeos",
+        player: "Jugador",
+        score: "Puntos",
+        streak: "Racha",
+        progress: "Progreso",
+        roundComplete: "¡Bien Hecho!",
+        roundScore: "Puntos de Ronda",
+        totalScore: "Puntos Totales",
+        progressCount: "Palabras Dominadas",
+        progressStreak: "Racha Actual",
+        yourRewards: "Tus Recompensas",
+        medalLabel: "Medalla",
+        trophyLabel: "Trofeo",
+        achievements: "Tus Logros",
+        gameOver: "¡Felicidades!",
+        finalPlayer: "¡Enhorabuena",
+        finalScore: "Puntos Finales",
+        bonusGameTitle: "¡Bonus Game Desbloqueado!",
+        bonusGameText: "¡Has completado 15 emparejamientos! Juega un minijuego para ganar puntos extra.",
+        playNow: "🎮 Jugar Ahora",
+        saveForLater: "💾 Guardar para Después"
+    },
+    en: {
+        appName: "NANDOmode",
+        subtitle: "Learn Spanish Vocabulary",
+        selectUser: "Select or Enter Name:",
+        newUser: "New User",
+        usernamePlaceholder: "Enter new name...",
+        saveContinue: "💾 Save & Continue",
+        selectMode: "Select Game Mode:",
+        easyMode: "😊 Easy Mode",
+        mediumMode: "😃 Medium Mode",
+        hardMode: "🤓 Hard Mode (2x points)",
+        quickPlay: "🎮 Quick Play",
+        logout: "🚪 Log Out",
+        quit: "🏠 Quit",
+        nextRound: "⏭️ Next Round",
+        playAgain: "🔄 Play Again",
+        mainMenu: "🏠 Main Menu",
+        masteredWords: "Mastered Words",
+        medals: "Medals",
+        trophies: "Trophies",
+        player: "Player",
+        score: "Score",
+        streak: "Streak",
+        progress: "Progress",
+        roundComplete: "Great Job!",
+        roundScore: "Round Score",
+        totalScore: "Total Score",
+        progressCount: "Words Mastered",
+        progressStreak: "Current Streak",
+        yourRewards: "Your Rewards",
+        medalLabel: "Medal",
+        trophyLabel: "Trophy",
+        achievements: "Your Achievements",
+        gameOver: "Congratulations!",
+        finalPlayer: "Congratulations",
+        finalScore: "Final Score",
+        bonusGameTitle: "Bonus Game Unlocked!",
+        bonusGameText: "You've completed 15 matches! Play a minigame to earn extra points.",
+        playNow: "🎮 Play Now",
+        saveForLater: "💾 Save for Later"
+    }
+};
+
+let currentLanguage = 'es'; // Default to Spanish
+
+// Function to update all text elements
+function updateLanguage() {
+    const lang = translations[currentLanguage];
     
-    <script>
-        // Game state variables
-        const isMobile = window.innerWidth <= 768;
-        let isProcessingClick = false;
-        let lastTTSTime = 0;
-        const ttsDebounce = 1000;
-        const milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-        let backgroundMusic = null;
-        let isMusicPlaying = false;
-        let roundsPlayed = 0;
-        let isKidMode = false;
-        let matchesCompleted = 0; // Track matches for bonus games
-        let bonusGameAvailable = false;
-
-        // Audio context and sounds
-        let audioContext;
-        let sounds = {
-            correct: null,
-            incorrect: null,
-            roundComplete: null,
-            milestone: null
-        };
-
-        // Initialize audio context
-        function initAudio() {
-            try {
-                // Create audio context
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Create all sound effects
-                createSounds();
-                
-                // Set up music control button
-                document.getElementById('music-control').addEventListener('click', toggleMusic);
-            } catch (e) {
-                console.warn("Web Audio API not supported:", e);
+    // Update UI elements
+    const languageToggle = document.getElementById('language-toggle');
+    if (languageToggle) languageToggle.textContent = currentLanguage === 'es' ? '🌐 English' : '🌐 Español';
+    
+    const h1 = document.querySelector('h1');
+    if (h1) h1.textContent = lang.appName;
+    
+    const h2 = document.querySelector('h2');
+    if (h2) h2.textContent = lang.subtitle;
+    
+    const usernameContainerH3 = document.querySelector('.username-container h3');
+    if (usernameContainerH3) usernameContainerH3.textContent = lang.selectUser;
+    
+    const userSelectOption = document.querySelector('#user-select option[value=""]');
+    if (userSelectOption) userSelectOption.textContent = lang.newUser;
+    
+    const usernameInput = document.getElementById('username-input');
+    if (usernameInput) usernameInput.placeholder = lang.usernamePlaceholder;
+    
+    const saveUsername = document.getElementById('save-username');
+    if (saveUsername) saveUsername.textContent = lang.saveContinue;
+    
+    const modeSelectH3 = document.querySelector('#start-screen h3:nth-of-type(2)');
+    if (modeSelectH3) modeSelectH3.textContent = lang.selectMode;
+    
+    const easyModeBtn = document.querySelector('.mode-btn.easy');
+    if (easyModeBtn) easyModeBtn.textContent = lang.easyMode;
+    
+    const mediumModeBtn = document.querySelector('.mode-btn.medium');
+    if (mediumModeBtn) mediumModeBtn.textContent = lang.mediumMode;
+    
+    const hardModeBtn = document.querySelector('.mode-btn.hard');
+    if (hardModeBtn) hardModeBtn.textContent = lang.hardMode;
+    
+    const quickPlayBtn = document.getElementById('quick-play-btn');
+    if (quickPlayBtn) quickPlayBtn.textContent = lang.quickPlay;
+    
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) logoutBtn.textContent = lang.logout;
+    
+    const quitBtn = document.getElementById('quit-btn');
+    if (quitBtn) quitBtn.textContent = lang.quit;
+    
+    const nextRoundBtn = document.getElementById('next-round-btn');
+    if (nextRoundBtn) nextRoundBtn.textContent = lang.nextRound;
+    
+    const quitRoundBtn = document.getElementById('quit-round-btn');
+    if (quitRoundBtn) quitRoundBtn.textContent = lang.quit;
+    
+    const playAgainBtn = document.getElementById('play-again-btn');
+    if (playAgainBtn) playAgainBtn.textContent = lang.playAgain;
+    
+    const mainMenuBtn = document.getElementById('main-menu-btn');
+    if (mainMenuBtn) mainMenuBtn.textContent = lang.mainMenu;
+    
+    // Update progress tracker labels if they exist
+    const progressTrackerItems = document.querySelectorAll('.progress-tracker-item');
+    if (progressTrackerItems.length > 0) {
+        const labels = [
+            lang.masteredWords,
+            lang.medals,
+            lang.trophies
+        ];
+        
+        progressTrackerItems.forEach((item, index) => {
+            const label = item.querySelector('.progress-tracker-label');
+            if (label && labels[index]) {
+                label.textContent = labels[index];
             }
-        }
-
-        // Create all sound effects with Spanish/Flamenco style
-        function createSounds() {
-            // Correct answer sound (short flamenco-style guitar pluck)
-            sounds.correct = () => {
-                const now = audioContext.currentTime;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(880, now);
-                osc.frequency.exponentialRampToValueAtTime(440, now + 0.3);
-                
-                gain.gain.setValueAtTime(0.5, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                
-                osc.start(now);
-                osc.stop(now + 0.3);
-            };
-
-            // Incorrect answer sound (short "olé" style)
-            sounds.incorrect = () => {
-                const now = audioContext.currentTime;
-                
-                // Create noise burst (like castanets)
-                const bufferSize = audioContext.sampleRate * 0.02;
-                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-                const output = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;
-                }
-                
-                const noise = audioContext.createBufferSource();
-                noise.buffer = buffer;
-                
-                const noiseGain = audioContext.createGain();
-                noiseGain.gain.setValueAtTime(0.3, now);
-                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-                
-                noise.connect(noiseGain);
-                noiseGain.connect(audioContext.destination);
-                
-                noise.start(now);
-                noise.stop(now + 0.1);
-                
-                // Add a short "olé" style vocal sound
-                const osc1 = audioContext.createOscillator();
-                const osc2 = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                osc1.type = "sine";
-                osc2.type = "sine";
-                osc1.frequency.setValueAtTime(220, now);
-                osc2.frequency.setValueAtTime(440, now);
-                
-                gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                
-                osc1.connect(gainNode);
-                osc2.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                osc1.start(now);
-                osc2.start(now);
-                osc1.stop(now + 0.3);
-                osc2.stop(now + 0.3);
-            };
-
-            // Round complete sound (flamenco rhythm)
-            sounds.roundComplete = () => {
-                const now = audioContext.currentTime;
-                
-                // Create a flamenco rhythm pattern
-                const playNote = (freq, duration, when) => {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    
-                    osc.type = "sine";
-                    osc.frequency.setValueAtTime(freq, when);
-                    
-                    gain.gain.setValueAtTime(0.3, when);
-                    gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
-                    
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    
-                    osc.start(when);
-                    osc.stop(when + duration);
-                };
-                
-                // Flamenco-style chord progression
-                playNote(587.33, 0.1, now); // D5
-                playNote(493.88, 0.1, now + 0.1); // B4
-                playNote(392.00, 0.1, now + 0.2); // G4
-                playNote(329.63, 0.3, now + 0.3); // E4
-                
-                // Add hand claps
-                for (let i = 0; i < 3; i++) {
-                    const clapTime = now + 0.1 + (i * 0.2);
-                    const clapBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.02, audioContext.sampleRate);
-                    const clapOutput = clapBuffer.getChannelData(0);
-                    
-                    for (let j = 0; j < clapBuffer.length; j++) {
-                        clapOutput[j] = Math.random() * 2 - 1;
-                    }
-                    
-                    const clap = audioContext.createBufferSource();
-                    clap.buffer = clapBuffer;
-                    
-                    const clapGain = audioContext.createGain();
-                    clapGain.gain.setValueAtTime(0.5, clapTime);
-                    clapGain.gain.exponentialRampToValueAtTime(0.001, clapTime + 0.05);
-                    
-                    clap.connect(clapGain);
-                    clapGain.connect(audioContext.destination);
-                    
-                    clap.start(clapTime);
-                    clap.stop(clapTime + 0.05);
-                }
-            };
-
-            // Milestone sound (celebratory castanets)
-            sounds.milestone = () => {
-                const now = audioContext.currentTime;
-                
-                // Create castanet sounds
-                for (let i = 0; i < 5; i++) {
-                    const clickTime = now + (i * 0.1);
-                    const bufferSize = audioContext.sampleRate * 0.01;
-                    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-                    const output = buffer.getChannelData(0);
-                    
-                    for (let j = 0; j < bufferSize; j++) {
-                        output[j] = Math.random() * 2 - 1;
-                    }
-                    
-                    const noise = audioContext.createBufferSource();
-                    noise.buffer = buffer;
-                    
-                    const gain = audioContext.createGain();
-                    gain.gain.setValueAtTime(0.5, clickTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, clickTime + 0.05);
-                    
-                    noise.connect(gain);
-                    gain.connect(audioContext.destination);
-                    
-                    noise.start(clickTime);
-                    noise.stop(clickTime + 0.05);
-                }
-                
-                // Add a celebratory "¡Olé!" vocal sound
-                const osc1 = audioContext.createOscillator();
-                const osc2 = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                osc1.type = "sine";
-                osc2.type = "sine";
-                osc1.frequency.setValueAtTime(294, now); // D4
-                osc2.frequency.setValueAtTime(440, now); // A4
-                
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-                
-                osc1.connect(gainNode);
-                osc2.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                osc1.start(now);
-                osc2.start(now);
-                osc1.stop(now + 0.5);
-                osc2.stop(now + 0.5);
-            };
-        }
-
-        // Toggle background music
-        function toggleMusic() {
-            const musicBtn = document.getElementById('music-control');
-            
-            if (!backgroundMusic) {
-                // Create simple background music
-                backgroundMusic = {
-                    oscillator: audioContext.createOscillator(),
-                    gain: audioContext.createGain()
-                };
-                
-                backgroundMusic.oscillator.type = "sine";
-                backgroundMusic.oscillator.frequency.setValueAtTime(330, audioContext.currentTime);
-                backgroundMusic.gain.gain.setValueAtTime(0.05, audioContext.currentTime);
-                
-                // Create a simple flamenco rhythm pattern
-                const bpm = 120;
-                const interval = 60 / bpm;
-                let time = audioContext.currentTime;
-                
-                for (let i = 0; i < 32; i++) {
-                    // Change note every beat
-                    const noteFreq = i % 4 === 0 ? 440 : 330;
-                    backgroundMusic.oscillator.frequency.setValueAtTime(noteFreq, time);
-                    
-                    // Add emphasis on the first beat
-                    if (i % 4 === 0) {
-                        backgroundMusic.gain.gain.setValueAtTime(0.08, time);
-                        backgroundMusic.gain.gain.linearRampToValueAtTime(0.05, time + interval * 0.5);
-                    }
-                    
-                    time += interval;
-                }
-                
-                backgroundMusic.oscillator.connect(backgroundMusic.gain);
-                backgroundMusic.gain.connect(audioContext.destination);
-                backgroundMusic.oscillator.start();
-            }
-            
-            if (isMusicPlaying) {
-                backgroundMusic.gain.gain.setValueAtTime(0, audioContext.currentTime);
-                musicBtn.textContent = "🔇";
-                isMusicPlaying = false;
-            } else {
-                backgroundMusic.gain.gain.setValueAtTime(0.05, audioContext.currentTime);
-                musicBtn.textContent = "🎵";
-                isMusicPlaying = true;
-            }
-        }
-
-        // Main game state
-        const gameState = {
-            currentScreen: 'start',
-            player: {
-                name: 'Invitado',
-                avatar: '🐉',
-                theme: 'green',
-                emoji: '',
-                points: 0,
-                purchasedEmojis: [],
-                avatarAccessories: [],
-                rewards: { 
-                    medals: 0,
-                    trophies: 0,
-                    crowns: 0,
-                    totalWordsMastered: 0
-                },
-                dailyStreak: 0,
-                lastPlayedDate: null,
-                weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                bonusGamesAvailable: 0
-            },
-            mode: '',
-            streak: 0,
-            completedWords: 0,
-            wordProgress: {},
-            currentRound: { 
-                pairs: [], 
-                leftColumn: [], 
-                rightColumn: [], 
-                selectedLeft: null, 
-                selectedRight: null, 
-                matchedPairs: [], 
-                roundPoints: 0 
-            },
-            leaderboard: []
-        };
-
-        function showSuccess(message) {
-            const notification = document.getElementById('success-notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function showError(message) {
-            const notification = document.getElementById('error-notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'milestone-notification';
-            notification.textContent = message;
-            document.getElementById('game-container').appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
-        }
-
-        // Screen elements
-        const screens = {
-            start: document.getElementById('start-screen'),
-            game: document.getElementById('game-screen'),
-            roundComplete: document.getElementById('round-complete-screen'),
-            trophyRoom: document.getElementById('trophy-room-screen'),
-            emojiStore: document.getElementById('emoji-store-screen'),
-            gameOver: document.getElementById('game-over-screen')
-        };
-
-        // Initialize the game
-        window.addEventListener('DOMContentLoaded', () => {
-            initGame();
         });
-
-        function initGame() {
-            try {
-                localStorage.setItem('test', 'test');
-                localStorage.removeItem('test');
-            } catch (e) {
-                console.error("LocalStorage not available:", e);
-                showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
-                return;
-            }
-            
-            // Initialize audio
-            initAudio();
-            
-            loadVocab().then(vocab => {
-                if (!vocab || vocab.length === 0) {
-                    console.warn("vocab.js not loaded, using default vocab");
-                    showError("¡Vaya! La lista de palabras no se cargó. Usando palabras de respaldo.");
-                }
-                
-                try {
-                    const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
-                    if (savedLeaderboard) {
-                        gameState.leaderboard = JSON.parse(savedLeaderboard);
-                    }
-                } catch (e) {
-                    console.warn("Error loading leaderboard:", e);
-                    showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
-                }
-                
-                // Setup character interaction
-                setupCharacter();
-                
-                populateUserSelect();
-                loadPlayerProgress();
-                setupEventListeners();
-                updatePlayerUI();
-                updateProgressBar();
-                updateStreakDisplay();
-                updateRewardPath();
-                updateLogoutButton();
-                updateStickerCollection();
-                updateProgressTracker();
-            });
-        }
-
-        function updateProgressTracker() {
-            document.getElementById('mastered-words').textContent = gameState.player.rewards.totalWordsMastered;
-            document.getElementById('medals-count').textContent = `${gameState.player.rewards.medals}/10`;
-            document.getElementById('trophies-count').textContent = `${gameState.player.rewards.trophies}/10`;
-            document.getElementById('crowns-count').textContent = gameState.player.rewards.crowns;
-        }
-
-        function loadVocab() {
-            return new Promise((resolve) => {
-                // Check if vocab.js is loaded
-                if (window.vocab && Array.isArray(window.vocab)) {
-                    resolve(window.vocab);
-                } else {
-                    // Try to load vocab.js
-                    const script = document.createElement('script');
-                    script.src = 'vocab.js';
-                    script.onload = () => {
-                        resolve(window.vocab || defaultVocab);
-                    };
-                    script.onerror = () => {
-                        console.warn("Failed to load vocab.js");
-                        resolve(defaultVocab);
-                    };
-                    document.head.appendChild(script);
-                }
-            });
-        }
-
-        function setupCharacter() {
-            const character = document.getElementById('character');
-            character.addEventListener('click', () => {
-                const messages = [
-                    "¡Vamos a aprender!",
-                    "¡Tú puedes!",
-                    "¡Sigue así!",
-                    "¡Eres increíble!",
-                    "¡Qué bien lo haces!"
-                ];
-                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-                showNotification(randomMessage);
-                
-                // Play a fun sound when character is clicked
-                if (sounds.milestone) sounds.milestone();
-            });
-        }
-
-        function populateUserSelect() {
-            const userSelect = document.getElementById('user-select');
-            userSelect.innerHTML = '<option value="">Nuevo Usuario</option>';
-            
-            const keys = Object.keys(localStorage);
-            const users = [];
-            keys.forEach(key => {
-                if (key.startsWith('nandomodeProgress_')) {
-                    const username = key.replace('nandomodeProgress_', '');
-                    users.push(username);
-                }
-            });
-            
-            users.sort();
-            
-            users.forEach(username => {
-                const option = document.createElement('option');
-                option.value = username;
-                option.textContent = username;
-                userSelect.appendChild(option);
-            });
-            
-            const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-            if (savedName && users.includes(savedName)) {
-                userSelect.value = savedName;
-                loadSelectedUser();
-            }
-        }
-
-        function setupEventListeners() {
-            document.getElementById('save-username').addEventListener('click', saveUsername);
-            document.getElementById('user-select').addEventListener('change', loadSelectedUser);
-            document.getElementById('quick-play-btn').addEventListener('click', quickPlay);
-            document.getElementById('trophy-room-btn').addEventListener('click', showTrophyRoom);
-            document.getElementById('emoji-store-btn').addEventListener('click', showEmojiStore);
-            document.getElementById('trophy-room-btn-round').addEventListener('click', showTrophyRoom);
-            document.getElementById('emoji-store-btn-round').addEventListener('click', showEmojiStore);
-            document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('back-to-menu-btn-store').addEventListener('click', quitToMainMenu);
-            document.getElementById('logout-btn').addEventListener('click', logout);
-            
-            document.querySelectorAll('.avatar').forEach(avatar => {
-                avatar.addEventListener('click', selectAvatar.bind(null, avatar));
-                avatar.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') selectAvatar(avatar);
-                });
-            });
-
-            document.querySelectorAll('.color-option').forEach(color => {
-                color.addEventListener('click', selectColor.bind(null, color));
-                color.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') selectColor(color);
-                });
-            });
-
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    gameState.mode = btn.dataset.mode;
-                    startNewGame();
-                });
-            });
-
-            document.getElementById('quit-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('next-round-btn').addEventListener('click', startNewRound);
-            document.getElementById('quit-round-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('play-again-btn').addEventListener('click', startNewGame);
-            document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
-            document.getElementById('kid-mode-btn').addEventListener('click', toggleKidMode);
-            
-            // Bonus game event listeners
-            document.getElementById('play-bonus-game-btn').addEventListener('click', playBonusGame);
-            document.getElementById('save-bonus-game-btn').addEventListener('click', saveBonusGame);
-        }
-
-        function toggleKidMode() {
-            isKidMode = !isKidMode;
-            const gameContainer = document.getElementById('game-container');
-            const kidModeBtn = document.getElementById('kid-mode-btn');
-            
-            if (isKidMode) {
-                gameContainer.classList.add('kid-mode');
-                kidModeBtn.textContent = '👶 Modo Normal';
-                showSuccess("Modo Niño Activado - ¡Tarjetas más grandes!");
-                if (sounds.correct) sounds.correct();
-            } else {
-                gameContainer.classList.remove('kid-mode');
-                kidModeBtn.textContent = '👶 Modo Niño';
-                showSuccess("Modo Niño Desactivado");
-            }
-            
-            updateGameUI();
-        }
-
-        function selectAvatar(avatar) {
-            document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
-            avatar.classList.add('selected');
-            gameState.player.avatar = avatar.dataset.avatar;
-            updatePlayerUI();
-            document.getElementById('character').textContent = avatar.dataset.avatar;
-            
-            // Play a sound when avatar is selected
-            if (sounds.correct) sounds.correct();
-        }
-
-        function selectColor(color) {
-            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
-            color.classList.add('selected');
-            gameState.player.theme = color.dataset.color;
-            updatePlayerUI();
-            
-            // Play a sound when color is selected
-            if (sounds.correct) sounds.correct();
-        }
-
-        function updatePlayerUI() {
-            const displayName = gameState.player.emoji ? `${gameState.player.name} ${gameState.player.emoji}` : gameState.player.name;
-            document.getElementById('player-name').textContent = displayName;
-            document.getElementById('final-player').textContent = displayName;
-            const avatarElement = document.getElementById('player-avatar');
-            if (avatarElement) avatarElement.textContent = gameState.player.avatar;
-            
-            // Update the theme
-            document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
-        }
-
-        function updateLogoutButton() {
-            const logoutBtn = document.getElementById('logout-btn');
-            if (gameState.player.name !== 'Invitado') {
-                logoutBtn.style.display = 'block';
-            } else {
-                logoutBtn.style.display = 'none';
-            }
-        }
-
-function updateStreakDisplay() {
-    const today = new Date().toDateString();
-    if (gameState.player.lastPlayedDate !== today) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        if (gameState.player.lastPlayedDate === yesterday.toDateString()) {
-            gameState.player.dailyStreak++;
-            showSuccess(`¡Racha extendida a ${gameState.player.dailyStreak} días!`);
-            if (sounds.milestone) sounds.milestone();
-        } else if (gameState.player.lastPlayedDate !== today) {
-            gameState.player.dailyStreak = 1;
-            showSuccess('¡Nueva racha comenzada!');
-        }
-        gameState.player.lastPlayedDate = today;
-        savePlayerProgress();
     }
     
-    // This line was causing the error - now it will work since we added the element
-    const streakCountElement = document.getElementById('streak-count');
-    if (streakCountElement) {
-        streakCountElement.textContent = gameState.player.dailyStreak;
+    // Update game header if it exists
+    const gameHeader = document.querySelector('.game-header');
+    if (gameHeader) {
+        const playerInfo = gameHeader.querySelector('div:nth-child(1)');
+        if (playerInfo) {
+            playerInfo.innerHTML = `<span class="player-avatar" id="player-avatar">${gameState.player.avatar}</span> ${lang.player}: <span id="player-name">${gameState.player.name}</span>`;
+        }
+        
+        const scoreDiv = gameHeader.querySelector('div:nth-child(2)');
+        if (scoreDiv) scoreDiv.textContent = `${lang.score}: `;
+        
+        const streakDiv = gameHeader.querySelector('div:nth-child(3)');
+        if (streakDiv) streakDiv.textContent = `${lang.streak}: `;
+        
+        const progressDiv = gameHeader.querySelector('div:nth-child(4)');
+        if (progressDiv) progressDiv.textContent = `${lang.progress}: `;
+    }
+    
+    // Update round complete screen if it exists
+    const roundCompleteH2 = document.querySelector('#round-complete-screen h2');
+    if (roundCompleteH2) roundCompleteH2.textContent = lang.roundComplete;
+    
+    const trophyContainerH3 = document.querySelector('.trophy-container h3');
+    if (trophyContainerH3) trophyContainerH3.textContent = lang.yourRewards;
+    
+    const rewardLabels = document.querySelectorAll('.reward-label');
+    if (rewardLabels.length > 0) {
+        rewardLabels[0].textContent = lang.medalLabel;
+        rewardLabels[1].textContent = lang.trophyLabel;
+    }
+    
+    // Update trophy room screen if it exists
+    const trophyRoomH2 = document.querySelector('#trophy-room-screen h2');
+    if (trophyRoomH2) trophyRoomH2.textContent = lang.trophyRoom;
+    
+    const trophyRoomH3 = document.querySelector('#trophy-room-screen .trophy-container h3');
+    if (trophyRoomH3) trophyRoomH3.textContent = lang.achievements;
+    
+    // Update game over screen if it exists
+    const gameOverH2 = document.querySelector('#game-over-screen h2');
+    if (gameOverH2) gameOverH2.textContent = lang.gameOver;
+    
+    // Update bonus game popup if it exists
+    const bonusGameH3 = document.querySelector('#bonus-game-popup h3');
+    if (bonusGameH3) bonusGameH3.textContent = lang.bonusGameTitle;
+    
+    const bonusGameP = document.querySelector('#bonus-game-popup p');
+    if (bonusGameP) bonusGameP.textContent = lang.bonusGameText;
+    
+    const playBonusBtn = document.getElementById('play-bonus-game-btn');
+    if (playBonusBtn) playBonusBtn.textContent = lang.playNow;
+    
+    const saveBonusBtn = document.getElementById('save-bonus-game-btn');
+    if (saveBonusBtn) saveBonusBtn.textContent = lang.saveForLater;
+    
+    // Update dynamic text elements
+    updatePlayerUI();
+    updateProgressTracker();
+}
+
+// Game state variables
+const isMobile = window.innerWidth <= 768;
+let isProcessingClick = false;
+let lastTTSTime = 0;
+const ttsDebounce = 1000;
+let totalWords = 0;
+let milestones = [];
+let roundsPlayed = 0;
+let matchesCompleted = 0; // Track matches for bonus games
+let bonusGameAvailable = false;
+
+// Sound effects
+function playSound(type) {
+    if (typeof Audio === 'undefined') return;
+    
+    const sounds = {
+        correct: 'https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3',
+        incorrect: 'https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3',
+        spin: 'https://assets.mixkit.co/sfx/preview/mixkit-slot-machine-spin-1930.mp3',
+        win: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+        flamenco: 'https://assets.mixkit.co/sfx/preview/mixkit-flamenco-guitar-stroke-1255.mp3',
+        pop: 'https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3'
+    };
+    
+    if (sounds[type]) {
+        const audio = new Audio(sounds[type]);
+        audio.volume = 0.3; // Lower volume to be less intrusive
+        audio.play().catch(e => console.log("Audio play failed:", e));
+    }
+}
+// Main game state
+const gameState = {
+    currentScreen: 'start',
+    player: {
+        name: 'Invitado',
+        avatar: '🐉',
+        theme: 'green',
+        emoji: '',
+        points: 0,
+        rewards: { 
+            medals: 0,
+            trophies: 0,
+            totalWordsMastered: 0
+        },
+        unlockedStickers: [],
+        bonusGamesAvailable: 0
+    },
+    mode: '',
+    streak: 0,
+    completedWords: 0,
+    wordProgress: {},
+    currentRound: { 
+        pairs: [], 
+        leftColumn: [], 
+        rightColumn: [], 
+        selectedLeft: null, 
+        selectedRight: null, 
+        matchedPairs: [], 
+        roundPoints: 0 
+    },
+    leaderboard: []
+};
+
+function showSuccess(message) {
+    const notification = document.getElementById('success-notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+function showError(message) {
+    const notification = document.getElementById('error-notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'milestone-notification';
+    notification.textContent = message;
+    document.getElementById('game-container').appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+
+// Screen elements
+const screens = {
+    start: document.getElementById('start-screen'),
+    game: document.getElementById('game-screen'),
+    roundComplete: document.getElementById('round-complete-screen'),
+    trophyRoom: document.getElementById('trophy-room-screen'),
+    gameOver: document.getElementById('game-over-screen')
+};
+
+// Initialize the game
+window.addEventListener('DOMContentLoaded', () => {
+    initGame();
+});
+
+function initGame() {
+    try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+    } catch (e) {
+        console.error("LocalStorage not available:", e);
+        showError("La configuración de tu navegador impide guardar el progreso. Por favor, habilita localStorage.");
+        return;
+    }
+    
+loadVocab().then(vocab => {
+    if (!vocab || vocab.length === 0) {
+        console.warn("vocab.js not loaded, using default vocab");
+        vocab = [
+            { word: "hola", emoji: "👋", en: "hello", jp: "こんにちは", type: "greeting" },
+            { word: "adiós", emoji: "👋", en: "goodbye", jp: "さようなら", type: "greeting" },
+            { word: "gracias", emoji: "🙏", en: "thank you", jp: "ありがとう", type: "expression" },
+            { word: "por favor", emoji: "🙏", en: "please", jp: "お願いします", type: "expression" },
+            { word: "sí", emoji: "👍", en: "yes", jp: "はい", type: "response" },
+            { word: "no", emoji: "👎", en: "no", jp: "いいえ", type: "response" },
+            { word: "perro", emoji: "🐕", en: "dog", jp: "犬", type: "animal" },
+            { word: "gato", emoji: "🐈", en: "cat", jp: "猫", type: "animal" },
+            { word: "casa", emoji: "🏠", en: "house", jp: "家", type: "place" },
+            { word: "comida", emoji: "🍲", en: "food", jp: "食べ物", type: "thing" }
+        ];
+    }
+        
+        totalWords = vocab.length;
+        document.getElementById('total-words').textContent = totalWords;
+        
+        // Create milestones every 50 words
+        milestones = [];
+        for (let i = 50; i <= totalWords; i += 50) {
+            milestones.push(i);
+        }
+        
+        // Also add some early milestones for motivation
+        if (!milestones.includes(5)) milestones.push(5);
+        if (!milestones.includes(10)) milestones.push(10);
+        if (!milestones.includes(25)) milestones.push(25);
+        milestones.sort((a, b) => a - b);
+        
+        try {
+            const savedLeaderboard = localStorage.getItem('nandomodeLeaderboard');
+            if (savedLeaderboard) {
+                gameState.leaderboard = JSON.parse(savedLeaderboard);
+            }
+        } catch (e) {
+            console.warn("Error loading leaderboard:", e);
+            showError("No se pudo cargar el marcador. ¡Empezando de nuevo!");
+        }
+        
+        populateUserSelect();
+        loadPlayerProgress();
+        setupEventListeners();
+        updatePlayerUI();
+        updateProgressBar();
+        updateRewardPath();
+        updateLogoutButton();
+        updateProgressTracker();
+    });
+    updateLanguage(); // Set initial language
+}
+
+function updateProgressTracker() {
+    document.getElementById('mastered-words').textContent = gameState.player.rewards.totalWordsMastered;
+    document.getElementById('total-words').textContent = totalWords;
+    
+    // Only show medals/trophies if earned
+    const medalsTracker = document.getElementById('medals-tracker');
+    const trophiesTracker = document.getElementById('trophies-tracker');
+    
+    if (gameState.player.rewards.medals > 0) {
+        document.getElementById('medals-count').textContent = gameState.player.rewards.medals;
+        medalsTracker.style.display = 'flex';
+    } else {
+        medalsTracker.style.display = 'none';
+    }
+    
+    if (gameState.player.rewards.trophies > 0) {
+        document.getElementById('trophies-count').textContent = gameState.player.rewards.trophies;
+        trophiesTracker.style.display = 'flex';
+    } else {
+        trophiesTracker.style.display = 'none';
     }
 }
 
-
-        function updateRewardPath() {
-            const steps = document.querySelectorAll('.reward-step');
-            
-            steps.forEach(step => {
-                step.classList.remove('earned', 'next');
-                const stepType = step.dataset.step;
-                
-                if (stepType === 'medal' && gameState.player.rewards.medals > 0) {
-                    step.classList.add('earned');
-                } else if (stepType === 'trophy' && gameState.player.rewards.trophies > 0) {
-                    step.classList.add('earned');
-                } else if (stepType === 'crown' && gameState.player.rewards.crowns > 0) {
-                    step.classList.add('earned');
-                }
-            });
-            
-            if (gameState.player.rewards.medals < 10) {
-                document.querySelector('.reward-step[data-step="medal"]').classList.add('next');
-            } else if (gameState.player.rewards.trophies < 10) {
-                document.querySelector('.reward-step[data-step="trophy"]').classList.add('next');
-            } else if (gameState.player.rewards.crowns < 10) {
-                document.querySelector('.reward-step[data-step="crown"]').classList.add('next');
-            }
-        }
-
-        function updateStickerCollection() {
-            const collection = document.getElementById('sticker-collection');
-            if (!collection) return;
-            
-            collection.innerHTML = '';
-            
-            const stickers = [
-                { emoji: '⭐', unlocked: true, points: 0 },
-                { emoji: '🎯', unlocked: true, points: 0 },
-                { emoji: '🏅', unlocked: false, points: 100 },
-                { emoji: '🏆', unlocked: false, points: 500 },
-                { emoji: '👑', unlocked: false, points: 1000 },
-                { emoji: '🎖️', unlocked: false, points: 1500 },
-                { emoji: '🎉', unlocked: false, points: 2000 },
-                { emoji: '🏅', unlocked: false, points: 2500 },
-                { emoji: '🏆', unlocked: false, points: 3000 },
-                { emoji: '👑', unlocked: false, points: 5000 }
-            ];
-            
-            stickers.forEach(sticker => {
-                const div = document.createElement('div');
-                div.className = `sticker ${gameState.player.unlockedStickers.includes(sticker.emoji) ? 'unlocked' : 'locked'}`;
-                div.textContent = sticker.emoji;
-                div.title = gameState.player.unlockedStickers.includes(sticker.emoji) ? 
-                    `Pegatina desbloqueada` : 
-                    `Desbloquea con ${sticker.points} puntos`;
-                collection.appendChild(div);
-            });
-        }
-
-        function loadSelectedUser() {
-            const userSelect = document.getElementById('user-select');
-            const username = userSelect.value;
-            const usernameInput = document.getElementById('username-input');
-            
-            if (username) {
-                try {
-                    const savedData = localStorage.getItem(`nandomodeProgress_${username}`);
-                    if (savedData) {
-                        const playerData = JSON.parse(savedData);
-                        
-                        // Always show the input field
-                        usernameInput.style.display = 'block';
-                        usernameInput.placeholder = `¡Bienvenido de nuevo, ${username}!`;
-                        
-                        // Update game state
-                        gameState.player = {
-                            name: username,
-                            avatar: playerData.avatar || '🐉',
-                            theme: playerData.theme || 'green',
-                            emoji: playerData.emoji || '',
-                            points: playerData.points || 0,
-                            purchasedEmojis: playerData.purchasedEmojis || [],
-                            avatarAccessories: playerData.avatarAccessories || [],
-                            rewards: playerData.rewards || { 
-                                medals: 0,
-                                trophies: 0,
-                                crowns: 0,
-                                totalWordsMastered: 0
-                            },
-                            dailyStreak: playerData.dailyStreak || 0,
-                            lastPlayedDate: playerData.lastPlayedDate || null,
-                            weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
-                            bonusGamesAvailable: playerData.bonusGamesAvailable || 0
-                        };
-                        
-                        gameState.streak = playerData.streak || 0;
-                        gameState.completedWords = playerData.completedWords || 0;
-                        gameState.wordProgress = playerData.wordProgress || {};
-                        
-                        // Update UI
-                        document.querySelectorAll('.avatar').forEach(avatar => {
-                            avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
-                        });
-                        
-                        document.querySelectorAll('.color-option').forEach(color => {
-                            color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
-                        });
-                        
-                        updatePlayerUI();
-                        updateLogoutButton();
-                        updateStickerCollection();
-                        updateProgressTracker();
-                        document.getElementById('character').textContent = gameState.player.avatar;
-                        showSuccess(`¡Bienvenido de nuevo, ${username}!`);
-                        if (sounds.correct) sounds.correct();
-                        return;
-                    }
-                } catch (e) {
-                    console.error("Error loading user data:", e);
-                    showError("Error al cargar datos de usuario. Empezando de nuevo.");
-                }
-            }
-            
-            // Default to showing input field for new users
-            usernameInput.style.display = 'block';
-            usernameInput.placeholder = 'Escribe nuevo nombre...';
-            gameState.player = {
-                name: 'Invitado',
-                avatar: '🐉',
-                theme: 'green',
-                emoji: '',
-                points: 0,
-                purchasedEmojis: [],
-                avatarAccessories: [],
-                rewards: { 
-                    medals: 0,
-                    trophies: 0,
-                    crowns: 0,
-                    totalWordsMastered: 0
-                },
-                dailyStreak: 0,
-                lastPlayedDate: null,
-                weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                bonusGamesAvailable: 0
+function loadVocab() {
+    return new Promise((resolve) => {
+        // Check if vocab.js is loaded
+        if (window.vocab && Array.isArray(window.vocab)) {
+            resolve(window.vocab);
+        } else {
+            // Try to load vocab.js
+            const script = document.createElement('script');
+            script.src = 'vocab.js';
+            script.onload = () => {
+                resolve(window.vocab || defaultVocab);
             };
-            gameState.streak = 0;
-            gameState.completedWords = 0;
-            gameState.wordProgress = {};
-            updatePlayerUI();
-            updateLogoutButton();
-            updateStickerCollection();
-            updateProgressTracker();
-            document.getElementById('character').textContent = '🐉';
+            script.onerror = () => {
+                console.warn("Failed to load vocab.js");
+                resolve(defaultVocab);
+            };
+            document.head.appendChild(script);
         }
+    });
+}
 
-        function saveUsername() {
-            const usernameInput = document.getElementById('username-input');
-            const username = usernameInput.value.trim();
-            
-            if (!username) {
-                showError("Por favor introduce un nombre de usuario");
-                if (sounds.incorrect) sounds.incorrect();
-                return;
-            }
-            
-            // Always show the input field
-            usernameInput.style.display = 'block';
-            
-            // Check if this is a new user or existing user
-            const isNewUser = !gameState.leaderboard.some(user => user.name === username);
-            
-            if (isNewUser) {
-                // Initialize new user data
+function populateUserSelect() {
+    const userSelect = document.getElementById('user-select');
+    userSelect.innerHTML = '<option value="">Nuevo Usuario</option>';
+    
+    const keys = Object.keys(localStorage);
+    const users = [];
+    keys.forEach(key => {
+        if (key.startsWith('nandomodeProgress_')) {
+            const username = key.replace('nandomodeProgress_', '');
+            users.push(username);
+        }
+    });
+    
+    users.sort();
+    
+    users.forEach(username => {
+        const option = document.createElement('option');
+        option.value = username;
+        option.textContent = username;
+        userSelect.appendChild(option);
+    });
+    
+    const savedName = localStorage.getItem('nandomodeCurrentPlayer');
+    if (savedName && users.includes(savedName)) {
+        userSelect.value = savedName;
+        loadSelectedUser();
+    }
+}
+
+function setupEventListeners() {
+    document.getElementById('save-username').addEventListener('click', saveUsername);
+    document.getElementById('user-select').addEventListener('change', loadSelectedUser);
+    document.getElementById('quick-play-btn').addEventListener('click', quickPlay);
+    document.getElementById('back-to-menu-btn').addEventListener('click', quitToMainMenu);
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    
+    document.querySelectorAll('.avatar').forEach(avatar => {
+        avatar.addEventListener('click', selectAvatar.bind(null, avatar));
+        avatar.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') selectAvatar(avatar);
+        });
+    });
+
+    document.querySelectorAll('.color-option').forEach(color => {
+        color.addEventListener('click', selectColor.bind(null, color));
+        color.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') selectColor(color);
+        });
+    });
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            gameState.mode = btn.dataset.mode;
+            startNewGame();
+        });
+    });
+
+    document.getElementById('quit-btn').addEventListener('click', quitToMainMenu);
+    document.getElementById('next-round-btn').addEventListener('click', startNewRound);
+    document.getElementById('quit-round-btn').addEventListener('click', quitToMainMenu);
+    document.getElementById('play-again-btn').addEventListener('click', startNewGame);
+    document.getElementById('main-menu-btn').addEventListener('click', quitToMainMenu);
+    
+    // Bonus game event listeners
+    document.getElementById('play-bonus-game-btn').addEventListener('click', playBonusGame);
+    document.getElementById('save-bonus-game-btn').addEventListener('click', saveBonusGame);
+    document.getElementById('language-toggle').addEventListener('click', toggleLanguage);       
+}
+
+function selectAvatar(avatar) {
+    document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
+    avatar.classList.add('selected');
+    gameState.player.avatar = avatar.dataset.avatar;
+    updatePlayerUI();
+}
+
+function selectColor(color) {
+    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+    color.classList.add('selected');
+    gameState.player.theme = color.dataset.color;
+    updatePlayerUI();
+}
+
+function updatePlayerUI() {
+    const displayName = gameState.player.emoji ? `${gameState.player.name} ${gameState.player.emoji}` : gameState.player.name;
+    document.getElementById('player-name').textContent = displayName;
+    document.getElementById('final-player').textContent = displayName;
+    const avatarElement = document.getElementById('player-avatar');
+    if (avatarElement) avatarElement.textContent = gameState.player.avatar;
+    
+    // Update the theme
+    document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
+}
+
+function updateLogoutButton() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (gameState.player.name !== 'Invitado') {
+        logoutBtn.style.display = 'block';
+    } else {
+        logoutBtn.style.display = 'none';
+    }
+}
+
+function toggleLanguage() {
+    currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
+    updateLanguage();
+}
+
+function updateRewardPath() {
+    const steps = document.querySelectorAll('.reward-step');
+    
+    steps.forEach(step => {
+        step.classList.remove('earned', 'next');
+        const stepType = step.dataset.step;
+        
+        if (stepType === 'medal' && gameState.player.rewards.medals > 0) {
+            step.classList.add('earned');
+        } else if (stepType === 'trophy' && gameState.player.rewards.trophies > 0) {
+            step.classList.add('earned');
+        }
+    });
+    
+    if (gameState.player.rewards.medals < 10) {
+        document.querySelector('.reward-step[data-step="medal"]').classList.add('next');
+    } else if (gameState.player.rewards.trophies < 10) {
+        document.querySelector('.reward-step[data-step="trophy"]').classList.add('next');
+    }
+}
+
+function loadSelectedUser() {
+    const userSelect = document.getElementById('user-select');
+    const username = userSelect.value;
+    const usernameInput = document.getElementById('username-input');
+    
+    if (username) {
+        try {
+            const savedData = localStorage.getItem(`nandomodeProgress_${username}`);
+            if (savedData) {
+                const playerData = JSON.parse(savedData);
+                
+                // Always show the input field
+                usernameInput.style.display = 'block';
+                usernameInput.placeholder = `¡Bienvenido de nuevo, ${username}!`;
+                
+                // Update game state
                 gameState.player = {
                     name: username,
-                    avatar: gameState.player.avatar || '🐉',
-                    theme: gameState.player.theme || 'green',
-                    emoji: '',
-                    points: 0,
-                    purchasedEmojis: [],
-                    avatarAccessories: [],
-                    rewards: { 
+                    avatar: playerData.avatar || '🐉',
+                    theme: playerData.theme || 'green',
+                    emoji: playerData.emoji || '',
+                    points: playerData.points || 0,
+                    rewards: playerData.rewards || { 
                         medals: 0,
                         trophies: 0,
-                        crowns: 0,
                         totalWordsMastered: 0
                     },
-                    dailyStreak: 0,
-                    lastPlayedDate: null,
-                    weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯'],
-                    bonusGamesAvailable: 0
+                    unlockedStickers: playerData.unlockedStickers || [],
+                    bonusGamesAvailable: playerData.bonusGamesAvailable || 0
                 };
                 
-                gameState.streak = 0;
-                gameState.completedWords = 0;
-                gameState.wordProgress = {};
-            }
-            
-            localStorage.setItem('nandomodeCurrentPlayer', username);
-            savePlayerProgress();
-            
-            updatePlayerUI();
-            updateLogoutButton();
-            updateStickerCollection();
-            updateProgressTracker();
-            
-            usernameInput.value = '';
-            usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
-            
-            const btn = document.getElementById('save-username');
-            btn.textContent = isNewUser ? '✓ ¡Nuevo Usuario Creado!' : '✓ ¡Usuario Cargado!';
-            setTimeout(() => btn.textContent = '💾 Guardar & Continuar', 1500);
-            
-            populateUserSelect();
-            document.getElementById('user-select').value = username;
-            
-            showSuccess(isNewUser ? `¡Nueva cuenta creada para ${username}!` : `¡Bienvenido de nuevo ${username}!`);
-            if (sounds.roundComplete) sounds.roundComplete();
-        }
-
-        function quickPlay() {
-            // Only set guest mode if no user is currently logged in
-            if (gameState.player.name === 'Invitado') {
-                gameState.player = {
-                    name: 'Invitado',
-                    avatar: '🐉',
-                    theme: 'green',
-                    emoji: '',
-                    points: 0,
-                    purchasedEmojis: [],
-                    avatarAccessories: [],
-                    rewards: { 
-                        medals: 0,
-                        trophies: 0,
-                        crowns: 0,
-                        totalWordsMastered: 0
-                    },
-                    dailyStreak: 0,
-                    lastPlayedDate: null,
-                    weeklyProgress: 0,
-                    unlockedStickers: ['⭐', '🎯'],
-                    bonusGamesAvailable: 0
-                };
-                gameState.streak = 0;
-                gameState.completedWords = 0;
-                gameState.wordProgress = {};
+                gameState.streak = playerData.streak || 0;
+                gameState.completedWords = playerData.completedWords || 0;
+                gameState.wordProgress = playerData.wordProgress || {};
+                
+                // Update UI
+                document.querySelectorAll('.avatar').forEach(avatar => {
+                    avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
+                });
+                
+                document.querySelectorAll('.color-option').forEach(color => {
+                    color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
+                });
                 
                 updatePlayerUI();
                 updateLogoutButton();
-                updateStickerCollection();
                 updateProgressTracker();
-                showSuccess("Jugando como Invitado. El progreso no se guardará.");
-            }
-            showScreen('start');
-        }
-
-        function logout() {
-            gameState.player = {
-                name: 'Invitado',
-                avatar: '🐉',
-                theme: 'green',
-                emoji: '',
-                points: 0,
-                purchasedEmojis: [],
-                avatarAccessories: [],
-                rewards: { 
-                    medals: 0,
-                    trophies: 0,
-                    crowns: 0,
-                    totalWordsMastered: 0
-                },
-                dailyStreak: 0,
-                lastPlayedDate: null,
-                weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                bonusGamesAvailable: 0
-            };
-            gameState.streak = 0;
-            gameState.completedWords = 0;
-            gameState.wordProgress = {};
-            
-            localStorage.removeItem('nandomodeCurrentPlayer');
-            
-            updatePlayerUI();
-            updateLogoutButton();
-            updateStickerCollection();
-            updateProgressTracker();
-            populateUserSelect();
-            
-            document.getElementById('username-input').style.display = 'block';
-            document.getElementById('username-input').placeholder = 'Escribe nuevo nombre...';
-            document.getElementById('user-select').value = '';
-            document.getElementById('character').textContent = '🐉';
-            
-            showSuccess("Sesión cerrada correctamente");
-            showScreen('start');
-        }
-
-        function savePlayerProgress() {
-            if (gameState.player.name === 'Invitado') {
-                console.log('Not saving progress for Guest user');
+                showSuccess(`¡Bienvenido de nuevo, ${username}!`);
                 return;
             }
-            
-            try {
-                const playerData = {
-                    name: gameState.player.name,
-                    avatar: gameState.player.avatar,
-                    theme: gameState.player.theme,
-                    emoji: gameState.player.emoji,
-                    points: gameState.player.points,
-                    purchasedEmojis: gameState.player.purchasedEmojis,
-                    avatarAccessories: gameState.player.avatarAccessories,
-                    rewards: gameState.player.rewards,
-                    dailyStreak: gameState.player.dailyStreak,
-                    lastPlayedDate: gameState.player.lastPlayedDate,
-                    weeklyProgress: gameState.player.weeklyProgress,
-                    wordProgress: gameState.wordProgress,
-                    completedWords: gameState.completedWords,
-                    streak: gameState.streak,
-                    unlockedStickers: gameState.player.unlockedStickers,
-                    bonusGamesAvailable: gameState.player.bonusGamesAvailable,
-                    lastActive: new Date().toISOString()
+        } catch (e) {
+            console.error("Error loading user data:", e);
+            showError("Error al cargar datos de usuario. Empezando de nuevo.");
+        }
+    }
+    
+    // Default to showing input field for new users
+    usernameInput.style.display = 'block';
+    usernameInput.placeholder = 'Escribe nuevo nombre...';
+    gameState.player = {
+        name: 'Invitado',
+        avatar: '🐉',
+        theme: 'green',
+        emoji: '',
+        points: 0,
+        rewards: { 
+            medals: 0,
+            trophies: 0,
+            totalWordsMastered: 0
+        },
+        unlockedStickers: [],
+        bonusGamesAvailable: 0
+    };
+    gameState.streak = 0;
+    gameState.completedWords = 0;
+    gameState.wordProgress = {};
+    updatePlayerUI();
+    updateLogoutButton();
+    updateProgressTracker();
+}
+
+function saveUsername() {
+    const usernameInput = document.getElementById('username-input');
+    const username = usernameInput.value.trim();
+    
+    if (!username) {
+        showError("Por favor introduce un nombre de usuario");
+        return;
+    }
+    
+    // Always show the input field
+    usernameInput.style.display = 'block';
+    
+    // Check if this is a new user or existing user
+    const isNewUser = !gameState.leaderboard.some(user => user.name === username);
+    
+    if (isNewUser) {
+        // Initialize new user data
+        gameState.player = {
+            name: username,
+            avatar: gameState.player.avatar || '🐉',
+            theme: gameState.player.theme || 'green',
+            emoji: '',
+            points: 0,
+            rewards: { 
+                medals: 0,
+                trophies: 0,
+                totalWordsMastered: 0
+            },
+            unlockedStickers: [],
+            bonusGamesAvailable: 0
+        };
+        
+        gameState.streak = 0;
+        gameState.completedWords = 0;
+        gameState.wordProgress = {};
+    }
+    
+    localStorage.setItem('nandomodeCurrentPlayer', username);
+    savePlayerProgress();
+    
+    updatePlayerUI();
+    updateLogoutButton();
+    updateProgressTracker();
+    
+    usernameInput.value = '';
+    usernameInput.placeholder = isNewUser ? `¡Bienvenido, ${username}!` : `¡Bienvenido de nuevo, ${username}!`;
+    
+    const btn = document.getElementById('save-username');
+    btn.textContent = isNewUser ? '✓ ¡Nuevo Usuario Creado!' : '✓ ¡Usuario Cargado!';
+    setTimeout(() => btn.textContent = '💾 Guardar & Continuar', 1500);
+    
+    populateUserSelect();
+    document.getElementById('user-select').value = username;
+    
+    showSuccess(isNewUser ? `¡Nueva cuenta creada para ${username}!` : `¡Bienvenido de nuevo ${username}!`);
+}
+
+function quickPlay() {
+    // Only set guest mode if no user is currently logged in
+    if (gameState.player.name === 'Invitado') {
+        gameState.player = {
+            name: 'Invitado',
+            avatar: '🐉',
+            theme: 'green',
+            emoji: '',
+            points: 0,
+            rewards: { 
+                medals: 0,
+                trophies: 0,
+                totalWordsMastered: 0
+            },
+            unlockedStickers: [],
+            bonusGamesAvailable: 0
+        };
+        gameState.streak = 0;
+        gameState.completedWords = 0;
+        gameState.wordProgress = {};
+        
+        updatePlayerUI();
+        updateLogoutButton();
+        updateProgressTracker();
+        showSuccess("Jugando como Invitado. El progreso no se guardará.");
+    }
+    showScreen('start');
+}
+
+function logout() {
+    gameState.player = {
+        name: 'Invitado',
+        avatar: '🐉',
+        theme: 'green',
+        emoji: '',
+        points: 0,
+        rewards: { 
+            medals: 0,
+            trophies: 0,
+            totalWordsMastered: 0
+        },
+        unlockedStickers: [],
+        bonusGamesAvailable: 0
+    };
+    gameState.streak = 0;
+    gameState.completedWords = 0;
+    gameState.wordProgress = {};
+    
+    localStorage.removeItem('nandomodeCurrentPlayer');
+    
+    updatePlayerUI();
+    updateLogoutButton();
+    updateProgressTracker();
+    populateUserSelect();
+    
+    document.getElementById('username-input').style.display = 'block';
+    document.getElementById('username-input').placeholder = 'Escribe nuevo nombre...';
+    document.getElementById('user-select').value = '';
+    
+    showSuccess("Sesión cerrada correctamente");
+    showScreen('start');
+}
+
+function savePlayerProgress() {
+    if (gameState.player.name === 'Invitado') {
+        console.log('Not saving progress for Guest user');
+        return;
+    }
+    
+    try {
+        const playerData = {
+            name: gameState.player.name,
+            avatar: gameState.player.avatar,
+            theme: gameState.player.theme,
+            emoji: gameState.player.emoji,
+            points: gameState.player.points,
+            rewards: gameState.player.rewards,
+            wordProgress: gameState.wordProgress,
+            completedWords: gameState.completedWords,
+            streak: gameState.streak,
+            unlockedStickers: gameState.player.unlockedStickers,
+            bonusGamesAvailable: gameState.player.bonusGamesAvailable,
+            lastActive: new Date().toISOString()
+        };
+        
+        localStorage.setItem(`nandomodeProgress_${gameState.player.name}`, JSON.stringify(playerData));
+        localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
+        console.log('Progress saved for:', gameState.player.name);
+    } catch (e) {
+        console.error("Error saving player progress:", e);
+        showError("No se pudo guardar el progreso. ¡Inténtalo de nuevo!");
+    }
+}
+
+function loadPlayerProgress() {
+    try {
+        const savedName = localStorage.getItem('nandomodeCurrentPlayer');
+        if (savedName) {
+            const savedData = localStorage.getItem(`nandomodeProgress_${savedName}`);
+            if (savedData) {
+                const playerData = JSON.parse(savedData);
+                
+                gameState.player = {
+                    name: savedName,
+                    avatar: playerData.avatar || '🐉',
+                    theme: playerData.theme || 'green',
+                    emoji: playerData.emoji || '',
+                    points: playerData.points || 0,
+                    rewards: playerData.rewards || { 
+                        medals: 0,
+                        trophies: 0,
+                        totalWordsMastered: 0
+                    },
+                    unlockedStickers: playerData.unlockedStickers || [],
+                    bonusGamesAvailable: playerData.bonusGamesAvailable || 0
                 };
                 
-                localStorage.setItem(`nandomodeProgress_${gameState.player.name}`, JSON.stringify(playerData));
-                localStorage.setItem('nandomodeCurrentPlayer', gameState.player.name);
-                console.log('Progress saved for:', gameState.player.name);
-            } catch (e) {
-                console.error("Error saving player progress:", e);
-                showError("No se pudo guardar el progreso. ¡Inténtalo de nuevo!");
-            }
-        }
-
-        function loadPlayerProgress() {
-            try {
-                const savedName = localStorage.getItem('nandomodeCurrentPlayer');
-                if (savedName) {
-                    const savedData = localStorage.getItem(`nandomodeProgress_${savedName}`);
-                    if (savedData) {
-                        const playerData = JSON.parse(savedData);
-                        
-                        gameState.player = {
-                            name: savedName,
-                            avatar: playerData.avatar || '🐉',
-                            theme: playerData.theme || 'green',
-                            emoji: playerData.emoji || '',
-                            points: playerData.points || 0,
-                            purchasedEmojis: playerData.purchasedEmojis || [],
-                            avatarAccessories: playerData.avatarAccessories || [],
-                            rewards: playerData.rewards || { 
-                                medals: 0,
-                                trophies: 0,
-                                crowns: 0,
-                                totalWordsMastered: 0
-                            },
-                            dailyStreak: playerData.dailyStreak || 0,
-                            lastPlayedDate: playerData.lastPlayedDate || null,
-                            weeklyProgress: playerData.weeklyProgress || 0,
-                            unlockedStickers: playerData.unlockedStickers || ['⭐', '🎯'],
-                            bonusGamesAvailable: playerData.bonusGamesAvailable || 0
-                        };
-                        
-                        gameState.streak = playerData.streak || 0;
-                        gameState.completedWords = playerData.completedWords || 0;
-                        gameState.wordProgress = playerData.wordProgress || {};
-                        
-                        document.getElementById('username-input').placeholder = `¡Bienvenido de nuevo, ${gameState.player.name}!`;
-                        document.querySelectorAll('.avatar').forEach(avatar => {
-                            avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
-                        });
-                        document.querySelectorAll('.color-option').forEach(color => {
-                            color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
-                        });
-                        
-                        updatePlayerUI();
-                        updateLogoutButton();
-                        updateStickerCollection();
-                        updateProgressTracker();
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.warn("Error loading player progress:", e);
-                showError("No se pudo cargar tu progreso. ¡Empezando de nuevo!");
-            }
-            
-            gameState.player = {
-                name: 'Invitado',
-                avatar: '🐉',
-                theme: 'green',
-                emoji: '',
-                points: 0,
-                purchasedEmojis: [],
-                avatarAccessories: [],
-                rewards: { 
-                    medals: 0,
-                    trophies: 0,
-                    crowns: 0,
-                    totalWordsMastered: 0
-                },
-                dailyStreak: 0,
-                lastPlayedDate: null,
-                weeklyProgress: 0,
-                unlockedStickers: ['⭐', '🎯'],
-                bonusGamesAvailable: 0
-            };
-            gameState.streak = 0;
-            gameState.completedWords = 0;
-            gameState.wordProgress = {};
-            
-            updatePlayerUI();
-            updateLogoutButton();
-            updateStickerCollection();
-            updateProgressTracker();
-            document.getElementById('character').textContent = '🐉';
-        }
-
-        function startNewGame() {
-            document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
-            startNewRound();
-            savePlayerProgress();
-            updateStreakDisplay();
-        }
-
-        function startNewRound() {
-            roundsPlayed++;
-            setupClassicMode();
-            showScreen('game');
-        }
-
-        function generateRoundData() {
-            gameState.currentRound = {
-                pairs: [],
-                leftColumn: [],
-                rightColumn: [],
-                selectedLeft: null,
-                selectedRight: null,
-                matchedPairs: [],
-                roundPoints: 0
-            };
-            
-            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
-            const newWords = getNewWords(3);
-            const reviewWords = getReviewWords(2);
-            const roundWords = shuffleArray([...newWords, ...reviewWords]);
-            
-            console.log(`Round words: ${roundWords.join(', ')}`);
-            
-            roundWords.forEach(word => {
-                const vocabItem = vocab.find(item => item.word === word);
-                if (vocabItem) {
-                    const pairId = sanitizePairId(word);
-                    gameState.currentRound.pairs.push({
-                        pairId,
-                        word: vocabItem.word,
-                        emoji: vocabItem.emoji,
-                        type: vocabItem.type
-                    });
-                }
-            });
-            
-            gameState.currentRound.pairs = shuffleArray([...gameState.currentRound.pairs]);
-            
-            const emojis = gameState.currentRound.pairs.map(pair => ({
-                pairId: pair.pairId,
-                type: 'emoji',
-                value: pair.emoji
-            }));
-            const words = gameState.currentRound.pairs.map(pair => ({
-                pairId: pair.pairId,
-                type: 'word',
-                value: pair.word
-            }));
-            
-            const shuffledEmojis = shuffleArray([...emojis]);
-            const shuffledWords = shuffleArray([...words]);
-            
-            if (gameState.mode === 'easy') {
-                gameState.currentRound.leftColumn = shuffledEmojis;
-                gameState.currentRound.rightColumn = shuffledWords;
-            } else {
-                gameState.currentRound.leftColumn = shuffledWords;
-                gameState.currentRound.rightColumn = shuffledEmojis;
-            }
-            
-            console.log('Generated pairs:', gameState.currentRound.pairs.map(p => `${p.word} (${p.pairId})`));
-            console.log('Left Column:', gameState.currentRound.leftColumn.map(item => `${item.value} (${item.pairId})`));
-            console.log('Right Column:', gameState.currentRound.rightColumn.map(item => `${item.value} (${item.pairId})`));
-        }
-
-        function getNewWords(count) {
-            const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
-            const unseenWords = vocab
-                .filter(item => !gameState.wordProgress[item.word])
-                .map(item => item.word);
-            
-            if (unseenWords.length < count) {
-                const seenWords = Object.keys(gameState.wordProgress).filter(word => gameState.wordProgress[word] < 3);
-                const candidates = [...unseenWords, ...seenWords];
-                return shuffleArray(candidates).slice(0, count);
-            }
-            
-            return shuffleArray(unseenWords).slice(0, count);
-        }
-
-        function getReviewWords(count) {
-            const reviewCandidates = Object.keys(gameState.wordProgress)
-                .filter(word => gameState.wordProgress[word] > 0 && gameState.wordProgress[word] < 3);
-            
-            if (reviewCandidates.length < count) {
-                return getNewWords(count);
-            }
-            
-            return shuffleArray(reviewCandidates).slice(0, count);
-        }
-
-        function setupClassicMode() {
-            generateRoundData();
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.className = 'game-board';
-            
-            const leftColumn = document.createElement('div');
-            leftColumn.className = 'column';
-            leftColumn.id = 'column-left';
-            
-            const rightColumn = document.createElement('div');
-            rightColumn.className = 'column';
-            rightColumn.id = 'column-right';
-            
-            gameBoard.appendChild(leftColumn);
-            gameBoard.appendChild(rightColumn);
-            
-            updateGameUI();
-        }
-
-        function updateGameUI() {
-            document.getElementById('score').textContent = gameState.player.points;
-            document.getElementById('streak').textContent = gameState.streak;
-            document.getElementById('progress').textContent = gameState.completedWords;
-            document.getElementById('percent-complete').textContent = Math.round((gameState.completedWords / 50) * 100);
-            updateProgressBar();
-            updateRewardPath();
-            updateProgressTracker();
-            
-            const leftColumn = document.getElementById('column-left');
-            const rightColumn = document.getElementById('column-right');
-            leftColumn.innerHTML = '';
-            rightColumn.innerHTML = '';
-            
-            gameState.currentRound.leftColumn.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                card.dataset.pairId = item.pairId;
-                card.dataset.type = item.type;
-                card.textContent = item.value;
-                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+                gameState.streak = playerData.streak || 0;
+                gameState.completedWords = playerData.completedWords || 0;
+                gameState.wordProgress = playerData.wordProgress || {};
                 
-                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                    card.classList.add('matched');
-                }
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                if (pair && gameState.wordProgress[pair.word]) {
-                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                }
-                
-                card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
-                card.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+                document.getElementById('username-input').placeholder = `¡Bienvenido de nuevo, ${gameState.player.name}!`;
+                document.querySelectorAll('.avatar').forEach(avatar => {
+                    avatar.classList.toggle('selected', avatar.dataset.avatar === gameState.player.avatar);
+                });
+                document.querySelectorAll('.color-option').forEach(color => {
+                    color.classList.toggle('selected', color.dataset.color === gameState.player.theme);
                 });
                 
-                leftColumn.appendChild(card);
+                updatePlayerUI();
+                updateLogoutButton();
+                updateProgressTracker();
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn("Error loading player progress:", e);
+        showError("No se pudo cargar tu progreso. ¡Empezando de nuevo!");
+    }
+    
+    gameState.player = {
+        name: 'Invitado',
+        avatar: '🐉',
+        theme: 'green',
+        emoji: '',
+        points: 0,
+        rewards: { 
+            medals: 0,
+            trophies: 0,
+            totalWordsMastered: 0
+        },
+        unlockedStickers: [],
+        bonusGamesAvailable: 0
+    };
+    gameState.streak = 0;
+    gameState.completedWords = 0;
+    gameState.wordProgress = {};
+    
+    updatePlayerUI();
+    updateLogoutButton();
+    updateProgressTracker();
+}
+
+function startNewGame() {
+    document.getElementById('game-container').className = `theme-${gameState.player.theme}`;
+    startNewRound();
+    savePlayerProgress();
+}
+
+function startNewRound() {
+    roundsPlayed++;
+    setupClassicMode();
+    showScreen('game');
+}
+
+function generateRoundData() {
+    gameState.currentRound = {
+        pairs: [],
+        leftColumn: [],
+        rightColumn: [],
+        selectedLeft: null,
+        selectedRight: null,
+        matchedPairs: [],
+        roundPoints: 0
+    };
+    
+    const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
+    const newWords = getNewWords(3);
+    const reviewWords = getReviewWords(2);
+    const roundWords = shuffleArray([...newWords, ...reviewWords]);
+    
+    console.log(`Round words: ${roundWords.join(', ')}`);
+    
+    roundWords.forEach(word => {
+        const vocabItem = vocab.find(item => item.word === word);
+        if (vocabItem) {
+            const pairId = sanitizePairId(word);
+            gameState.currentRound.pairs.push({
+                pairId,
+                word: vocabItem.word,
+                emoji: vocabItem.emoji,
+                type: vocabItem.type,
+                en: vocabItem.en,
+                jp: vocabItem.jp
             });
+        }
+    });
+    
+    gameState.currentRound.pairs = shuffleArray([...gameState.currentRound.pairs]);
+    
+    const emojis = gameState.currentRound.pairs.map(pair => ({
+        pairId: pair.pairId,
+        type: 'emoji',
+        value: pair.emoji
+    }));
+    const words = gameState.currentRound.pairs.map(pair => ({
+        pairId: pair.pairId,
+        type: 'word',
+        value: pair.word
+    }));
+    
+    const shuffledEmojis = shuffleArray([...emojis]);
+    const shuffledWords = shuffleArray([...words]);
+    
+    if (gameState.mode === 'easy') {
+        gameState.currentRound.leftColumn = shuffledEmojis;
+        gameState.currentRound.rightColumn = shuffledWords;
+    } else {
+        gameState.currentRound.leftColumn = shuffledWords;
+        gameState.currentRound.rightColumn = shuffledEmojis;
+    }
+    
+    console.log('Generated pairs:', gameState.currentRound.pairs.map(p => `${p.word} (${p.pairId})`));
+    console.log('Left Column:', gameState.currentRound.leftColumn.map(item => `${item.value} (${item.pairId})`));
+    console.log('Right Column:', gameState.currentRound.rightColumn.map(item => `${item.value} (${item.pairId})`));
+}
+
+function getNewWords(count) {
+    const vocab = window.vocab && window.vocab.length > 0 ? window.vocab : defaultVocab;
+    const unseenWords = vocab
+        .filter(item => !gameState.wordProgress[item.word])
+        .map(item => item.word);
+    
+    if (unseenWords.length < count) {
+        const seenWords = Object.keys(gameState.wordProgress).filter(word => gameState.wordProgress[word] < 3);
+        const candidates = [...unseenWords, ...seenWords];
+        return shuffleArray(candidates).slice(0, count);
+    }
+    
+    return shuffleArray(unseenWords).slice(0, count);
+}
+
+function getReviewWords(count) {
+    const reviewCandidates = Object.keys(gameState.wordProgress)
+        .filter(word => gameState.wordProgress[word] > 0 && gameState.wordProgress[word] < 3);
+    
+    if (reviewCandidates.length < count) {
+        return getNewWords(count);
+    }
+    
+    return shuffleArray(reviewCandidates).slice(0, count);
+}
+
+function setupClassicMode() {
+    generateRoundData();
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.className = 'game-board';
+    
+    // Clear any existing columns
+    gameBoard.innerHTML = '';
+    
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'column';
+    leftColumn.id = 'column-left';
+    
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'column';
+    rightColumn.id = 'column-right';
+    
+    gameBoard.appendChild(leftColumn);
+    gameBoard.appendChild(rightColumn);
+    
+    // Now that columns exist, we can safely update the UI
+    updateGameUI();
+}
+
+function updateGameUI() {
+    // Safely update score display if it exists
+    const scoreElement = document.getElementById('score');
+    if (scoreElement) scoreElement.textContent = gameState.player.points;
+    
+    // Safely update streak display if it exists
+    const streakElement = document.getElementById('streak');
+    if (streakElement) streakElement.textContent = gameState.streak;
+    
+    // Safely update progress display if it exists
+    const progressElement = document.getElementById('progress');
+    if (progressElement) {
+        progressElement.textContent = 
+            `${gameState.completedWords}/50 (Total: ${gameState.player.rewards.totalWordsMastered})`;
+    }
+    
+    // Safely update percent complete if it exists
+    const percentElement = document.getElementById('percent-complete');
+    if (percentElement) {
+        percentElement.textContent = Math.round((gameState.completedWords / 50) * 100);
+    }
+    
+    updateProgressBar();
+    updateRewardPath();
+    updateProgressTracker();
             
-            gameState.currentRound.rightColumn.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
-                card.dataset.pairId = item.pairId;
-                card.dataset.type = item.type;
-                card.textContent = item.value;
-                card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
-                card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
-                
-                if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
-                    card.classList.add('matched');
-                }
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
-                if (pair && gameState.wordProgress[pair.word]) {
-                    card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
-                }
-                
-                card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
-                card.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
-                });
-                
-                rightColumn.appendChild(card);
-            });
+    const leftColumn = document.getElementById('column-left');
+    const rightColumn = document.getElementById('column-right');
+    
+    // Only proceed if both columns exist
+    if (!leftColumn || !rightColumn) return;
+    
+    leftColumn.innerHTML = '';
+    rightColumn.innerHTML = '';
+            
+    gameState.currentRound.leftColumn.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+        card.dataset.pairId = item.pairId;
+        card.dataset.type = item.type;
+        card.textContent = item.value;
+        card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+        
+        if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+            card.classList.add('matched');
+        }
+        
+        const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+        if (pair && gameState.wordProgress[pair.word]) {
+            card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+        }
+        
+        card.addEventListener('click', () => handleCardClick('left', item.pairId, index));
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleCardClick('left', item.pairId, index);
+        });
+        
+        leftColumn.appendChild(card);
+    });
+    
+    gameState.currentRound.rightColumn.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `card ${item.type === 'emoji' ? 'emoji-card' : 'word-card'}`;
+        card.dataset.pairId = item.pairId;
+        card.dataset.type = item.type;
+        card.textContent = item.value;
+        card.tabIndex = gameState.currentRound.matchedPairs.includes(item.pairId) ? -1 : 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Seleccionar tarjeta: ${item.value}`);
+        
+        if (gameState.currentRound.matchedPairs.includes(item.pairId)) {
+            card.classList.add('matched');
+        }
+        
+        const pair = gameState.currentRound.pairs.find(p => p.pairId === item.pairId);
+        if (pair && gameState.wordProgress[pair.word]) {
+            card.classList.add(`word-mastery-${Math.min(3, gameState.wordProgress[pair.word])}`);
+        }
+        
+        card.addEventListener('click', () => handleCardClick('right', item.pairId, index));
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleCardClick('right', item.pairId, index);
+        });
+        
+        rightColumn.appendChild(card);
+    });
+    
+    if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
+        console.log('All pairs matched, ending round');
+        endRound();
+    }
+}
+
+function updateProgressBar() {
+    const progressBar = document.querySelector('.progress-bar');
+    const percent = Math.min(100, (gameState.completedWords / totalWords) * 100);
+    progressBar.style.width = `${percent}%`;
+}
+
+function handleCardClick(column, pairId, index) {
+    if (isProcessingClick || gameState.currentRound.matchedPairs.includes(pairId)) {
+        console.log(`Skipped click: isProcessing=${isProcessingClick}, pairId=${pairId}, matched=${gameState.currentRound.matchedPairs.includes(pairId)}`);
+        return;
+    }
+    isProcessingClick = true;
+    
+    const columnData = column === 'left' ? gameState.currentRound.leftColumn : gameState.currentRound.rightColumn;
+    const item = columnData[index];
+    if (!item || item.pairId !== pairId) {
+        console.error(`Item mismatch: pairId=${pairId}, index=${index}, column=${column}, found=${!!item}`);
+        isProcessingClick = false;
+        showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
+        return;
+    }
+    
+    const card = document.querySelector(`.card[data-pair-id="${pairId}"][data-type="${item.type}"]`);
+    if (!card || card.classList.contains('matched')) {
+        console.error(`Invalid card: pairId=${pairId}, type=${item.type}, column=${column}, found=${!!card}`);
+        isProcessingClick = false;
+        showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
+        return;
+    }
+    
+    if (gameState.mode !== 'hard' && column === 'left') {
+        const pair = gameState.currentRound.pairs.find(p => p.pairId === pairId);
+        if (pair) {
+            const now = Date.now();
+            if (now - lastTTSTime >= ttsDebounce) {
+                speakWord(pair.word);
+                lastTTSTime = now;
+                console.log(`TTS triggered: word=${pair.word}`);
+            }
+        }
+    }
+    
+    if (column === 'left') {
+        if (gameState.currentRound.selectedLeft) {
+            const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedLeft}"]`);
+            if (prevCard) prevCard.classList.remove('selected');
+        }
+        gameState.currentRound.selectedLeft = pairId;
+        card.classList.add('selected');
+    } else {
+        if (gameState.currentRound.selectedRight) {
+            const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedRight}"]`);
+            if (prevCard) prevCard.classList.remove('selected');
+        }
+        gameState.currentRound.selectedRight = pairId;
+        card.classList.add('selected');
+    }
+    
+    console.log(`Selected: left=${gameState.currentRound.selectedLeft}, right=${gameState.currentRound.selectedRight}`);
+    
+    if (gameState.currentRound.selectedLeft && gameState.currentRound.selectedRight) {
+        checkMatch();
+    } else {
+        isProcessingClick = false;
+    }
+}
+
+function checkMatch() {
+    const leftId = gameState.currentRound.selectedLeft;
+    const rightId = gameState.currentRound.selectedRight;
+    
+    console.log(`Checking match: leftId=${leftId}, rightId=${rightId}, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
+    
+    const leftCard = document.querySelector(`.card[data-pair-id="${leftId}"]`);
+    const rightCard = document.querySelector(`.card[data-pair-id="${rightId}"]`);
+    
+    if (!leftCard || !rightCard) {
+        console.error(`Cards not found in checkMatch: leftCard=${leftCard}, rightCard=${rightCard}, leftId=${leftId}, rightId=${rightId}`);
+        resetSelections();
+        showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
+        return;
+    }
+    
+    if (leftId === rightId) {
+        // Correct match
+        playSound('correct');
+        
+        // Calculate points - double for hard mode
+        const basePoints = gameState.mode === 'hard' ? 20 : 10;
+        gameState.player.points += basePoints;
+        gameState.streak++;
+        gameState.currentRound.roundPoints += basePoints;
+        matchesCompleted++;
+        
+        // Check for bonus game every 15 matches
+        if (matchesCompleted % 15 === 0) {
+            showBonusGamePopup();
+        }
+        
+        const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
+        if (pair) {
+            gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
+            if (gameState.wordProgress[pair.word] === 3) {
+                gameState.completedWords++;
+                gameState.player.rewards.totalWordsMastered++;
+                checkMilestone();
+                checkModeCompletion();
+            }
+            
+            // Show translations for matched cards
+            const translationDisplay = document.getElementById('translation-display');
+            if (pair.en || pair.jp) {
+                translationDisplay.innerHTML = `
+                    <span class="word">${pair.word}</span>
+                    ${pair.en ? `<span class="translation">EN: ${pair.en}</span>` : ''}
+                    ${pair.jp ? `<span class="translation">JP: ${pair.jp}</span>` : ''}
+                `;
+                translationDisplay.style.display = 'block';
+                setTimeout(() => {
+                    translationDisplay.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        gameState.currentRound.matchedPairs.push(leftId);
+        console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
+        
+        if (gameState.streak % 5 === 0) {
+            const bonus = gameState.streak * 2;
+            gameState.player.points += bonus;
+            showNotification(`¡Bonus de Racha: +${bonus} Puntos!`);
+            playSound('flamenco'); // Flamenco flourish for streak bonus
+        }
+        
+        leftCard.classList.add('correct');
+        rightCard.classList.add('correct');
+        
+        setTimeout(() => {
+            leftCard.classList.remove('correct');
+            rightCard.classList.remove('correct');
+            leftCard.classList.add('matched');
+            rightCard.classList.add('matched');
+            leftCard.tabIndex = -1;
+            rightCard.tabIndex = -1;
+            gameState.currentRound.selectedLeft = null;
+            gameState.currentRound.selectedRight = null;
+            isProcessingClick = false;
             
             if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
                 console.log('All pairs matched, ending round');
                 endRound();
-            }
-        }
-
-        function updateProgressBar() {
-            const progressBar = document.querySelector('.progress-bar');
-            const percent = Math.min(100, (gameState.completedWords / 50) * 100);
-            progressBar.style.width = `${percent}%`;
-        }
-
-        function handleCardClick(column, pairId, index) {
-            if (isProcessingClick || gameState.currentRound.matchedPairs.includes(pairId)) {
-                console.log(`Skipped click: isProcessing=${isProcessingClick}, pairId=${pairId}, matched=${gameState.currentRound.matchedPairs.includes(pairId)}`);
-                return;
-            }
-            isProcessingClick = true;
-            
-            const columnData = column === 'left' ? gameState.currentRound.leftColumn : gameState.currentRound.rightColumn;
-            const item = columnData[index];
-            if (!item || item.pairId !== pairId) {
-                console.error(`Item mismatch: pairId=${pairId}, index=${index}, column=${column}, found=${!!item}`);
-                isProcessingClick = false;
-                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
-                return;
-            }
-            
-            const card = document.querySelector(`.card[data-pair-id="${pairId}"][data-type="${item.type}"]`);
-            if (!card || card.classList.contains('matched')) {
-                console.error(`Invalid card: pairId=${pairId}, type=${item.type}, column=${column}, found=${!!card}`);
-                isProcessingClick = false;
-                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
-                return;
-            }
-            
-            if (gameState.mode !== 'hard' && column === 'left') {
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === pairId);
-                if (pair) {
-                    const now = Date.now();
-                    if (now - lastTTSTime >= ttsDebounce) {
-                        speakWord(pair.word);
-                        lastTTSTime = now;
-                        console.log(`TTS triggered: word=${pair.word}`);
-                    }
-                }
-            }
-            
-            if (column === 'left') {
-                if (gameState.currentRound.selectedLeft) {
-                    const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedLeft}"]`);
-                    if (prevCard) prevCard.classList.remove('selected');
-                }
-                gameState.currentRound.selectedLeft = pairId;
-                card.classList.add('selected');
             } else {
-                if (gameState.currentRound.selectedRight) {
-                    const prevCard = document.querySelector(`.card[data-pair-id="${gameState.currentRound.selectedRight}"]`);
-                    if (prevCard) prevCard.classList.remove('selected');
-                }
-                gameState.currentRound.selectedRight = pairId;
-                card.classList.add('selected');
+                updateGameUI();
             }
-            
-            console.log(`Selected: left=${gameState.currentRound.selectedLeft}, right=${gameState.currentRound.selectedRight}`);
-            
-            if (gameState.currentRound.selectedLeft && gameState.currentRound.selectedRight) {
-                checkMatch();
-            } else {
-                isProcessingClick = false;
-            }
-        }
-
-        function checkMatch() {
-            const leftId = gameState.currentRound.selectedLeft;
-            const rightId = gameState.currentRound.selectedRight;
-            
-            console.log(`Checking match: leftId=${leftId}, rightId=${rightId}, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
-            
-            const leftCard = document.querySelector(`.card[data-pair-id="${leftId}"]`);
-            const rightCard = document.querySelector(`.card[data-pair-id="${rightId}"]`);
-            
-            if (!leftCard || !rightCard) {
-                console.error(`Cards not found in checkMatch: leftCard=${leftCard}, rightCard=${rightCard}, leftId=${leftId}, rightId=${rightId}`);
-                resetSelections();
-                showError("¡Vaya! Algo salió mal. ¡Inténtalo de nuevo!");
-                return;
-            }
-            
-            if (leftId === rightId) {
-                // Correct match
-                if (sounds.correct) sounds.correct();
-                
-                // Calculate points - double for hard mode
-                const basePoints = gameState.mode === 'hard' ? 20 : 10;
-                gameState.player.points += basePoints;
-                gameState.streak++;
-                gameState.currentRound.roundPoints += basePoints;
-                matchesCompleted++;
-                
-                // Check for bonus game every 15 matches
-                if (matchesCompleted % 15 === 0) {
-                    showBonusGamePopup();
-                }
-                
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
-                if (pair) {
-                    gameState.wordProgress[pair.word] = (gameState.wordProgress[pair.word] || 0) + 1;
-                    if (gameState.wordProgress[pair.word] === 3) {
-                        gameState.completedWords++;
-                        gameState.player.rewards.totalWordsMastered++;
-                        checkMilestone();
-                        checkModeCompletion();
-                        checkStickerUnlock();
-                    }
-                }
-                
-                gameState.currentRound.matchedPairs.push(leftId);
-                console.log(`Match successful, matchedPairs=${gameState.currentRound.matchedPairs.length}`);
-                
-                if (gameState.streak % 5 === 0) {
-                    const bonus = gameState.streak * 2;
-                    gameState.player.points += bonus;
-                    showNotification(`¡Bonus de Racha: +${bonus} Puntos!`);
-                }
-                
-                checkEmojiPurchase();
-                
-                leftCard.classList.add('correct');
-                rightCard.classList.add('correct');
-                
-                setTimeout(() => {
-                    leftCard.classList.remove('correct');
-                    rightCard.classList.remove('correct');
-                    leftCard.classList.add('matched');
-                    rightCard.classList.add('matched');
-                    leftCard.tabIndex = -1;
-                    rightCard.tabIndex = -1;
-                    gameState.currentRound.selectedLeft = null;
-                    gameState.currentRound.selectedRight = null;
-                    isProcessingClick = false;
-                    
-                    if (gameState.currentRound.matchedPairs.length === gameState.currentRound.pairs.length) {
-                        console.log('All pairs matched, ending round');
-                        endRound();
-                    } else {
-                        updateGameUI();
-                    }
-                }, 500);
-            } else {
-                // Incorrect match
-                if (sounds.incorrect) sounds.incorrect();
-                
-                // Show translations
-                const pair = gameState.currentRound.pairs.find(p => p.pairId === leftId);
-                if (pair && (pair.en || pair.jp)) {
-                    const translationDisplay = document.getElementById('translation-display');
-                    translationDisplay.innerHTML = `
-                        <span class="word">${pair.word}</span>
-                        ${pair.en ? `<span class="translation">EN: ${pair.en}</span>` : ''}
-                        ${pair.jp ? `<span class="translation">JP: ${pair.jp}</span>` : ''}
-                    `;
-                    translationDisplay.style.display = 'block';
-                    setTimeout(() => {
-                        translationDisplay.style.display = 'none';
-                    }, 3000);
-                }
-                
-                gameState.streak = 0;
-                
-                leftCard.classList.add('incorrect');
-                rightCard.classList.add('incorrect');
-                
-                setTimeout(() => {
-                    leftCard.classList.remove('selected', 'incorrect');
-                    rightCard.classList.remove('selected', 'incorrect');
-                    gameState.currentRound.selectedLeft = null;
-                    gameState.currentRound.selectedRight = null;
-                    isProcessingClick = false;
-                    updateGameUI();
-                }, 1000);
-            }
-            
-            savePlayerProgress();
-        }
-
-        function showBonusGamePopup() {
-            document.getElementById('bonus-game-popup').style.display = 'flex';
-            if (sounds.milestone) sounds.milestone();
-        }
-
-        function playBonusGame() {
-            // Hide the popup
-            document.getElementById('bonus-game-popup').style.display = 'none';
-            
-            // In a real implementation, you would start a bonus game here
-            // For now, we'll just give some bonus points
-            const bonusPoints = Math.floor(Math.random() * 50) + 50;
-            gameState.player.points += bonusPoints;
-            showSuccess(`¡Bonus Game completado! +${bonusPoints} puntos`);
-            
-            // Play success sound
-            if (sounds.roundComplete) sounds.roundComplete();
-            
-            // Update UI
-            updateGameUI();
-            savePlayerProgress();
-        }
-
-        function saveBonusGame() {
-            // Hide the popup
-            document.getElementById('bonus-game-popup').style.display = 'none';
-            
-            // Save the bonus game for later
-            gameState.player.bonusGamesAvailable++;
-            showSuccess(`¡Bonus Game guardado! Ahora tienes ${gameState.player.bonusGamesAvailable} juegos disponibles.`);
-            
-            // Play success sound
-            if (sounds.correct) sounds.correct();
-            
-            // Update UI
-            savePlayerProgress();
-        }
-
-        function checkStickerUnlock() {
-            const stickers = [
-                { emoji: '⭐', unlocked: true, points: 0 },
-                { emoji: '🎯', unlocked: true, points: 0 },
-                { emoji: '🏅', unlocked: false, points: 100 },
-                { emoji: '🏆', unlocked: false, points: 500 },
-                { emoji: '👑', unlocked: false, points: 1000 },
-                { emoji: '🎖️', unlocked: false, points: 1500 },
-                { emoji: '🎉', unlocked: false, points: 2000 },
-                { emoji: '🏅', unlocked: false, points: 2500 },
-                { emoji: '🏆', unlocked: false, points: 3000 },
-                { emoji: '👑', unlocked: false, points: 5000 }
-            ];
-            
-            const stickerToUnlock = stickers.find(sticker => 
-                !gameState.player.unlockedStickers.includes(sticker.emoji) && 
-                gameState.player.points >= sticker.points
-            );
-            
-            if (stickerToUnlock) {
-                gameState.player.unlockedStickers.push(stickerToUnlock.emoji);
-                showNotification(`¡Nueva pegatina desbloqueada: ${stickerToUnlock.emoji}!`);
-                if (sounds.milestone) sounds.milestone();
-                updateStickerCollection();
-                savePlayerProgress();
-            }
-        }
-
-        function resetSelections() {
+        }, 500);
+    } else {
+        // Incorrect match
+        playSound('incorrect');
+        gameState.streak = 0;
+        
+        leftCard.classList.add('incorrect');
+        rightCard.classList.add('incorrect');
+        
+        setTimeout(() => {
+            leftCard.classList.remove('selected', 'incorrect');
+            rightCard.classList.remove('selected', 'incorrect');
             gameState.currentRound.selectedLeft = null;
             gameState.currentRound.selectedRight = null;
-            document.querySelectorAll('.card.selected').forEach(card => card.classList.remove('selected'));
             isProcessingClick = false;
             updateGameUI();
-        }
+        }, 1000);
+    }
+    
+    savePlayerProgress();
+}
 
-        function checkMilestone() {
-            const previousWords = gameState.completedWords - 1;
-            const currentWords = gameState.completedWords;
-            if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
-                if (sounds.milestone) sounds.milestone();
-                showNotification(`¡Logro! ${currentWords}/50 palabras dominadas`);
-            }
-        }
+function showBonusGamePopup() {
+    document.getElementById('bonus-game-popup').style.display = 'flex';
+    document.getElementById('fruit-machine').style.display = 'flex';
+    document.getElementById('balloon-game').style.display = 'none';
+}
 
-        function checkModeCompletion() {
-            // Check for medals (every 50 words mastered)
-            if (gameState.player.rewards.totalWordsMastered % 50 === 0) {
-                gameState.player.rewards.medals++;
-                showNotification(`🎖️ ¡Medalla ganada!`);
-                createConfetti(document.getElementById('game-screen'), 20);
-                
-                // Check if we've earned enough medals for a trophy (10 medals)
-                if (gameState.player.rewards.medals >= 10) {
-                    gameState.player.rewards.medals = 0;
-                    gameState.player.rewards.trophies++;
-                    showNotification(`🏆 ¡Trofeo ganado!`);
-                    createConfetti(document.getElementById('game-screen'), 20);
-                }
-                
-                // Check if we've earned enough trophies for a crown (10 trophies)
-                if (gameState.player.rewards.trophies >= 10) {
-                    gameState.player.rewards.trophies = 0;
-                    gameState.player.rewards.crowns++;
-                    showNotification(`👑 ¡Corona ganada!`);
-                    createConfetti(document.getElementById('game-screen'), 20);
-                }
-                
-                savePlayerProgress();
-                updateProgressTracker();
-            }
-        }
+function playBonusGame() {
+    // Keep the popup visible but change its content
+    document.getElementById('fruit-machine').style.display = 'flex';
+    document.getElementById('balloon-game').style.display = 'none';
+    
+    // Hide the buttons since we're playing now
+    document.querySelector('.bonus-game-buttons').style.display = 'none';
+    
+    // Add a close button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '✖ Close';
+    closeButton.addEventListener('click', () => {
+        document.getElementById('bonus-game-popup').style.display = 'none';
+        document.querySelector('.bonus-game-buttons').style.display = 'flex';
+    });
+    
+    const content = document.querySelector('.bonus-game-content');
+    if (!content.querySelector('#close-bonus-btn')) {
+        content.appendChild(closeButton);
+        closeButton.id = 'close-bonus-btn';
+    }
+    
+    // Start the fruit machine game
+    playFruitMachine();
+}
 
-        function checkEmojiPurchase() {
-            const emojiStore = [
-                { emoji: '🎩', points: 100, name: 'Sombrero' },
-                { emoji: '👒', points: 150, name: 'Sombrero de mujer' },
-                { emoji: '👑', points: 500, name: 'Corona' },
-                { emoji: '🎓', points: 200, name: 'Gorra de graduación' },
-                { emoji: '🧢', points: 100, name: 'Gorra' },
-                { emoji: '👓', points: 120, name: 'Gafas' },
-                { emoji: '🕶️', points: 150, name: 'Gafas de sol' },
-                { emoji: '🐶', points: 200, name: 'Perro mascota' },
-                { emoji: '🐱', points: 200, name: 'Gato mascota' },
-                { emoji: '🐭', points: 150, name: 'Ratón mascota' },
-                { emoji: '🐹', points: 180, name: 'Hámster mascota' },
-                { emoji: '🐰', points: 220, name: 'Conejo mascota' },
-                { emoji: '🦊', points: 250, name: 'Zorro mascota' },
-                { emoji: '🐻', points: 300, name: 'Oso mascota' },
-                { emoji: '🐼', points: 350, name: 'Panda mascota' },
-                { emoji: '🦄', points: 400, name: 'Unicornio mascota' },
-                { emoji: '🌈', points: 100, name: 'Arcoíris' },
-                { emoji: '🌠', points: 150, name: 'Estrella fugaz' },
-                { emoji: '🎀', points: 80, name: 'Moño' },
-                { emoji: '🎁', points: 120, name: 'Regalo' }
-            ];
+function saveBonusGame() {
+    // Hide the popup
+    document.getElementById('bonus-game-popup').style.display = 'none';
+    
+    // Save the bonus game for later
+    gameState.player.bonusGamesAvailable++;
+    showSuccess(`¡Bonus Game guardado! Ahora tienes ${gameState.player.bonusGamesAvailable} juegos disponibles.`);
+    
+    // Update UI
+    savePlayerProgress();
+}
 
-            const affordableEmojis = emojiStore.filter(item => !gameState.player.purchasedEmojis.includes(item.emoji) && gameState.player.points >= item.points);
-            if (affordableEmojis.length > 0) {
-                const emoji = affordableEmojis[0];
-                gameState.player.purchasedEmojis.push(emoji.emoji);
-                gameState.player.emoji = emoji.emoji;
-                gameState.player.points -= emoji.points;
-                showNotification(`¡Comprado emoji ${emoji.name} ${emoji.emoji}!`);
-                if (sounds.milestone) sounds.milestone();
-                updatePlayerUI();
-                savePlayerProgress();
-            }
-        }
-
-        function endRound() {
-            if (sounds.roundComplete) sounds.roundComplete();
-            if (gameState.currentRound.roundPoints === gameState.currentRound.pairs.length * 10) {
-                gameState.player.points += 50;
-                showNotification('¡Ronda perfecta! +50 puntos');
-            }
+function playFruitMachine() {
+    const fruits = ['🍎', '🍊', '🍋', '🥑'];
+    const reels = [
+        document.getElementById('fruit-reel-1'),
+        document.getElementById('fruit-reel-2'),
+        document.getElementById('fruit-reel-3')
+    ];
+    
+    // Disable play button during spin
+    const playBtn = document.getElementById('play-bonus-game-btn');
+    if (playBtn) playBtn.disabled = true;
+    
+    // Play spin sound
+    playSound('spin');
+    
+    // Spin each reel with different durations
+    const spinDurations = [1000, 1500, 2000];
+    const results = [];
+    
+    reels.forEach((reel, index) => {
+        const startTime = Date.now();
+        const spinInterval = setInterval(() => {
+            reel.textContent = fruits[Math.floor(Math.random() * fruits.length)];
+        }, 100);
+        
+        setTimeout(() => {
+            clearInterval(spinInterval);
+            const result = fruits[Math.floor(Math.random() * fruits.length)];
+            reel.textContent = result;
+            results.push(result);
             
-            document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
-            document.getElementById('total-score').textContent = gameState.player.points;
-            document.getElementById('progress-count').textContent = gameState.completedWords;
-            document.getElementById('progress-streak').textContent = gameState.streak;
-            
-            updateTrophyDisplay(document.getElementById('trophy-display'));
-            updateRewardPath();
-            updateProgressTracker();
-            
-            savePlayerProgress();
-            checkEmojiPurchase();
-            
+            // Visual feedback when reel stops
+            reel.style.transform = 'scale(1.2)';
+            reel.style.backgroundColor = 'rgba(255,255,255,0.2)';
             setTimeout(() => {
-                createConfetti(document.getElementById('round-complete-screen'), 20);
-                showScreen('roundComplete');
-            }, 1000);
+                reel.style.transform = 'scale(1)';
+                reel.style.backgroundColor = 'transparent';
+            }, 300);
             
-            if (gameState.completedWords >= 50) {
-                endGame();
-            }
-        }
-
-        function showTrophyRoom() {
-            const trophyList = document.getElementById('trophy-list');
-            trophyList.innerHTML = '';
-            
-            if (gameState.player.rewards.medals > 0 || gameState.player.rewards.trophies > 0 || gameState.player.rewards.crowns > 0) {
-                const modeHeader = document.createElement('h4');
-                modeHeader.textContent = `Tus Logros`;
-                trophyList.appendChild(modeHeader);
+            // Check if all reels have stopped
+            if (results.length === 3) {
+                if (playBtn) playBtn.disabled = false;
                 
-                const modeContainer = document.createElement('div');
-                modeContainer.style.display = 'flex';
-                modeContainer.style.flexWrap = 'wrap';
-                modeContainer.style.justifyContent = 'center';
-                
-                if (gameState.player.rewards.medals > 0) {
-                    const medalDiv = document.createElement('div');
-                    medalDiv.className = 'trophy-item';
-                    medalDiv.textContent = '🎖️';
-                    medalDiv.title = `${gameState.player.rewards.medals} Medallas`;
-                    modeContainer.appendChild(medalDiv);
-                }
-                if (gameState.player.rewards.trophies > 0) {
-                    const trophyDiv = document.createElement('div');
-                    trophyDiv.className = 'trophy-item';
-                    trophyDiv.textContent = '🏆';
-                    trophyDiv.title = `${gameState.player.rewards.trophies} Trofeos`;
-                    modeContainer.appendChild(trophyDiv);
-                }
-                if (gameState.player.rewards.crowns > 0) {
-                    const crownDiv = document.createElement('div');
-                    crownDiv.className = 'trophy-item';
-                    crownDiv.textContent = '👑';
-                    crownDiv.title = `${gameState.player.rewards.crowns} Coronas`;
-                    modeContainer.appendChild(crownDiv);
-                }
-                
-                trophyList.appendChild(modeContainer);
+                // Add a slight delay before checking result
+                setTimeout(() => {
+                    checkFruitMachineResult(results);
+                }, 500);
             }
-            
-            if (trophyList.innerHTML === '') {
-                trophyList.textContent = '¡No hay recompensas todavía! ¡Sigue jugando!';
-            }
-            
-            updateStickerCollection();
-            showScreen('trophyRoom');
+        }, spinDurations[index]);
+    });
+}
+
+function checkFruitMachineResult(results) {
+    // Check for win (all fruits the same)
+    if (results[0] === results[1] && results[1] === results[2]) {
+        playSound('win');
+        showSuccess("¡Ganaste el juego de frutas! ¡Ahora al juego de globos!");
+        setTimeout(startBalloonGame, 1500);
+    } else {
+        showError("¡Casi! Inténtalo de nuevo la próxima vez.");
+    }
+}
+
+function startBalloonGame() {
+    const balloonGame = document.getElementById('balloon-game');
+    balloonGame.innerHTML = '';
+    balloonGame.style.display = 'flex';
+    
+    // Create Spanish alphabet balloons
+    const spanishAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+                            'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    
+    // Shuffle and take 10 random letters
+    const shuffledLetters = shuffleArray([...spanishAlphabet]).slice(0, 10);
+    
+    shuffledLetters.forEach(letter => {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.textContent = letter;
+        balloon.addEventListener('click', () => popBalloon(balloon, letter));
+        balloonGame.appendChild(balloon);
+    });
+    
+    // Set 30-second timer
+    let timeLeft = 30;
+    const timerDisplay = document.createElement('div');
+    timerDisplay.style.textAlign = 'center';
+    timerDisplay.style.width = '100%';
+    timerDisplay.style.fontSize = '1.5rem';
+    timerDisplay.style.margin = '10px 0';
+    timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+    balloonGame.insertBefore(timerDisplay, balloonGame.firstChild);
+    
+    const timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Tiempo: ${timeLeft}s`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            endBalloonGame();
         }
+    }, 1000);
+}
 
-        function updateTrophyDisplay(container) {
-            container.innerHTML = '';
-            
-            if (gameState.player.rewards.medals > 0) {
-                const medalDiv = document.createElement('div');
-                medalDiv.className = 'trophy-item';
-                medalDiv.textContent = '🎖️';
-                medalDiv.title = `${gameState.player.rewards.medals} Medallas`;
-                container.appendChild(medalDiv);
-            }
-            if (gameState.player.rewards.trophies > 0) {
-                const trophyDiv = document.createElement('div');
-                trophyDiv.className = 'trophy-item';
-                trophyDiv.textContent = '🏆';
-                trophyDiv.title = `${gameState.player.rewards.trophies} Trofeos`;
-                container.appendChild(trophyDiv);
-            }
-            if (gameState.player.rewards.crowns > 0) {
-                const crownDiv = document.createElement('div');
-                crownDiv.className = 'trophy-item';
-                crownDiv.textContent = '👑';
-                crownDiv.title = `${gameState.player.rewards.crowns} Coronas`;
-                container.appendChild(crownDiv);
-            }
-            
-            if (container.innerHTML === '') {
-                container.textContent = '¡Gana recompensas dominando palabras!';
-            }
-        }
+function popBalloon(balloon, letter) {
+    balloon.style.display = 'none';
+    playSound('pop');
+    speakLetter(letter);
+}
 
-        function showEmojiStore() {
-            const emojiList = document.getElementById('emoji-list');
-            emojiList.innerHTML = '';
-            document.getElementById('store-points').textContent = gameState.player.points;
-            
-            // Avatar accessories for purchase
-            const avatarAccessories = [
-                { emoji: '🎩', points: 100, name: 'Sombrero' },
-                { emoji: '👒', points: 150, name: 'Sombrero de mujer' },
-                { emoji: '👑', points: 500, name: 'Corona' },
-                { emoji: '🎓', points: 200, name: 'Gorra de graduación' },
-                { emoji: '🧢', points: 100, name: 'Gorra' },
-                { emoji: '👓', points: 120, name: 'Gafas' },
-                { emoji: '🕶️', points: 150, name: 'Gafas de sol' },
-                { emoji: '🐶', points: 200, name: 'Perro mascota' },
-                { emoji: '🐱', points: 200, name: 'Gato mascota' },
-                { emoji: '🐭', points: 150, name: 'Ratón mascota' },
-                { emoji: '🐹', points: 180, name: 'Hámster mascota' },
-                { emoji: '🐰', points: 220, name: 'Conejo mascota' },
-                { emoji: '🦊', points: 250, name: 'Zorro mascota' },
-                { emoji: '🐻', points: 300, name: 'Oso mascota' },
-                { emoji: '🐼', points: 350, name: 'Panda mascota' },
-                { emoji: '🦄', points: 400, name: 'Unicornio mascota' }
-            ];
+function speakLetter(letter) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(letter);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+    }
+}
 
-            // Show avatar accessories
-            const avatarCustomization = document.getElementById('avatar-customization');
-            avatarCustomization.innerHTML = '';
-            
-            avatarAccessories.forEach(item => {
-                const div = document.createElement('div');
-                div.className = `avatar-accessory ${gameState.player.avatarAccessories.includes(item.emoji) ? 'selected' : ''}`;
-                div.textContent = item.emoji;
-                div.title = `${item.name} (${item.points} puntos)`;
-                
-                if (!gameState.player.avatarAccessories.includes(item.emoji) && gameState.player.points >= item.points) {
-                    div.addEventListener('click', () => {
-                        gameState.player.avatarAccessories.push(item.emoji);
-                        gameState.player.points -= item.points;
-                        savePlayerProgress();
-                        showEmojiStore();
-                        showSuccess(`¡Comprado ${item.name} ${item.emoji}!`);
-                        if (sounds.correct) sounds.correct();
-                    });
-                } else if (gameState.player.avatarAccessories.includes(item.emoji)) {
-                    div.title = `${item.name} (Ya comprado)`;
-                }
-                
-                avatarCustomization.appendChild(div);
-            });
-            
-            showScreen('emojiStore');
-        }
+function endBalloonGame() {
+    document.getElementById('balloon-game').style.display = 'none';
+    
+    // Award points based on performance
+    const balloonsPopped = document.querySelectorAll('.balloon[style*="display: none"]').length;
+    const bonusPoints = balloonsPopped * 5;
+    gameState.player.points += bonusPoints;
+    
+    showSuccess(`¡Ganaste ${bonusPoints} puntos en el juego de globos!`);
+    savePlayerProgress();
+}
 
-        function endGame() {
-            gameState.leaderboard.push({
-                name: gameState.player.name,
-                avatar: gameState.player.avatar,
-                score: gameState.player.points,
-                date: new Date().toISOString()
-            });
-            
-            gameState.leaderboard.sort((a, b) => b.score - a.score);
-            gameState.leaderboard = gameState.leaderboard.slice(0, 20);
-            
-            try {
-                localStorage.setItem('nandomodeLeaderboard', JSON.stringify(gameState.leaderboard));
-            } catch (e) {
-                console.warn("Error saving leaderboard:", e);
-                showError("No se pudo guardar el marcador. ¡Inténtalo de nuevo!");
-            }
-            
-            document.getElementById('final-score').textContent = gameState.player.points;
-            updateTrophyDisplay(document.getElementById('final-trophy-display'));
-            
-            // Unlock special sticker for completing the game
-            if (!gameState.player.unlockedStickers.includes('🎉')) {
-                gameState.player.unlockedStickers.push('🎉');
-                showNotification('¡Pegatina especial desbloqueada: 🎉!');
-                savePlayerProgress();
-            }
-            
-            // Play celebration sound
-            if (sounds.roundComplete) sounds.roundComplete();
-            
-            showScreen('gameOver');
-        }
+function resetSelections() {
+    gameState.currentRound.selectedLeft = null;
+    gameState.currentRound.selectedRight = null;
+    document.querySelectorAll('.card.selected').forEach(card => card.classList.remove('selected'));
+    isProcessingClick = false;
+    updateGameUI();
+}
 
-        function quitToMainMenu() {
-            showScreen('start');
-            populateUserSelect();
-        }
+function checkMilestone() {
+    const previousWords = gameState.completedWords - 1;
+    const currentWords = gameState.completedWords;
+    if (milestones.includes(currentWords) && !milestones.includes(previousWords)) {
+        showNotification(`¡Logro! ${currentWords}/50 palabras dominadas`);
+    }
+}
 
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.remove('active'));
-            screens[screenName].classList.add('active');
-            gameState.currentScreen = screenName;
+function checkModeCompletion() {
+    // Award medals for every 50 words
+    if (gameState.player.rewards.totalWordsMastered > 0 && 
+        gameState.player.rewards.totalWordsMastered % 50 === 0) {
+        
+        // Reset the completed words counter but keep total progress
+        gameState.completedWords = 0;
+        
+        gameState.player.rewards.medals++;
+        showNotification(`🎖️ ¡Medalla ganada!`);
+        createConfetti(document.getElementById('game-screen'), 20);
+        
+        // Award trophies for every 500 words (10 medals)
+        if (gameState.player.rewards.medals >= 10) {
+            gameState.player.rewards.medals = 0;
+            gameState.player.rewards.trophies++;
+            showNotification(`🏆 ¡Trofeo ganado!`);
+            createConfetti(document.getElementById('game-screen'), 20);
         }
         
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
+        savePlayerProgress();
+        updateProgressTracker();
+    }
+}
 
-        function createConfetti(container, count) {
-            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ffbe0b', '#fb5607', '#8338ec'];
-            
-            for (let i = 0; i < Math.min(count, 20); i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = `${Math.random() * 100}%`;
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = `${Math.random() * 1 + 1}s`;
-                confetti.style.width = `${Math.random() * 6 + 4}px`;
-                confetti.style.height = `${Math.random() * 6 + 4}px`;
-                container.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 2000);
-            }
+function endRound() {
+    document.getElementById('round-score').textContent = gameState.currentRound.roundPoints;
+    document.getElementById('total-score').textContent = gameState.player.points;
+    
+    // Update to show both current and total progress
+    document.getElementById('progress-count').textContent = 
+        `${gameState.completedWords}/50 (Total: ${gameState.player.rewards.totalWordsMastered})`;
+    
+    document.getElementById('progress-streak').textContent = gameState.streak;
+    
+    updateTrophyDisplay(document.getElementById('trophy-display'));
+    updateRewardPath();
+    updateProgressTracker();
+    
+    savePlayerProgress();
+    
+    setTimeout(() => {
+        createConfetti(document.getElementById('round-complete-screen'), 20);
+        showScreen('roundComplete');
+        
+        // Check for level up milestone
+        if (milestones.includes(gameState.completedWords)) {
+            setTimeout(() => {
+                showNotification(`¡Nivel alcanzado! ${gameState.completedWords} palabras dominadas`);
+                createConfetti(document.getElementById('round-complete-screen'), 30);
+            }, 500);
         }
+    }, 1000);
+}
 
-        function speakWord(word) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'es-ES';
-                utterance.rate = 0.8;
-                speechSynthesis.speak(utterance);
-            } else {
-                console.warn("SpeechSynthesis not supported.");
-            }
-        }
+function updateTrophyDisplay(container) {
+    container.innerHTML = '';
+    
+    if (gameState.player.rewards.medals > 0) {
+        const medalDiv = document.createElement('div');
+        medalDiv.className = 'trophy-item';
+        medalDiv.textContent = '🎖️';
+        medalDiv.title = `${gameState.player.rewards.medals} Medallas`;
+        container.appendChild(medalDiv);
+    }
+    if (gameState.player.rewards.trophies > 0) {
+        const trophyDiv = document.createElement('div');
+        trophyDiv.className = 'trophy-item';
+        trophyDiv.textContent = '🏆';
+        trophyDiv.title = `${gameState.player.rewards.trophies} Trofeos`;
+        container.appendChild(trophyDiv);
+    }
+    
+    if (container.innerHTML === '') {
+        container.textContent = '¡Gana recompensas dominando palabras!';
+    }
+}
 
-        function sanitizePairId(word) {
-            return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-        }
-    </script>
+function showTrophyRoom() {
+    updateTrophyDisplay(document.getElementById('trophy-list'));
+    showScreen('trophyRoom');
+}
+
+function endGame() {
+    gameState.leaderboard.push({
+        name: gameState.player.name,
+        avatar: gameState.player.avatar,
+        score: gameState.player.points,
+        date: new Date().toISOString()
+    });
+    
+    gameState.leaderboard.sort((a, b) => b.score - a.score);
+    gameState.leaderboard = gameState.leaderboard.slice(0, 20);
+    
+    try {
+        localStorage.setItem('nandomodeLeaderboard', JSON.stringify(gameState.leaderboard));
+    } catch (e) {
+        console.warn("Error saving leaderboard:", e);
+        showError("No se pudo guardar el marcador. ¡Inténtalo de nuevo!");
+    }
+    
+    document.getElementById('final-score').textContent = gameState.player.points;
+    updateTrophyDisplay(document.getElementById('final-trophy-display'));
+    
+    showScreen('gameOver');
+}
+
+function quitToMainMenu() {
+    showScreen('start');
+    populateUserSelect();
+}
+
+function showScreen(screenName) {
+    Object.values(screens).forEach(screen => screen.classList.remove('active'));
+    screens[screenName].classList.add('active');
+    gameState.currentScreen = screenName;
+}
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+function createConfetti(container, count) {
+    const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ffbe0b', '#fb5607', '#8338ec'];
+    
+    for (let i = 0; i < Math.min(count, 20); i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = `${Math.random() * 1 + 1}s`;
+        confetti.style.width = `${Math.random() * 6 + 4}px`;
+        confetti.style.height = `${Math.random() * 6 + 4}px`;
+        container.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 2000);
+    }
+}
+
+function speakWord(word) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+    } else {
+        console.warn("SpeechSynthesis not supported.");
+    }
+}
+
+function sanitizePairId(word) {
+    return word.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+</script>
 </body>
 </html>
